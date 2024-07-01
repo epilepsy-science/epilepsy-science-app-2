@@ -114,7 +114,7 @@ export default {
   display: flex;
   width: 46%;
   height: auto;
-  background-color: $darkBlue;
+  background-color: #e76f51;
   flex-direction: column;
   @media screen and (max-width: 767px) {
     width: 95% !important;

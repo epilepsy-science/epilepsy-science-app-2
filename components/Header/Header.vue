@@ -2,20 +2,20 @@
   <div class="header">
     <div class="header__nav">
       <div class="header__nav--parent">
-        <svgo-icon-contact class="tab3 mr-4 mt-4" />
+        <svgo-icon-contact class="tab3 tab3-epi mr-4 mt-4" />
         <nuxt-link :to="`/contact-us?source_url=${currentUrl}`" target="_blank">
           Contact Us
         </nuxt-link>
-        <svgo-icon-help class="tab3 mr-4 mt-4" />
+        <svgo-icon-help class="tab3 tab3-epi mr-4 mt-4" />
         <a href="https://docs.sparc.science/" target="_blank">
           Help
         </a>
         <client-only>
-          <svgo-icon-sign-in class="tab3 mt-4" />
+          <svgo-icon-sign-in class="tab3 tab3-epi mt-4" />
           <a class="sign-in-link" v-if="!userProfile" @click="showLoginDialog = true">
             Sign in
           </a>
-          <el-menu ref="userMenu" class="mr-16 user-menu" v-else :ellipsis="false" background-color="#24245b"
+          <el-menu ref="userMenu" class="mr-16 user-menu" v-else :ellipsis="false" background-color="#e76f51"
             @select="handleUserMenuSelect" @mouseleave="closeMenu" @mouseenter="openMenu">
             <el-sub-menu index="user" class="submenu">
               <template #title>{{username}}</template>
@@ -300,7 +300,7 @@ export default {
 }
 
 .header__nav {
-  background-color: $darkBlue;
+  background-color: #e76f51;
   width: 100%;
 }
 
@@ -472,7 +472,7 @@ export default {
 
       a {
         text-decoration: none;
-        color: $darkBlue;
+        color: #e76f51;
         padding-bottom: 0.2rem;
         font-weight: 500;
 

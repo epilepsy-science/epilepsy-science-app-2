@@ -31,7 +31,7 @@ export default {
 @import 'sparc-design-system-components-2/src/assets/_variables.scss';
 
 .page-hero {
-  background: $darkBlue;
+  background: #264653;
   font-size: 1rem;
   line-height: 1.5rem;
   font-weight: 400;

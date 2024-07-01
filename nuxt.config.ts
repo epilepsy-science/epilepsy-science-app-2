@@ -198,7 +198,7 @@ export default defineNuxtConfig({
   /*
   ** Global CSS
   */
-  css: ['sparc-design-system-components-2/dist/style.css', '@/assets/_base.scss'],
+  css: ['sparc-design-system-components-2/dist/style.css', '@/assets/_base.scss', '@/assets/_design-system-overrides.scss'],
   sitemap: {
     xslColumns: [
       { label: 'URL', width: '100%' }
