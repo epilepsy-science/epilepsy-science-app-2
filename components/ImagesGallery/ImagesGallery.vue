@@ -857,7 +857,7 @@ export default {
 
 .key-image-span.active {
   transform: scale(1.16);
-  border: 4px $purple solid;
+  border: 4px #e76f50 solid;
 }
 
 .key-image-span {

@@ -287,7 +287,7 @@ export default {
 .btn-copy-permalink {
   border: none;
   background: none;
-  color: $purple;
+  color: #e76f50;
   cursor: pointer;
   padding: 0;
   &:active {

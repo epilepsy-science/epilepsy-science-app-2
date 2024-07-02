@@ -195,6 +195,6 @@ p.bold {
   width: 0;
   height: 0;
   border-left: solid transparent;
-  border-top: solid $purple;
+  border-top: solid #e76f50;
 }
 </style>

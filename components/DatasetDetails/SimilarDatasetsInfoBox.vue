@@ -240,7 +240,7 @@ export default {
   border: 1px solid $lineColor1;
   background: white;
   a {
-    color: $purple;
+    color: #e76f50;
   }
 }
 hr {
@@ -255,11 +255,11 @@ hr {
   border-radius: 15px;
   max-width: fit-content;
   background-color: #fbefeb;
-  color: $purple !important;
-  border: 1px solid $purple;
+  color: #e76f50 !important;
+  border: 1px solid #e76f50;
   cursor: pointer;
   a {
-    color: $purple !important;
+    color: #e76f50 !important;
     text-decoration: none !important;
   }
 }

@@ -239,7 +239,7 @@ export default {
   :deep(.publications-container) {
     display: flex;
     a {
-      color: $purple;
+      color: #e76f50;
     }
     @media (max-width: 48em) {
       flex-direction: column;

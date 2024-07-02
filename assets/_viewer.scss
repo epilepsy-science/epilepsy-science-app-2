@@ -2,7 +2,7 @@
 
 .file-detail {
   a {
-    color: $purple;
+    color: #e76f50;
   }
   border-bottom: 1px solid $lineColor1;
   flex-direction: column;
@@ -27,7 +27,7 @@
 .btn-copy-permalink {
   border: none;
   background: none;
-  color: $purple;
+  color: #e76f50;
   cursor: pointer;
   padding: 0;
   &:active {

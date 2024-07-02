@@ -45,7 +45,7 @@ export default {
 <style scoped lang="scss">
 @import 'sparc-design-system-components-2/src/assets/_variables.scss';
 .data {
-  color: $purple;
+  color: #e76f50;
 }
 .card {
   background-color: transparent;

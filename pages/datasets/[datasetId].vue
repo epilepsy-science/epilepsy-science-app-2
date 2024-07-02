@@ -688,7 +688,7 @@ export default {
 :deep(.card-container) {
   .content {
       a {
-        color: $purple;
+        color: #e76f50;
       }
   }
 }

@@ -174,7 +174,7 @@ export default {
   min-width: 1.5rem;
   min-height: 1.5rem;
   border-radius: 50%;
-  background: $purple;
+  background: #e76f50;
   line-height: 1.1rem;
   display: flex;
   justify-content: center;

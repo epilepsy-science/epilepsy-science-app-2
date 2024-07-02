@@ -91,7 +91,7 @@ export default {
 .btn-load-more {
   background: none;
   border: none;
-  color: $purple;
+  color: #e76f50;
   cursor: pointer;
   display: block;
   padding: 0;

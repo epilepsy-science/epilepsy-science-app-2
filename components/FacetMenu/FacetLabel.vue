@@ -109,7 +109,7 @@ export default {
 }
 
 .purple-fill {
-  fill: $purple;
+  fill: #e76f50;
 }
 
 .disabled {
