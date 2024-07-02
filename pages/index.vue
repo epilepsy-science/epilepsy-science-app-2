@@ -15,17 +15,8 @@
         />
       </template>
     </page-hero>
-    <div class="secondary-background">
-      <sparc-numbers :explore-data="exploreData"/>
-    </div>
     <hr />
     <portal-features :features="portalFeatures" />
-    <hr />
-    <div class="secondary-background">
-      <featured-data :featured-data="featuredData" />
-    </div>
-    <hr />
-    <projects-and-datasets :datasetSectionTitle="datasetSectionTitle" :projectOrResource="featuredProject" :dataset="featuredDataset" />
     <hr />
     <div class="secondary-background">
       <homepage-news :news="newsAndEvents" />
@@ -37,11 +28,8 @@
 </template>
 
 <script>
-import FeaturedData from '@/components/FeaturedData/FeaturedData.vue'
-import SparcNumbers from '@/components/SparcNumbers/SparcNumbers.vue'
 import HomepageNews from '@/components/HomepageNews/HomepageNews.vue'
 import PortalFeatures from '@/components/PortalFeatures/PortalFeatures.vue'
-import ProjectsAndDatasets from '@/components/ProjectsAndDatasets/ProjectsAndDatasets.vue'
 import StayConnected from '@/components/StayConnected/StayConnected.vue'
 
 import marked from '@/mixins/marked/index'
@@ -54,11 +42,8 @@ export default {
   name: 'SparcHomepage',
 
   components: {
-    FeaturedData,
-    SparcNumbers,
     HomepageNews,
     PortalFeatures,
-    ProjectsAndDatasets,
     StayConnected
   },
 
