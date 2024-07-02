@@ -14,28 +14,6 @@
                 {{ footerData.footerDescription }}
               </p>
             </div>
-            <div class="footer__info--social">
-              <a href="https://twitter.com/sparc_science" target="_blank">
-                <svgo-icon-twitter class="social-media-icon pr-16"/>
-              </a>
-              <a
-                href="https://www.linkedin.com/groups/12694019"
-                target="_blank"
-              >
-                <svgo-icon-linkedin class="social-media-icon pr-16"/>
-              </a>
-              <a
-                href="https://www.youtube.com/channel/UCCmUx4tOSlTAwlUrjSGz2mw"
-                target="_blank"
-              >
-                <svgo-icon-youtube class="social-media-icon"/>
-              </a>
-            </div>
-            <div class="footer__info--re3data">
-              <a href="https://doi.org/10.17616/R31NJN2V" target="_blank">
-                <img src="/100013719.svg" alt="re3data badge"/>
-              </a>
-            </div>
           </div>
         </el-col>
         <el-col :sm="{ span: 22, offset: 1 }" :md="{ span: 8, offset: 4 }">
@@ -49,41 +27,6 @@
                     :key="learnMoreLink.fields.url"
                   >
                     <footer-link :link="learnMoreLink" />
-                  </li>
-                </ul>
-              </el-col>
-              <el-col :span="12">
-                <h3>Policies</h3>
-                <ul>
-                  <li
-                    v-for="policiesLink in footerData.policiesLinks"
-                    :key="policiesLink.fields.url"
-                  >
-                    <footer-link :link="policiesLink" />
-                  </li>
-                </ul>
-              </el-col>
-            </el-row>
-            <el-row :gutter="32">
-              <el-col :span="12">
-                <h3>Help Us Improve</h3>
-                <ul>
-                  <li
-                    v-for="helpUsImproveLink in footerData.helpUsImproveLinks"
-                    :key="helpUsImproveLink.fields.url"
-                  >
-                    <footer-link :link="helpUsImproveLink" />
-                  </li>
-                </ul>
-              </el-col>
-              <el-col :span="12">
-                <h3>Stay Up-to-Date</h3>
-                <ul>
-                  <li
-                    v-for="stayUpdatedLink in footerData.stayUpdatedLinks"
-                    :key="stayUpdatedLink.fields.url"
-                  >
-                    <footer-link :link="stayUpdatedLink" />
                   </li>
                 </ul>
               </el-col>
@@ -126,11 +69,6 @@ export default {
   padding: 3rem 1rem;
   background-color: #F8FAFF;
 
-  .social-media-icon {
-    color: #606266;
-    font-size: 2rem;
-  }
-
   &__info {
     &--logo {
       height: 4rem;
@@ -144,14 +82,6 @@ export default {
         font-weight: normal;
         line-height: 2rem;
         color: $mediumGrey;
-      }
-    }
-
-    &--social {
-      margin-bottom: 3rem;
-      .svg-icon {
-        width: 2.2rem;
-        margin-right: 1rem;
       }
     }
   }
@@ -197,10 +127,6 @@ export default {
         p {
           margin-bottom: 1rem;
         }
-      }
-
-      &--re3data {
-        margin-bottom: 1.5rem;
       }
     }
   }
