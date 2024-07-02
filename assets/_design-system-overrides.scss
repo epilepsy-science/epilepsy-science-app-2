@@ -7,6 +7,10 @@
         background-color: #e76f51;
     }
 
+    .tab1 {
+        color : #e76f50;
+    }
+
     .el-table a {
         color: #e76f50;
     }
@@ -61,5 +65,16 @@
                 background: #e76f50 !important;
             }
         }
+
+
+        li.number.is-active {
+            border-bottom-color:#e76f50;
+        }
     }
+
+    .el-tree-node.is-checked {
+        .custom-tree-node {
+          color: #e76f50;
+        }
+      }
 }
