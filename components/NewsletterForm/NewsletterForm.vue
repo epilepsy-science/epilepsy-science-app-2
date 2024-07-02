@@ -51,7 +51,7 @@ label {
   border-radius: 4px;
   padding: 0.5rem 1rem;
   &:focus {
-    border-color: $purple;
+    border-color: #e76f50;
   }
 }
 </style>

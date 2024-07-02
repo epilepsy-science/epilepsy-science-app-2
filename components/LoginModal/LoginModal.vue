@@ -111,9 +111,9 @@ export default {
   vertical-align: text-top;
 }
 a {
-  color: $purple;
+  color: #e76f50;
 }
 :deep(.el-dialog__headerbtn):hover {
-  color: $purple !important
+  color: #e76f50 !important
 }
 </style>

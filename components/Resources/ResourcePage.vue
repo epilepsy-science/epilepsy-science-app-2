@@ -323,21 +323,21 @@ export default {
   overflow: auto;
   margin: 0 0 0 0;
   padding: 0 0;
-  outline: 0.1rem solid $purple;
+  outline: 0.1rem solid #e76f50;
   @media (max-width: 40rem) {
     display: block;
   }
   li {
     width: 100%;
     text-align: center;
-    color: $purple;
+    color: #e76f50;
   }
   li:last-child > a {
     border-right: none;
   }
 }
 .search-tabs__button {
-  background: #f9f2fc;
+  background: #fbefeb;
   display: block;
   font-size: 0.75rem;
   font-weight: 500;
@@ -348,7 +348,7 @@ export default {
   line-height: 3.5rem;
   @media (min-width: 40rem) {
     font-size: 0.65rem;
-    border-right: 0.1rem solid $purple;
+    border-right: 0.1rem solid #e76f50;
   }
   @media (min-width: 50rem) {
     font-size: .75rem;
@@ -361,7 +361,7 @@ export default {
   &:hover,
   &.active {
     color: white;
-    background-color: $purple;
+    background-color: #e76f50;
     font-weight: 500;
   }
 }

@@ -191,7 +191,7 @@ export default {
 }
 
 .resource-category {
-  background: $purple;
+  background: #e76f50;
   border-radius: 15px;
   color: #fff;
   margin-right: .25rem;

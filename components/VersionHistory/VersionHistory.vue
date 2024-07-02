@@ -266,7 +266,7 @@ export default {
     margin-right: 4px;
     -moz-border-radius: 0.75em; /* or 50% */
     border-radius: 0.75em; /* or 50% */
-    background-color: $purple;
+    background-color: #e76f50;
     color: #fff;
     cursor: pointer;
     writing-mode: vertical-rl;

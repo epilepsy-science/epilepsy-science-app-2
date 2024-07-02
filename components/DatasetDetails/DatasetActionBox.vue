@@ -238,7 +238,7 @@ export default {
     align-self: center;
   }
   .ospac-tooltip {
-    color: $purple;
+    color: #e76f50;
   }
 }
 </style>

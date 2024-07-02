@@ -137,7 +137,7 @@ hr {
 .container-link {
   text-decoration: underline;
   text-transform: none;
-  color: $purple;
+  color: #e76f50;
   a:hover {
     text-decoration: none;
   }

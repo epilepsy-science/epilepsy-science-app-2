@@ -195,14 +195,14 @@ export default {
   width: fit-content;
   margin-left: auto;
   a {
-    color: $purple;
+    color: #e76f50;
   }
   @media (max-width: 47rem) {
     margin-left: 0;
     margin-right: auto;
   }
   .active-link {
-    color: $purple;
+    color: #e76f50;
     text-decoration: underline;
     cursor: pointer;
   }

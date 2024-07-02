@@ -116,7 +116,7 @@ h2 {
 }
 a {
   font-size: 1em;
-  color: $purple;
+  color: #e76f50;
   text-decoration: none;
 }
 a:hover {

@@ -523,7 +523,7 @@ a {
   border: 2px solid $lineColor1;
 }
 .icon-help {
-  fill: $purple;
+  fill: #e76f50;
 }
 .background-container {
   background-color: #f5f7fa
@@ -573,7 +573,7 @@ a {
   width: 1.25rem;
 }
 .icon-help {
-  color: $purple;
+  color: #e76f50;
   height: 1.5rem;
   width: 1.5rem;
 }
@@ -584,7 +584,7 @@ a {
   }
 }
 :deep(.popover) {
-  background-color: #f9f2fc;
+  background-color: #fbefeb;
   word-wrap: normal;
   word-break: normal;
   max-width: 300px;

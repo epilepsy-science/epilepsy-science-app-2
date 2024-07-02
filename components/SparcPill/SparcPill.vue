@@ -13,7 +13,7 @@ export default {
 <style lang="scss" scoped>
 @import 'sparc-design-system-components-2/src/assets/_variables.scss';
 .sparc-pill {
-  background: $purple;
+  background: #e76f50;
   border-radius: 15px;
   color: #fff;
   font-size: 0.875rem;

@@ -190,7 +190,7 @@ export default {
 @import 'sparc-design-system-components-2/src/assets/_variables.scss';
 .has-orcid {
   text-decoration: underline;
-  color: $purple;
+  color: #e76f50;
 }
 .title, .organization {
   word-break: normal;

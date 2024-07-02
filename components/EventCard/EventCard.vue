@@ -153,7 +153,7 @@ export default {
     text-overflow: ellipsis;
   }
   a {
-    color: $purple;
+    color: #e76f50;
     text-decoration: none;
     &:hover,
     &:focus {

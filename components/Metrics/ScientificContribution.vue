@@ -263,7 +263,7 @@ hr {
 .col-data {
   font-size: 2rem;
   line-height: 2.75rem;
-  color: $purple;
+  color: #e76f50;
   font-weight: bold;
 }
 

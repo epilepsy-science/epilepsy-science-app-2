@@ -84,7 +84,7 @@ export default {
     }
     h2 {
       font-size: 1em;
-      color: $purple;
+      color: #e76f50;
       margin-bottom: 0.375rem;
       line-height: 22px;
       font-weight: 500;
@@ -165,7 +165,7 @@ export default {
 }
 
 .resource-category {
-  background: $purple;
+  background: #e76f50;
   border-radius: 15px;
   color: #fff;
   font-size: 0.875rem;
