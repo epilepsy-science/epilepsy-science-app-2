@@ -6,7 +6,7 @@
           <div class="footer__info">
             <div class="footer__info--logo">
               <nuxt-link :to="{ name: 'index' }">
-                <client-only><sparc-logo /></client-only>
+                <client-only><img class="logo" :src="EpilepsyLogo" alt="Logo for Epilepsy.science" /></client-only>
               </nuxt-link>
             </div>
             <div class="footer__info--blurb">
@@ -99,16 +99,20 @@
 import { mapState } from 'pinia'
 import FooterLink from './FooterLink.vue'
 import { useMainStore } from '../store/index.js'
-import SparcLogo from 'sparc-design-system-components-2/src/components/SparcLogo'
+import EpilepsyLogo from '@/assets/epilepsy.science.png'
 
 export default {
-  name: 'SparcFooter',
+  name: 'EpilepsyFooter',
   components: {
-    FooterLink,
-    SparcLogo
+    FooterLink
   },
   computed: {
     ...mapState(useMainStore, ['footerData'])
+  },
+  data() {
+    return {
+      EpilepsyLogo
+    }
   }
 }
 </script>
@@ -207,5 +211,11 @@ export default {
     height: 4rem;
     width: 8rem;
   }
+}
+
+img {
+  display: block;
+  height: auto;
+  width: 100%;
 }
 </style>

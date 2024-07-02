@@ -1,15 +1,15 @@
 <template>
   <div id="epilepsy-science-app" :class="[disableScrolling ? 'layout' : '']">
-    <sparc-header />
+    <epilepsy-header />
     <slot />
-    <sparc-footer />
+    <epilepsy-footer />
     <cookie-notice v-if="!hasAcceptedGDPR" />
   </div>
 </template>
 
 <script>
-import SparcHeader from '@/components/Header/Header.vue'
-import SparcFooter from '@/components/Footer/Footer.vue'
+import EpilepsyHeader from '@/components/Header/Header.vue'
+import EpilepsyFooter from '@/components/Footer/Footer.vue'
 import CookieNotice from '@/components/CookieNotice/CookieNotice.vue'
 import { propOr } from 'ramda'
 import DOMPurify from 'isomorphic-dompurify'
@@ -19,8 +19,8 @@ import { mapState } from 'pinia'
 export default {
   components: {
     CookieNotice,
-    SparcHeader,
-    SparcFooter
+    EpilepsyHeader,
+    EpilepsyFooter
   },
   data() {
     return {

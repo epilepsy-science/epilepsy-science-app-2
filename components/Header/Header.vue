@@ -32,7 +32,7 @@
           </button>
           <div class="logo">
             <nuxt-link :to="{ name: 'index' }">
-              <client-only><sparc-logo /></client-only>
+              <client-only><img class="logo" :src="EpilepsyLogo" alt="Logo for Epilepsy.science" /></client-only>
             </nuxt-link>
           </div>
 
@@ -97,18 +97,13 @@
 import LoginModal from '@/components/LoginModal/LoginModal.vue'
 import { useMainStore } from '../../store/index.js'
 import { mapActions, mapState } from 'pinia'
-import SparcLogo from 'sparc-design-system-components-2/src/components/SparcLogo'
+import EpilepsyLogo from '@/assets/epilepsy.science.png'
 
 const links = [
   {
     title: 'data',
     displayTitle: 'Data & Models',
     href: '/data?type=dataset'
-  },
-  {
-    title: 'apps',
-    displayTitle: 'SPARC Apps',
-    href: '/apps'
   },
   {
     title: 'tools-and-resources',
@@ -124,22 +119,17 @@ const links = [
     title: 'about',
     displayTitle: 'About',
     href: '/about'
-  },
-  {
-    title: 'share-data',
-    displayTitle: 'Submit to SPARC',
-    href: '/share-data'
   }
 ]
 
 export default {
-  name: 'SparcHeader',
+  name: 'EpilepsyHeader',
   components: {
-    LoginModal,
-    SparcLogo
+    LoginModal
   },
   data: () => {
     return {
+      EpilepsyLogo,
       links,
       menuOpen: false,
       showLoginDialog: false,
@@ -571,5 +561,11 @@ export default {
 :deep(.user-submenu) {
   padding-left: .5rem !important;
   padding-right: .5rem !important;
+}
+
+img {
+  display: block;
+  height: auto;
+  width: 100%;
 }
 </style>
