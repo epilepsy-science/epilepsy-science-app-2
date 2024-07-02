@@ -229,7 +229,7 @@ export default {
   overflow: hidden;
 }
 .back-link {
-  color: $darkBlue;
+  color: #e76f51;
   font-weight: 700;
 }
 .image-button-container {

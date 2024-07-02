@@ -176,7 +176,7 @@ export default {
   }
 }
 .back-link {
-  color: $darkBlue;
+  color: #e76f51;
   font-weight: 700;
 }
 .page {

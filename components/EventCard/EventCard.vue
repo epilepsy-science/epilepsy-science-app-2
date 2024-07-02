@@ -108,7 +108,7 @@ export default {
 .upcoming-event {
   background: #fff;
   border: 1px solid $lineColor1;
-  color: $darkBlue;
+  color: #e76f51;
   padding: 1.5em 1em;
   &__image {
     margin-bottom: 1rem;

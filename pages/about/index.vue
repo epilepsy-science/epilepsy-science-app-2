@@ -272,7 +272,7 @@ export default {
 }
 
 .midnightblue-background {
-  background-color: $darkBlue;
+  background-color: #e76f51;
 }
 
 .white-text {
@@ -317,7 +317,7 @@ export default {
   p {
     font-size: 1em;
     font-weight: 700;
-    color: #24245b;
+    color: #e76f51;
 
     &:hover {
       text-decoration: underline;

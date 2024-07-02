@@ -43,7 +43,7 @@ export default {
     margin-bottom: 0;
   }
   p {
-    color: $darkBlue
+    color: #e76f51
   }
 }
 .subpage {

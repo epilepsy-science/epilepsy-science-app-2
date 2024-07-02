@@ -10,25 +10,6 @@
   <div class="page-data">
     <breadcrumb :breadcrumb="breadcrumb" :title="searchType.label" />
     <div class="container">
-      <div class="search-tabs__container">
-        <h1 hidden>Dataset search</h1>
-        <div class="heading2 pl-8 mb-8">
-          Browse categories
-        </div>
-        <ul class="search-tabs">
-          <li v-for="search in searchTypes" :key="search.label">
-            <nuxt-link class="search-tabs__button" :class="{ active: search.type === $route.query.type }" :to="{
-                name: 'data',
-                query: {
-                  ...$route.query,
-                  type: search.type,
-                }
-              }">
-              {{ search.label }}
-            </nuxt-link>
-          </li>
-        </ul>
-      </div>
       <div class="search-bar__container">
         <div class="body1 mb-8">
           Search within category
@@ -552,19 +533,6 @@ export default {
   background-color: $background;
 }
 
-.search-tabs__container {
-  margin-top: 2rem;
-  padding-top: 0.5rem;
-  background-color: white;
-  border: 0.1rem solid $lineColor2;
-
-  h3 {
-    padding-left: 0.75rem;
-    font-weight: 600;
-    font-size: 1.5rem;
-  }
-}
-
 .search-bar__container {
   margin-top: 1em;
   padding: 0.75rem;
@@ -575,64 +543,6 @@ export default {
     line-height: 1rem;
     font-weight: 600;
     font-size: 1rem;
-  }
-}
-
-.search-tabs {
-  display: flex;
-  list-style: none;
-  overflow: auto;
-  margin: 0 0 0 0;
-  padding: 0 0;
-  outline: 0.1rem solid #e76f50;
-
-  @media (max-width: 40rem) {
-    display: block;
-  }
-
-  li {
-    width: 100%;
-    text-align: center;
-    color: #e76f50;
-  }
-
-  li:last-child>a {
-    border-right: none;
-  }
-}
-
-.search-tabs__button {
-  color: #e76f50;
-  background: #fbefeb;
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 500;
-  outline: none;
-  padding: 0;
-  text-decoration: none;
-  text-transform: uppercase;
-  line-height: 3.5rem;
-
-  @media (min-width: 40rem) {
-    font-size: 0.65rem;
-    border-right: 0.1rem solid #e76f50;
-  }
-
-  @media (min-width: 50rem) {
-    font-size: .75rem;
-  }
-
-  @media (min-width: 64rem) {
-    font-size: 1.25rem;
-    font-weight: 600;
-    text-transform: none;
-  }
-
-  &:hover,
-  &.active {
-    color: white;
-    background-color: #e76f50;
-    font-weight: 500;
   }
 }
 
