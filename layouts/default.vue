@@ -1,5 +1,5 @@
 <template>
-  <div :class="[disableScrolling ? 'layout' : '']">
+  <div id="epilepsy-science-app" :class="[disableScrolling ? 'layout' : '']">
     <sparc-header />
     <slot />
     <sparc-footer />

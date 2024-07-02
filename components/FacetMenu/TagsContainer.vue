@@ -129,7 +129,7 @@ export default {
   .container-link {
     text-decoration: underline;
     text-transform: none;
-    color: $purple;
+    color: #e76f50;
     a:hover {
       text-decoration: none;
     }
@@ -140,12 +140,12 @@ export default {
     border: none;
   }
   .help-icon {
-    color: $purple;
+    color: #e76f51;
     height: 1.5rem;
     width: 1.5rem;
   }
   :deep(.popover) {
-    background-color: #f9f2fc;
+    background-color: #fbefeb;
   }
 }
 </style>

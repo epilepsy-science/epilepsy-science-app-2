@@ -584,7 +584,7 @@ a {
   }
 }
 :deep(.popover) {
-  background-color: #f9f2fc;
+  background-color: #fbefeb;
   word-wrap: normal;
   word-break: normal;
   max-width: 300px;

@@ -493,7 +493,7 @@ export default {
 
 .search-tabs__button {
   color: $purple;
-  background: #f9f2fc;
+  background: #fbefeb;
   display: block;
   font-size: 0.75rem;
   font-weight: 500;

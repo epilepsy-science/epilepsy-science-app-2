@@ -254,7 +254,7 @@ hr {
   display: block !important;
   border-radius: 15px;
   max-width: fit-content;
-  background-color: #f9f2fc;
+  background-color: #fbefeb;
   color: $purple !important;
   border: 1px solid $purple;
   cursor: pointer;

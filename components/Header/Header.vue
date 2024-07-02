@@ -2,16 +2,16 @@
   <div class="header">
     <div class="header__nav">
       <div class="header__nav--parent">
-        <svgo-icon-contact class="tab3 tab3-epi mr-4 mt-4" />
+        <svgo-icon-contact class="tab3 mr-4 mt-4" />
         <nuxt-link :to="`/contact-us?source_url=${currentUrl}`" target="_blank">
           Contact Us
         </nuxt-link>
-        <svgo-icon-help class="tab3 tab3-epi mr-4 mt-4" />
+        <svgo-icon-help class="tab3 mr-4 mt-4" />
         <a href="https://docs.sparc.science/" target="_blank">
           Help
         </a>
         <client-only>
-          <svgo-icon-sign-in class="tab3 tab3-epi mt-4" />
+          <svgo-icon-sign-in class="tab3 mt-4" />
           <a class="sign-in-link" v-if="!userProfile" @click="showLoginDialog = true">
             Sign in
           </a>
@@ -442,7 +442,7 @@ export default {
   -webkit-appearance: none;
 
   &:hover:not(:active) {
-    color: #1a1489;
+    color: #e76f51;
   }
 
   @media screen and (max-width: 1120px) {
@@ -478,8 +478,8 @@ export default {
 
         &.active,
         &:hover {
-          border-bottom: 2px solid $purple;
-          color: $purple;
+          border-bottom: 2px solid #264653;
+          color: #264653
         }
       }
     }

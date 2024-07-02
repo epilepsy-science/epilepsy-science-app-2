@@ -75,7 +75,7 @@ export default {
   background-color: transparent;
   font-size: 14px;
   font-weight: normal;
-  color: $purple;
+  color: #e76f50;
   margin-left: 5px;
 }
 

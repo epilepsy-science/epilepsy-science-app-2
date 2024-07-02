@@ -1,3 +1,65 @@
-.tab3.tab3-epi {
-    background-color: #e76f51;
+:root body {
+    --el-color-primary: #e76f50 !important;
+  }
+
+#epilepsy-science-app {
+    .tab3 {
+        background-color: #e76f51;
+    }
+
+    .el-table a {
+        color: #e76f50;
+    }
+
+    .filter-dropdown {
+        color : #e76f50;
+    }
+
+    .help-icon {
+        fill : #e76f50;
+    }
+
+    .el-button {
+        background: #e76f50 !important;
+        border: 1px solid #e76f50 !important;
+        &:hover,
+        &:focus,
+        &[disabled],
+        &[disabled]:hover,
+        &[disabled]:focus {
+          background: #e76f50 !important;
+          border: 1px solid #e76f50 !important;
+        }
+
+        &.secondary,
+        &.secondary[disabled],
+        &.secondary[disabled]:hover,
+        &.secondary[disabled]:focus {
+          background: #fbefeb !important;
+          border: 1px solid #e76f50 !important;
+          color: #e76f50 !important;
+        }
+    }
+
+    .el-input__inner {
+        border-color: #e76f50 !important;
+    }
+
+    .sparc-design-system-pagination {
+        .is-background {
+
+            li.number {
+                background: #fbefeb;
+                border: 1.5px solid #e76f50;
+                color: #e76f50;
+            }
+
+            .btn-next, .btn-prev {
+                background: #e76f50;
+            }
+            li.number:hover {
+                background: #e76f50 !important;
+            }
+        }
+    }
 }
