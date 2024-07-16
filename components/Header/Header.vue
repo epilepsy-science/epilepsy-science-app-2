@@ -6,24 +6,6 @@
         <nuxt-link :to="`/contact-us?source_url=${currentUrl}`" target="_blank">
           Contact Us
         </nuxt-link>
-        <svgo-icon-help class="tab3 mr-4 mt-4" />
-        <a href="https://docs.sparc.science/" target="_blank">
-          Help
-        </a>
-        <client-only>
-          <svgo-icon-sign-in class="tab3 mt-4" />
-          <a class="sign-in-link" v-if="!userProfile" @click="showLoginDialog = true">
-            Sign in
-          </a>
-          <el-menu ref="userMenu" class="mr-16 user-menu" v-else :ellipsis="false" background-color="#e76f51"
-            @select="handleUserMenuSelect" @mouseleave="closeMenu" @mouseenter="openMenu">
-            <el-sub-menu index="user" class="submenu">
-              <template #title>{{username}}</template>
-              <el-menu-item class="user-submenu" index="profile">Profile</el-menu-item>
-              <el-menu-item class="user-submenu" index="logout">Logout</el-menu-item>
-            </el-sub-menu>
-          </el-menu>
-        </client-only>
       </div>
       <div class="header__nav--main">
         <div class="nav-main-container">
@@ -53,28 +35,6 @@
                     Contact Us
                   </nuxt-link>
                 </li>
-                <li>
-                  <svgo-icon-help class="tab2" />
-                  <a href="https://docs.sparc.science/" target="_blank">
-                    Help
-                  </a>
-                </li>
-                <li>
-                  <client-only>
-                    <svgo-icon-sign-in class="tab2" />
-                    <a v-if="!userProfile" class="sign-in-link" @click="showLoginDialog = true">
-                      Sign in
-                    </a>
-                    <span v-else>
-                      <a class="sign-in-link" @click="handleUserMenuSelect('profile', ['user','profile'])">
-                        Profile
-                      </a>
-                      <a class="sign-in-link" @click="handleUserMenuSelect('logout', ['user','logout'])">
-                        Logout
-                      </a>
-                    </span>
-                  </client-only>
-                </li>
               </ul>
               <div class="mobile-navigation__links--social">
                 <a href="https://twitter.com/sparc_science" target="_blank">
@@ -89,12 +49,10 @@
         </div>
       </div>
     </div>
-    <login-modal :show-dialog="showLoginDialog" @dialog-closed="showLoginDialog = false" />
   </div>
 </template>
 
 <script>
-import LoginModal from '@/components/LoginModal/LoginModal.vue'
 import { useMainStore } from '../../store/index.js'
 import { mapActions, mapState } from 'pinia'
 import EpilepsyLogo from '@/assets/epilepsy.science.png'
@@ -124,19 +82,15 @@ const links = [
 
 export default {
   name: 'EpilepsyHeader',
-  components: {
-    LoginModal
-  },
   data: () => {
     return {
       EpilepsyLogo,
       links,
-      menuOpen: false,
-      showLoginDialog: false,
+      menuOpen: false
     }
   },
   computed: {
-    ...mapState(useMainStore, ['userProfile', 'profileComplete', 'userToken', 'username']),
+    ...mapState(useMainStore, ['profileComplete', 'userToken']),
     firstPath: function() {
       const path = this.$route.path
       // ignore the first backslash
@@ -152,12 +106,6 @@ export default {
   },
 
   watch: {
-    profileComplete: {
-      handler: function() {
-        this.verifyProfileComplete()
-      },
-      immediate: true
-    },
     /**
      * Watches for the route path to hide
      * mobile nav on menu click
@@ -167,7 +115,6 @@ export default {
         if (val) {
           this.menuOpen = false
         }
-        this.verifyProfileComplete()
       },
       immediate: true
     },
@@ -187,28 +134,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(useMainStore, ['updateDisabledScrolling', 'logout']),
-    verifyProfileComplete() {
-      if (this.userProfile) {
-        // If the user is logged in and their profile is incomplete then make sure they complete it. Otherwise, do not allow them to visit the welcome page again
-        if (!this.profileComplete) {
-          if (this.$route.name !== 'welcome') {
-            this.$router.push("/welcome")
-          }
-        }
-        else if (this.$route.name == 'welcome') {
-          this.$router.push("/")
-        }
-      }
-    },
-    handleUserMenuSelect(menuId, menuIdPath) {
-      if (menuId === 'logout') {
-        this.logout()
-      }
-      if (menuId === 'profile') {
-        this.$router.push('/user/profile')
-      }
-    },
+    ...mapActions(useMainStore, ['updateDisabledScrolling']),
     /**
      * Sets a link to active based on current page
      * @param {String} query
@@ -231,12 +157,6 @@ export default {
         this.menuOpen = false
         this.updateDisabledScrolling(false)
       }
-    },
-    openMenu() {
-      this.$refs.userMenu.open('user')
-    },
-    closeMenu() {
-      this.$refs.userMenu.close('user')
     }
   }
 }
@@ -522,45 +442,6 @@ export default {
   bottom: 5px;
   margin-left: 5px;
   user-select: none;
-}
-
-.sign-in-link:hover {
-  cursor: pointer;
-}
-:deep(.el-sub-menu__title) {
-  line-height: inherit !important;
-  height: fit-content !important;
-  color: white !important;
-  border: none !important;
-  padding-left: 0 !important;
-  i {
-    color: white;
-  }
-}
-
-.user-menu {
-  border: none !important;
-}
-.user-submenu {
-  color: #303133 !important;
-  background-color: white !important;
-  font-size: 14px !important;
-  line-height: 32px !important;
-  font-weight: medium !important;
-  height: fit-content !important;
-}
-.user-submenu:hover {
-  color: #8300bf !important;
-}
-:deep(.submenu > ul.el-menu) {
-  position: absolute;
-  margin-top: .5rem;
-  margin-left: .5rem;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-}
-:deep(.user-submenu) {
-  padding-left: .5rem !important;
-  padding-right: .5rem !important;
 }
 
 img {
