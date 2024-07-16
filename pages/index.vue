@@ -39,7 +39,7 @@ import { mapState } from 'pinia'
 import { clone, pathOr } from 'ramda'
 
 export default {
-  name: 'SparcHomepage',
+  name: 'EpilepsyScienceHomepage',
 
   components: {
     HomepageNews,
@@ -53,13 +53,13 @@ export default {
     const config = useRuntimeConfig()
     const { $contentfulClient, $axios } = useNuxtApp()
     useHead({
-      title: 'SPARC Portal',
+      title: 'Epilepsy Science Portal',
       meta: [
         {
           hid: 'description',
           name: 'description',
           content:
-            'The open community platform for bridging the body and the brain through neuroscience and systems physiology data, computational and spatial modeling, and device design.'
+            'Advancing Epilepsy Research through Open Science'
         },
         {
           name: 'og:type',
@@ -68,7 +68,7 @@ export default {
         {
           hid: 'og:title',
           property: 'og:title',
-          content: 'SPARC Portal'
+          content: 'Epilepsy Science Portal'
         },
         {
           hid: 'og:image',
@@ -81,7 +81,7 @@ export default {
         },
         {
           name: 'og:site_name',
-          content: 'SPARC Portal'
+          content: 'Epilepsy Science Portal'
         },
         {
           name: 'twitter:card',
@@ -93,7 +93,7 @@ export default {
         },
         {
           name: 'twitter:title',
-          content: 'SPARC Portal'
+          content: 'Epilepsy Science Portal'
         },
         {
           name: 'twitter:image',
