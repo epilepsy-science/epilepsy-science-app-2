@@ -16,23 +16,6 @@
             </div>
           </div>
         </el-col>
-        <el-col :sm="{ span: 22, offset: 1 }" :md="{ span: 8, offset: 4 }">
-          <div class="footer__links">
-            <el-row :gutter="32">
-              <el-col :span="12">
-                <h3>Learn More</h3>
-                <ul>
-                  <li
-                    v-for="learnMoreLink in footerData.learnMoreLinks"
-                    :key="learnMoreLink.fields.url"
-                  >
-                    <footer-link :link="learnMoreLink" />
-                  </li>
-                </ul>
-              </el-col>
-            </el-row>
-          </div>
-        </el-col>
       </el-row>
     </div>
   </div>
@@ -82,31 +65,6 @@ export default {
         font-weight: normal;
         line-height: 2rem;
         color: $mediumGrey;
-      }
-    }
-  }
-
-  &__links {
-    h3 {
-      font-size: 1rem;
-      font-weight: bold;
-      line-height: 2rem;
-      color: $mediumGrey;
-    }
-    ul {
-      list-style: none;
-      padding-left: 0;
-
-      li {
-        padding-bottom: 1rem;
-      }
-
-      a {
-        color: $mediumGrey;
-        text-decoration: none;
-        &:hover {
-          text-decoration: underline;
-        }
       }
     }
   }
