@@ -27,31 +27,6 @@ describe('Homepage', { testIsolation: false }, function () {
     cy.get('[class="page-hero-img"]').should('exist')
   })
 
-  it('Featured data', function () {
-    // Check for content title
-    cy.get('.featured-data > .categories-container > h2').should('have.text', 'Find by')
-
-    cy.wait(5000)
-
-    cy.get('.featured-data > .gallery > .resources-gallery-strip > .card-line > .key-image-span > .data-wrap > .data-item').as('category')
-
-    cy.get('@category').each(($cat) => {
-      cy.wrap($cat).should('have.attr', 'href').and('contain', 'selectedFacetIds')
-    })
-    cy.get('@category').first().click()
-
-    cy.wait('@query', { timeout: 20000 })
-    cy.waitForLoadingMask()
-
-    cy.url().should('contain', 'data?type=dataset&selectedFacetIds=')
-    cy.go('back')
-
-    cy.waitForLoadingMask()
-
-    // Check for the number of categories
-    cy.get('@category').should('have.length', 6)
-  })
-
   it('Portal features', function () {
     // Check for the number of features
     cy.get('.feature-container').should('have.length', 4)

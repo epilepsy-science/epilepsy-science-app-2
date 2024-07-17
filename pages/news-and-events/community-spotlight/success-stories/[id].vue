@@ -305,7 +305,7 @@ export default {
 .btn-load-more {
   background: none;
   border: none;
-  color: $darkBlue;
+  color: #e76f51;
   cursor: pointer;
   display: block;
   font-size: 1rem;
