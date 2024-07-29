@@ -4,13 +4,14 @@
     <div class="subpage py-16">
       <el-row :gutter="32">
         <el-col :xs="24" :sm="12" class="newsletter-wrap">
-          <div class="heading2">Sign up for the SPARC Newsletter</div>
-          <div class="body1 mb-16 mt-8">Keep up to date with all the latest news and events from the SPARC Portal.</div>
+          <div class="heading2">Sign up for the epilepsy.science Newsletter</div>
+          <div class="body1 mb-16 mt-8">Keep up to date with all the latest news and events from the epilepsy.science Portal.</div>
           <newsletter-form />
         </el-col>
-        <el-col class="office-hours-column" :xs="24" :sm="12">
-          <div class="heading2">Open Office Hours</div>
-          <div class="body1 mb-16 mt-8">Join one of our weekly office hours to ask questions and learn more from the SPARC Data Resource Center Team.</div>
+        <el-col class="connect-with-us-column" :xs="24" :sm="12">
+          <div class="heading2">Connect with our team</div>
+          <div class="body1 mb-16 mt-8">Reach out to our team to see how your dataset can be included in the repository.</div>
+          <!-- TODO: replace the URL below -->
           <a href="https://docs.sparc.science/docs/sparc-drc-open-office-hours" target="_blank">
             <el-button class="secondary">
               Find Out More
@@ -52,7 +53,7 @@ export default {
 .subheader {
   text-align: center;
 }
-.office-hours-column {
+.connect-with-us-column {
   border-left: 2px solid $lineColor2;
   @media screen and (max-width: 767px) {
     border-left: none;
