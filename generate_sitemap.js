@@ -272,27 +272,6 @@ eventsResp.items.forEach(db => {
 
 process.stdout.write('Fetching events from Contentful... Done. Found ' + counter + ' URLs.\n')
 
-// Fetching COMMUNITY SPOTLIGHT IDs
-process.stdout.write('Fetching community spotlights from Contentful...')
-
-const commResp = await contentfulClient.getEntries({
-  content_type: 'communitySpotlight',
-  limit: 1000,
-  'fields.itemType[in]': undefined,
-  'fields.anatomicalStructure[in]': undefined
-})
-
-process.stdout.clearLine(0)
-process.stdout.cursorTo(0)
-
-counter = 0
-commResp.items.forEach(db => {
-  if (db.fields.linkedItem && db.fields.linkedItem.fields.storyRoute) {
-    counter++
-    urls.add(PORTAL_BASE_URL + '/news-and-events/community-spotlight/success-stories/' + db.fields.linkedItem.fields.storyRoute)
-  }
-})
-
 // Fetching ABOUT DETAILS IDs
 process.stdout.write('Fetching about details from Contentful...')
 

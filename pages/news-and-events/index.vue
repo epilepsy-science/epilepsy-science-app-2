@@ -14,7 +14,7 @@
       <!-- eslint-disable vue/no-v-html -->
       <!-- marked will sanitize the HTML injected -->
       <div v-html="parseMarkdown(page.fields.heroCopy)" />
-      <img v-if="page.fields.heroImage" :v-slot="image" class="page-hero-img"
+      <img v-if="page.fields.heroImage" :v-slot="image" class="page-hero-img" height="150px" width="150px"
         :src="page.fields.heroImage.fields.file.url" />
       <NuxtLink to="/news-and-events/news">
         <el-button class="secondary mb-16">Browse All News &amp; Events</el-button>

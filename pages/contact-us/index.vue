@@ -89,7 +89,6 @@ import InterestForm from '@/components/ContactUsForms/InterestForm/InterestForm.
 import ResearchForm from '@/components/ContactUsForms/ResearchForm/ResearchForm.vue'
 import ToolsAndResourcesForm from '@/components/ContactUsForms/ToolsAndResourcesForm/ToolsAndResourcesForm.vue'
 import NewsAndEventsForm from '@/components/ContactUsForms/NewsAndEventsForm/NewsAndEventsForm.vue'
-import CommunitySpotlightForm from '@/components/ContactUsForms/CommunitySpotlightForm/CommunitySpotlightForm.vue'
 import { defaultTo, pathOr, propOr } from 'ramda'
 import MarkedMixin from '@/mixins/marked'
 
@@ -128,7 +127,6 @@ const formComponents = {
   research: ResearchForm,
   tool: ToolsAndResourcesForm,
   'news-event': NewsAndEventsForm,
-  story: CommunitySpotlightForm,
 }
 
 export default {
@@ -141,8 +139,7 @@ export default {
     InterestForm,
     ResearchForm,
     ToolsAndResourcesForm,
-    NewsAndEventsForm,
-    CommunitySpotlightForm
+    NewsAndEventsForm
   },
 
   mixins: [MarkedMixin],

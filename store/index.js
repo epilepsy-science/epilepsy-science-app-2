@@ -61,7 +61,7 @@ export const useMainStore = defineStore('main', {
   },
   actions: {
     async init() {
-      await Promise.all([this.fetchContactUsFormOptions(), this.fetchFooterData(), this.fetchPortalNotification()])
+      await Promise.all([, this.fetchFooterData(), this.fetchPortalNotification()])
     },
     updateDisabledScrolling(value) {
       this.disableScrolling = value
@@ -83,23 +83,6 @@ export const useMainStore = defineStore('main', {
     },
     setFormOptions(value) {
       this.formOptions = value
-    },
-    async fetchContactUsFormOptions() {
-      try {
-        const response = await useNuxtApp().$contentfulClient.getEntry(useRuntimeConfig().public.ctf_contact_us_form_options_id)
-        const fields = response.fields
-  
-        const formOptions = {
-          userTypes: propOr([], 'typeOfUser', fields),
-          areasOfSparc: propOr([], 'areaOfSparcPortal', fields),
-          services: propOr([], 'services', fields),
-          resourceCategories: propOr([], 'resourceCategories', fields)
-        }
-        
-        this.setFormOptions(formOptions)
-      } catch (e) {
-        console.error(e)
-      }
     },
     async fetchPortalNotification() {
       try {
