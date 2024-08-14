@@ -153,10 +153,6 @@ const searchTypes = [
   {
     label: 'Events',
     path: 'events'
-  },
-  {
-    label: 'Community Spotlight',
-    path: 'community-spotlight'
   }
 ]
 

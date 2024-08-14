@@ -1,8 +1,7 @@
 import { searchQueryReplacements } from '@/utils/utils'
 const CTF_EVENT_ID = 'event'
 const CTF_NEWS_ID = 'news'
-const CTF_COMMUNITY_SPOTLIGHT_ITEM_ID = 'communitySpotlight'
-const CTF_NEWS_AND_EVENTS_PAGE_ID = '4IoMamTLRlN3OpxT1zgnU'
+const CTF_NEWS_AND_EVENTS_PAGE_ID = '27g94v7HnxrqsCKKA8Wf7o'
 
 const replaceTerms = (terms) => {
   let result = terms
@@ -29,21 +28,17 @@ export const fetchData = async (client, terms, limit) => {
 
     const page = await client.getEntry(CTF_NEWS_AND_EVENTS_PAGE_ID ?? '')
 
-    const stories = await fetchCommunitySpotlightItems(client, query, undefined, undefined, undefined, 2, 0)
-
     return {
       upcomingEvents,
       news,
       page,
-      stories
     }
   } catch (e) {
     console.error(e)
     return {
       upcomingEvents: {},
       news: {},
-      page: {},
-      stories: {}
+      page: {}
     }
   }
 }
@@ -79,24 +74,6 @@ export const fetchNews = async (client, terms, publishedLessThanDate, publishedG
       'fields.publishedDate[lt]': publishedLessThanDate,
       'fields.publishedDate[gte]': publishedGreaterThanOrEqualToDate,
       'fields.subject[in]': subjects
-    })
-  } catch (e) {
-    console.error(e)
-    return {}
-  }
-}
-
-export const fetchCommunitySpotlightItems = async (client, terms, spotlightTypes, anatomicalStructures, sortOrder, limit, skip) => {
-  const query = replaceTerms(terms)
-  try {
-    return await client.getEntries({
-      content_type: CTF_COMMUNITY_SPOTLIGHT_ITEM_ID,
-      order: sortOrder || '-fields.publishedDate',
-      query,
-      limit,
-      skip,
-      'fields.itemType[in]': spotlightTypes?.toString(),
-      'fields.anatomicalStructure[in]': anatomicalStructures?.toString()
     })
   } catch (e) {
     console.error(e)

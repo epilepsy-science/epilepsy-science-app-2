@@ -113,7 +113,7 @@ describe('Homepage', { testIsolation: false }, function () {
 
     // Check for content
     cy.get('.newsletter-wrap > .heading2').should('have.text', 'Sign up for the SPARC Newsletter')
-    cy.get('.office-hours-column > .heading2').should('have.text', 'Open Office Hours')
+    cy.get('.connect-with-us-column > .heading2').should('have.text', 'Open Office Hours')
   })
 
   it('Footer', function () {

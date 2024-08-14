@@ -31,7 +31,6 @@
 import {
   fetchNews,
   fetchEvents,
-  fetchCommunitySpotlightItems
 } from '@/pages/news-and-events/model.js'
 
 function getLastUrlSegment(path) {
@@ -58,25 +57,21 @@ export default {
   data: function() {
     return {
       searchHasAltResults: false,
-      dataTypes: ['news', 'events', 'community-spotlight'],
+      dataTypes: ['news', 'events'],
       humanReadableDataTypesLookup: {
         news: 'News',
         events: 'Events',
-        'community-spotlight': 'Community Spotlight'
       },
       functionLookup: {
         news: fetchNews,
         events: fetchEvents,
-        'community-spotlight': fetchCommunitySpotlightItems
       },
       resultCounts: {
         news: 0,
         events: 0,
-        'community-spotlight': 0
       },
       fetchNews: fetchNews,
       fetchEvents: fetchEvents,
-      fetchCommunitySpotlightItems: fetchCommunitySpotlightItems
     }
   },
   computed: {
