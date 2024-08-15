@@ -123,7 +123,6 @@ export default defineNuxtConfig({
       ctf_event_id: 'event',
       ctf_resource_id: 'sparcPartners',
       ctf_news_and_events_page_id: '27g94v7HnxrqsCKKA8Wf7o',
-      ctf_about_portal_page_id: '3QNKLvQyniXdkmFPVI7skQ',
       ctf_share_data_page_id: '5w2F52873w6g9TH4YMVxXW',
       ctf_tools_and_resources_page_id: '5gOQBmYpDBRPtJh7Yzj8SP',
       ctf_osparc_resource_entry_id: '4LkLiH5s4FV0LVJd3htsvH',

@@ -87,10 +87,8 @@ export default {
   mixins: [marked],
 
   data: () => {
-    const config = useRuntimeConfig()
     return {
       heroCopy: '',
-      copy: '',
       breadcrumb: [
         {
           to: {
@@ -99,8 +97,6 @@ export default {
           label: 'Home'
         }
       ],
-      aboutPortalPageId: config.public.ctf_about_portal_page_id,
-      contentfulError: false
     }
   },
 
@@ -128,13 +124,5 @@ export default {
 @import 'sparc-design-system-components-2/src/assets/_variables.scss';
 .about-page {
   background-color: $background;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  @media screen and (max-width: 767px) {
-    flex-direction: column;
-  }
 }
 </style>
