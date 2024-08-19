@@ -67,7 +67,7 @@
               :lg='18'
             >
               <div class="search-heading mb-16">
-                <div class="label1" v-show="resources.items.length">
+                <div class="label1" v-show="resources.items?.length">
                   {{ resources.total }} Results | Showing
                   <client-only>
                     <pagination-menu
@@ -76,7 +76,7 @@
                     />
                   </client-only>
                 </div>
-                <span v-if="resources.items.length" class="label1">
+                <span v-if="resources.items?.length" class="label1">
                   Sort
                   <client-only>
                     <sort-menu  
@@ -91,12 +91,12 @@
                 <client-only><resources-search-results :table-data="resources.items" /></client-only>
                 <alternative-search-results
                   ref="altSearchResults"
-                  :search-had-results="resources.items.length > 0"
+                  :search-had-results="resources.items?.length > 0"
                   @vue:mounted="altResultsMounted"
                 />
               </div>
               <div class="search-heading">
-                <div class="label1" v-if="resources.items.length">
+                <div class="label1" v-if="resources.items?.length">
                   {{ resources.total }} Results | Showing
                   <client-only>
                     <pagination-menu

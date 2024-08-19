@@ -14,11 +14,14 @@
       <!-- eslint-disable vue/no-v-html -->
       <!-- marked will sanitize the HTML injected -->
       <div v-html="parseMarkdown(page.fields.heroCopy)" />
-      <img v-if="page.fields.heroImage" :v-slot="image" class="page-hero-img" height="150px" width="150px"
-        :src="page.fields.heroImage.fields.file.url" />
       <NuxtLink to="/news-and-events/news">
         <el-button class="secondary mb-16">Browse All News &amp; Events</el-button>
       </NuxtLink>
+      <template v-slot:image>
+        <img v-if="page.fields.heroImage"class="page-hero-img news-and-events-hero-img" height="200px" width="200px"
+          :src="page.fields.heroImage.fields.file.url" />
+      </template>
+      
     </page-hero>
 
     <div class="pt-32 pb-16">
@@ -198,5 +201,10 @@ export default {
 
 :deep(.campaign) {
    margin-top: .5rem; 
+}
+
+img.page-hero-img.news-and-events-hero-img{
+  height: 200px;
+  width: 200px;
 }
 </style>

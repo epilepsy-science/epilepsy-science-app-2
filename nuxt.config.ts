@@ -121,7 +121,7 @@ export default defineNuxtConfig({
       ctf_about_details_content_type_id: 'aboutPageSecondLevel',
       ctf_news_id: 'news',
       ctf_event_id: 'event',
-      ctf_resource_id: 'sparcPartners',
+      ctf_resource_id: 'epilepsyResource',
       ctf_news_and_events_page_id: '27g94v7HnxrqsCKKA8Wf7o',
       ctf_share_data_page_id: '5w2F52873w6g9TH4YMVxXW',
       ctf_tools_and_resources_page_id: '5gOQBmYpDBRPtJh7Yzj8SP',
