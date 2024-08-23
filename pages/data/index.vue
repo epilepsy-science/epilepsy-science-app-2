@@ -49,30 +49,6 @@
                   error, please try again later.
                 </p>
                 <dataset-search-results :tableData="tableData" />
-                <div v-if="searchHasAltResults" class="mt-24">
-                  <template v-if="searchData.total === 0">
-                    No results were found for <strong>{{ searchType.label }}</strong>.
-                  </template>
-                  The following results were discovered for the other categories:
-                  <br />
-                  <br />
-                  <template v-for="dataType in dataTypes">
-                    <dd v-if="resultCounts[dataType] > 0" :key="dataType">
-                      <nuxt-link class="alternative-links" :to="{
-                          name: 'data',
-                          query: {
-                            ...$route.query,
-                            type: dataType
-                          }
-                        }">
-                        {{ resultCounts[dataType] }} result{{
-                        resultCounts[dataType] > 1 ? 's' : ''
-                        }}
-                      </nuxt-link>
-                      - {{ humanReadableDataTypesLookup[dataType] }}
-                    </dd>
-                  </template>
-                </div>
               </div>
               <div class="search-heading">
                 <p v-if="!isLoadingSearch && searchData.items.length">
@@ -200,18 +176,6 @@ export default {
         total: 0
       },
       facets: [],
-      dataTypes: ['dataset', 'simulation', 'model'],
-      humanReadableDataTypesLookup: {
-        dataset: 'Datasets',
-        model: 'Anatomical Models',
-        simulation: 'Computational Models',
-      },
-      resultCounts: {
-        model: 0,
-        dataset: 0,
-        simulation: 0,
-      },
-      searchHasAltResults: false,
       visibleFacets: {},
       isLoadingSearch: false,
       searchFailed: false,
@@ -430,47 +394,6 @@ export default {
               this.isLoadingSearch = false
               this.searchFailed = true
             })
-        })
-    },
-
-    // alternaticeSearchUpdate: Updates this.resultCounts which is used for displaying other search options to the user
-    //    when a search returns 0 results
-    alternativeSearchUpdate: function () {
-      const searchTypeInURL = pathOr('dataset', ['query', 'type'], this.$route) // Get current data type
-
-      this.searchHasAltResults = false
-      for (let key in this.resultCounts) { // reset reults list
-        this.resultCounts[key] = 0
-      }
-      let altSearchTypes = this.dataTypes.filter(e => e !== searchTypeInURL) // Remove from list of data types
-
-      altSearchTypes.forEach(type => {  // Search on each data type remaining
-        this.searchContentsCheck(type)
-      })
-    },
-
-    //  searchContentsCheck(searchType): Takes in a search type and returns the number of datasets found with the current filters
-    searchContentsCheck: function (searchType) {
-      const query = this.$route.query.search
-
-      const datasetsFilter =
-        searchType === 'simulation' ? '(NOT item.types.name:Dataset AND NOT item.types.name:Scaffold)'
-          : searchType === 'model' ? '(NOT item.types.name:Dataset AND item.types.name:Scaffold)'
-            : "item.types.name:Dataset"
-
-      var filters = this.$refs.datasetFacetMenu?.getFilters()
-      filters = filters === undefined ?
-        `${datasetsFilter}` :
-        filters + ` AND ${datasetsFilter}`
-
-      this.algoliaIndex
-        .search(query, {
-          facets: ['*'],
-          filters: filters
-        })
-        .then(response => {
-          response.nbHits > 0 ? (this.searchHasAltResults = true) : null
-          this.resultCounts[searchType] = response.nbHits
         })
     },
 
