@@ -72,7 +72,6 @@ import SparcPill from '@/components/SparcPill/SparcPill.vue'
 import FormatDate from '@/mixins/format-date'
 import StorageMetrics from '@/mixins/bf-storage-metrics'
 import _ from 'lodash'
-import { HIGHLIGHT_HTML_TAG } from '@/utils/utils'
 
 export default {
   name: 'DatasetSearchResults',
@@ -92,71 +91,19 @@ export default {
     return {
       PROPERTY_DATA: [
         {
-          displayName: 'Anatomical Structure',
-          propPath: '_highlightResult.anatomy.organ'
-        },
-        {
-          displayName: 'Species',
-          propPath: '_highlightResult.organisms.primary[0].species.name.value'
-        },
-        {
-          displayName: 'Experimental Approach',
-          propPath: '_highlightResult.item.modalities'
-        },
-        {
           displayName: 'Publication Date',
           propPath: 'pennsieve'
-        },
-        {
-          displayName: 'Samples',
-          propPath: 'item.statistics'
         }
       ]
     }
   },
 
   methods: {
-    toTermUppercase: function(term) {
-      let value = _.upperFirst(term)
-      if (value.indexOf(`<${HIGHLIGHT_HTML_TAG}>`) === 0) {
-        // If first word is a search term coincidence, set first letter to uppercase
-        value = value.slice(0, 3) + value.charAt(3).toUpperCase() + value.slice(4)
-      }
-      return value
-    },
     getPropertyValue: function(item, property) {
       if (item == undefined) {
         return undefined
       }
       switch (property.displayName) {
-        case 'Anatomical Structure': {
-          const organs = _.get(item, property.propPath)
-          return organs
-            ? organs.map(item => this.toTermUppercase(item.name.value)).join(', ')
-            : undefined
-        }
-        case 'Includes': {
-          const published = _.get(item, property.propPath)
-          return (published == undefined || published == 'false') ? undefined : 'Publications'
-        }
-        case 'Samples': {
-          const sampleCount = _.get(item, property.propPath + '.samples.count')
-          const subjectCount = _.get(
-            item,
-            property.propPath + '.subjects.count'
-          )
-          return sampleCount && subjectCount
-            ? `${sampleCount} samples from ${subjectCount} subjects`
-            : undefined
-        }
-        case 'Experimental Approach': {
-          const techniques = _.get(item, property.propPath)
-          return techniques
-            ? techniques
-                .map(item => this.toTermUppercase(item.keyword.value))
-                .join(', ')
-            : undefined
-        }
         case 'Publication Date': {
           const pennsieve = _.get(item, property.propPath)
           if (pennsieve.firstPublishedAt == undefined || pennsieve.versionPublishedAt == undefined) {
