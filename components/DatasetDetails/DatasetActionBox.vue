@@ -77,16 +77,6 @@
       <el-button class="secondary" @click="actionButtonClicked('cite')">
         Cite Dataset
       </el-button>
-      <template v-if="sdsViewer">
-        <a
-          :href="sdsViewer"
-          target="_blank"
-        >
-          <el-button class="secondary" @click="onSdsButtonClick">
-            Explore In SDS Viewer
-          </el-button>
-        </a>
-      </template>
     </div>
   </div>
 </template>
@@ -146,14 +136,6 @@ export default {
     },
     embargoed: function() {
       return propOr(false, 'embargo', this.datasetInfo)
-    },
-    sdsViewer: function() {
-      if (this.datasetInfo.doi) {
-        const metacellUrl = new URL(this.$config.public.METACELL_SDS_VIEWER_URL)
-        metacellUrl.searchParams.append('doi', this.datasetInfo.doi)
-        return metacellUrl.toString()
-      }
-      return null
     }
   },
 
@@ -164,22 +146,6 @@ export default {
      */
     getDatasetDetailsTabArea: function() {
       return document.getElementById('datasetDetailsTabsContainer')
-    },
-    onSdsButtonClick(){
-      this.$gtm.trackEvent({
-        event: 'interaction_event',
-        event_name: 'sds_viewer_button_click',
-        location: 'dataset_action_box',
-        category: "",
-        dataset_id: propOr('', 'id', this.datasetInfo),
-        version_id: propOr('', 'version', this.datasetInfo),
-        doi: propOr('', 'doi', this.datasetInfo),
-        citation_type: "",
-        files: "",
-        file_name: "",
-        file_path: "",
-        file_type: "",
-      })
     },
     /**
      * scroll to the dataset details tab area

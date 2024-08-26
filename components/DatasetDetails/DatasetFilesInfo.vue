@@ -89,11 +89,6 @@
               </template>
             </sparc-tooltip>
           </div>
-          <a v-show="sdsViewer" :href="sdsViewer" target="_blank">
-            <el-button class="secondary" @click="onSdsButtonClick">
-              Explore in SDS Viewer
-            </el-button>
-          </a>
         </el-col>
         <el-col :md="12" class="bx--col-sm-4 bx--col-md-8 bx--col aws-download-column">
           <div class="mb-8">
@@ -275,14 +270,6 @@ export default {
       }
       return url
     },
-    sdsViewer: function() {
-      if (this.datasetInfo.doi && this.$config.public.SHOW_SDS_VIEWER === 'true') {
-        const metacellUrl = new URL(this.$config.public.METACELL_SDS_VIEWER_URL)
-        metacellUrl.searchParams.append('doi', this.datasetInfo.doi)
-        return metacellUrl.toString()
-      }
-      return null
-    },
     showRehydrationFeature() {
       return this.$config.public.SHOW_REHYDRATION_FEATURE == 'true'
     }
@@ -312,22 +299,6 @@ export default {
         () => {
           failMessage('Failed to copy.')
         }
-    },
-    onSdsButtonClick() {
-      this.$gtm.trackEvent({
-        event: 'interaction_event',
-        event_name: 'sds_viewer_button_click',
-        location: 'files_tab',
-        category: "",
-        dataset_id: propOr('', 'id', this.datasetInfo),
-        version_id: propOr('', 'version', this.datasetInfo),
-        doi: propOr('', 'doi', this.datasetInfo),
-        citation_type: "",
-        files: "",
-        file_name: "",
-        file_path: "",
-        file_type: "",
-      })
     },
     agreementLoaded(id) {
       this.agreementId = id
