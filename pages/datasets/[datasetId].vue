@@ -52,8 +52,6 @@
                   :loading-markdown="loadingMarkdown"/>
                 <citation-details class="body1" v-show="activeTabId === 'cite'" :doi-value="datasetInfo.doi" />
                 <dataset-files-info class="body1" v-if="hasFiles" v-show="activeTabId === 'files'" />
-                <version-history v-if="canViewVersions" class="body1" v-show="activeTabId === 'versions'"
-                  :versions="versions" />
               </content-tab-card>
             </client-only>
           </el-col>
@@ -80,7 +78,6 @@ import FormatStorage from '@/mixins/bf-storage-metrics'
 import DatasetDescriptionInfo from '@/components/DatasetDetails/DatasetDescriptionInfo.vue'
 import CitationDetails from '@/components/CitationDetails/CitationDetails.vue'
 import DatasetFilesInfo from '@/components/DatasetDetails/DatasetFilesInfo.vue'
-import VersionHistory from '@/components/VersionHistory/VersionHistory.vue'
 import error404 from '@/components/Error/404.vue'
 import error400 from '@/components/Error/400.vue'
 import { getLicenseLink, getLicenseAbbr } from '@/static/js/license-util'
@@ -162,7 +159,6 @@ export default {
     DatasetDescriptionInfo,
     CitationDetails,
     DatasetFilesInfo,
-    VersionHistory,
     error400,
     error404
   },
@@ -390,12 +386,6 @@ export default {
     },
     scaffold: function () {
       return Scaffolds[this.organType.toLowerCase()]
-    },
-    embargoed: function () {
-      return propOr(false, 'embargo', this.datasetInfo)
-    },
-    canViewVersions: function () {
-      return !this.embargoed
     }
   },
 
@@ -437,17 +427,6 @@ export default {
       },
       immediate: true
     },
-    canViewVersions: {
-      handler: function (newValue) {
-        if (newValue && !this.hasError) {
-          const hasVersionsTab = this.tabs.find(tab => tab.id === 'versions') !== undefined
-          if (!hasVersionsTab) {
-            this.tabs.splice(6, 0, { label: 'Versions', id: 'versions' })
-          }
-        }
-      },
-      immediate: true
-    }
   },
   methods: {
     tabChanged(newTab) {
