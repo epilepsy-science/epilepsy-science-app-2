@@ -49,10 +49,7 @@
               <content-tab-card class="mt-32" id="datasetDetailsTabsContainer" :tabs="tabs" :active-tab-id="activeTabId"
                 @tab-changed="tabChanged" routeName="datasetDetailsTab">
                 <dataset-description-info class="body1" v-show="activeTabId === 'abstract'" :markdown="markdown"
-                  :dataset-records="datasetRecords" :loading-markdown="loadingMarkdown" :dataset-tags="datasetTags" />
-                <dataset-about-info class="body1" v-show="activeTabId === 'about'"
-                  :latestVersionRevision="latestVersionRevision" :latestVersionDate="latestVersionDate"
-                  :associated-projects="associatedProjects" />
+                  :loading-markdown="loadingMarkdown"/>
                 <citation-details class="body1" v-show="activeTabId === 'cite'" :doi-value="datasetInfo.doi" />
                 <dataset-files-info class="body1" v-if="hasFiles" v-show="activeTabId === 'files'" />
                 <images-gallery class="body1" :markdown="markdown.markdownTop" v-show="activeTabId === 'images'" />
@@ -84,7 +81,6 @@ import Scaffolds from '@/static/js/scaffolds.js'
 import DateUtils from '@/mixins/format-date'
 import FormatStorage from '@/mixins/bf-storage-metrics'
 import DatasetDescriptionInfo from '@/components/DatasetDetails/DatasetDescriptionInfo.vue'
-import DatasetAboutInfo from '@/components/DatasetDetails/DatasetAboutInfo.vue'
 import CitationDetails from '@/components/CitationDetails/CitationDetails.vue'
 import DatasetFilesInfo from '@/components/DatasetDetails/DatasetFilesInfo.vue'
 import ImagesGallery from '@/components/ImagesGallery/ImagesGallery.vue'
@@ -155,10 +151,6 @@ const tabs = [
     id: 'abstract'
   },
   {
-    label: 'About',
-    id: 'about'
-  },
-  {
     label: 'Cite',
     id: 'cite'
   },
@@ -177,7 +169,6 @@ export default {
     DatasetActionBox,
     SimilarDatasetsInfoBox,
     DatasetDescriptionInfo,
-    DatasetAboutInfo,
     CitationDetails,
     DatasetFilesInfo,
     ImagesGallery,
@@ -300,7 +291,6 @@ export default {
       loadingMarkdown: false,
       isLoadingDataset: false,
       errorLoading: false,
-      datasetRecords: [],
       sparcAwardNumbers: [],
       showCopySuccess: false,
       subtitles: [],
@@ -355,22 +345,6 @@ export default {
 
       return true
     },
-    latestVersionRevision() {
-      if (this.versions === undefined) {
-        return ''
-      }
-      let revision = compose(propOr(0, 'revision'), head)(this.versions)
-      let version = compose(propOr(1, 'version'), head)(this.versions)
-      return `${version}.${revision}`
-    },
-    latestVersionDate() {
-      if (this.versions === undefined) {
-        return ''
-      }
-      let version = compose(head)(this.versions)
-      const date = version.revisedAt || version.versionPublishedAt
-      return this.formatDate(date)
-    },
     licenseLink: function () {
       return getLicenseLink(this.datasetLicense)
     },
@@ -404,9 +378,6 @@ export default {
     },
     fileCount: function () {
       return propOr('0', 'fileCount', this.datasetInfo)
-    },
-    datasetTags: function () {
-      return propOr([], 'tags', this.datasetInfo)
     },
     externalPublications: function () {
       return propOr([], 'externalPublications', this.datasetInfo)
@@ -541,9 +512,6 @@ export default {
         const allProtocols = allPubs.filter(
           x => x.relationshipType === 'IsSupplementedBy'
         )
-        this.datasetRecords = allProtocols.map(obj => {
-          return { url: `https://doi.org/${obj.doi}` }
-        })
       } else {
         this.$axios
           .get(this.getProtocolRecordsUrl)
@@ -554,9 +522,6 @@ export default {
               const allProtocols = records.filter(protocol =>
                 protocol.properties.url.startsWith('https://doi.org')
               )
-              this.datasetRecords = allProtocols.map(obj => {
-                return { url: obj.properties.url }
-              })
             }
           })
           .catch(() => {
