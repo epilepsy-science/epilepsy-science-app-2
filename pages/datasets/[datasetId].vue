@@ -52,7 +52,6 @@
                   :loading-markdown="loadingMarkdown"/>
                 <citation-details class="body1" v-show="activeTabId === 'cite'" :doi-value="datasetInfo.doi" />
                 <dataset-files-info class="body1" v-if="hasFiles" v-show="activeTabId === 'files'" />
-                <images-gallery class="body1" :markdown="markdown.markdownTop" v-show="activeTabId === 'images'" />
                 <dataset-references v-if="hasCitations" class="body1" v-show="activeTabId === 'references'"
                   :primary-publications="primaryPublications" :associated-publications="associatedPublications" />
                 <version-history v-if="canViewVersions" class="body1" v-show="activeTabId === 'versions'"
@@ -83,7 +82,6 @@ import FormatStorage from '@/mixins/bf-storage-metrics'
 import DatasetDescriptionInfo from '@/components/DatasetDetails/DatasetDescriptionInfo.vue'
 import CitationDetails from '@/components/CitationDetails/CitationDetails.vue'
 import DatasetFilesInfo from '@/components/DatasetDetails/DatasetFilesInfo.vue'
-import ImagesGallery from '@/components/ImagesGallery/ImagesGallery.vue'
 import DatasetReferences from '~/components/DatasetDetails/DatasetReferences.vue'
 import VersionHistory from '@/components/VersionHistory/VersionHistory.vue'
 import error404 from '@/components/Error/404.vue'
@@ -154,10 +152,6 @@ const tabs = [
     label: 'Cite',
     id: 'cite'
   },
-  {
-    label: 'Gallery',
-    id: 'images'
-  },
 ]
 
 export default {
@@ -171,7 +165,6 @@ export default {
     DatasetDescriptionInfo,
     CitationDetails,
     DatasetFilesInfo,
-    ImagesGallery,
     DatasetReferences,
     VersionHistory,
     error400,
