@@ -386,9 +386,6 @@ export default {
               }
               this.searchData = mergeLeft(searchData, this.searchData)
               this.isLoadingSearch = false
-
-              // Update alternative search results
-              this.alternativeSearchUpdate()
             })
             .catch(() => {
               this.isLoadingSearch = false
