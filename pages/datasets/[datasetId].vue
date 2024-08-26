@@ -52,8 +52,6 @@
                   :loading-markdown="loadingMarkdown"/>
                 <citation-details class="body1" v-show="activeTabId === 'cite'" :doi-value="datasetInfo.doi" />
                 <dataset-files-info class="body1" v-if="hasFiles" v-show="activeTabId === 'files'" />
-                <dataset-references v-if="hasCitations" class="body1" v-show="activeTabId === 'references'"
-                  :primary-publications="primaryPublications" :associated-publications="associatedPublications" />
                 <version-history v-if="canViewVersions" class="body1" v-show="activeTabId === 'versions'"
                   :versions="versions" />
               </content-tab-card>
@@ -82,7 +80,6 @@ import FormatStorage from '@/mixins/bf-storage-metrics'
 import DatasetDescriptionInfo from '@/components/DatasetDetails/DatasetDescriptionInfo.vue'
 import CitationDetails from '@/components/CitationDetails/CitationDetails.vue'
 import DatasetFilesInfo from '@/components/DatasetDetails/DatasetFilesInfo.vue'
-import DatasetReferences from '~/components/DatasetDetails/DatasetReferences.vue'
 import VersionHistory from '@/components/VersionHistory/VersionHistory.vue'
 import error404 from '@/components/Error/404.vue'
 import error400 from '@/components/Error/400.vue'
@@ -165,7 +162,6 @@ export default {
     DatasetDescriptionInfo,
     CitationDetails,
     DatasetFilesInfo,
-    DatasetReferences,
     VersionHistory,
     error400,
     error404
@@ -395,21 +391,6 @@ export default {
     scaffold: function () {
       return Scaffolds[this.organType.toLowerCase()]
     },
-    primaryPublications: function () {
-      const valObj = this.externalPublications.filter(function (elem) {
-        return elem.relationshipType == 'IsDescribedBy'
-      })
-      return valObj.length > 0 ? valObj : null
-    },
-    associatedPublications: function () {
-      const valObj = this.externalPublications.filter(function (elem) {
-        return elem.relationshipType == 'IsReferencedBy' || elem.relationshipType == 'IsSupplementedBy'
-      })
-      return valObj.length > 0 ? valObj : null
-    },
-    hasCitations: function () {
-      return (this.primaryPublications || this.associatedPublications) !== null
-    },
     embargoed: function () {
       return propOr(false, 'embargo', this.datasetInfo)
     },
@@ -451,17 +432,6 @@ export default {
           const hasFilesTab = this.tabs.find(tab => tab.id === 'files') !== undefined
           if (!hasFilesTab) {
             this.tabs.splice(3, 0, { label: 'Files', id: 'files' })
-          }
-        }
-      },
-      immediate: true
-    },
-    hasCitations: {
-      handler: function (newValue) {
-        if (newValue && !this.hasError) {
-          const hasCitationsTab = this.tabs.find(tab => tab.id === 'references') !== undefined
-          if (!hasCitationsTab) {
-            this.tabs.splice(5, 0, { label: 'References', id: 'references' })
           }
         }
       },
