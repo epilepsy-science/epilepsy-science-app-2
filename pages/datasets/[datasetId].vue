@@ -45,8 +45,6 @@
             <similar-datasets-info-box :associated-projects="associatedProjects" :dataset-type-name="datasetTypeName" />
           </el-col>
           <el-col :xs="24" :sm="16" :md="18" :lg="19" class="right-column">
-            <dataset-header class="dataset-header" :latestVersionRevision="latestVersionRevision"
-              :latestVersionDate="latestVersionDate" :numCitations="numCitations" :numDownloads="numDownloads" />
             <client-only>
               <content-tab-card class="mt-32" id="datasetDetailsTabsContainer" :tabs="tabs" :active-tab-id="activeTabId"
                 @tab-changed="tabChanged" routeName="datasetDetailsTab">
@@ -83,7 +81,6 @@ import DatasetVersionMessage from '@/components/DatasetVersionMessage/DatasetVer
 import DatasetActionBox from '@/components/DatasetDetails/DatasetActionBox.vue'
 import SimilarDatasetsInfoBox from '@/components/DatasetDetails/SimilarDatasetsInfoBox.vue'
 import Scaffolds from '@/static/js/scaffolds.js'
-import DatasetHeader from '@/components/DatasetDetails/DatasetHeader.vue'
 import DateUtils from '@/mixins/format-date'
 import FormatStorage from '@/mixins/bf-storage-metrics'
 import DatasetDescriptionInfo from '@/components/DatasetDetails/DatasetDescriptionInfo.vue'
@@ -133,21 +130,6 @@ const getDatasetVersions = async (config, datasetId, axios) => {
   }
 }
 
-const getDownloadsSummary = async (config, axios) => {
-  try {
-    const startDate = new Date('2000','1');
-    const currentDate = new Date()
-    const url = `${config.public.discover_api_host}/metrics/dataset/downloads/summary`
-    return axios.get(url, {
-        params: { startDate: startDate, endDate: currentDate }
-      }).then(({ data }) => {
-      return data
-    })
-  } catch (error) {
-    return 0
-  }
-}
-
 const getOrganizationNames = async (algoliaIndex) => {
   try {
     await algoliaIndex.search('', {
@@ -194,7 +176,6 @@ export default {
     DatasetVersionMessage,
     DatasetActionBox,
     SimilarDatasetsInfoBox,
-    DatasetHeader,
     DatasetDescriptionInfo,
     DatasetAboutInfo,
     CitationDetails,
@@ -225,7 +206,7 @@ export default {
     const datasetTypeName = typeFacet !== undefined ? typeFacet.children[0].label : 'dataset'
     const store = useMainStore()
     try {
-      let [datasetDetails, versions, downloadsSummary, sparcOrganizationNames] = await Promise.all([
+      let [datasetDetails, versions, sparcOrganizationNames] = await Promise.all([
         getDatasetDetails(
           config,
           datasetId,
@@ -234,7 +215,6 @@ export default {
           $pennsieveApiClient
         ),
         getDatasetVersions(config, datasetId, $axios),
-        getDownloadsSummary(config, $axios),
         getOrganizationNames(algoliaIndex)
       ])
       
@@ -279,7 +259,6 @@ export default {
         tabs: tabsData,
         versions,
         datasetTypeName,
-        downloadsSummary,
         showTombstone,
         algoliaIndex,
         hasError: false,
@@ -466,18 +445,6 @@ export default {
     },
     hasCitations: function () {
       return (this.primaryPublications || this.associatedPublications) !== null
-    },
-    numCitations: function () {
-      let numPrimary = this.primaryPublications ? this.primaryPublications.length : 0;
-      let numAssociated = this.associatedPublications ? this.associatedPublications.length : 0;
-      return numPrimary + numAssociated;
-    },
-    numDownloads: function () {
-      let numDownloads = 0;
-      this.downloadsSummary.filter(download => download.datasetId == this.datasetId).forEach(item => {
-        numDownloads += item.downloads;
-      })
-      return numDownloads
     },
     embargoed: function () {
       return propOr(false, 'embargo', this.datasetInfo)
