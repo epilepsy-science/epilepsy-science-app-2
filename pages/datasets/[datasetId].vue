@@ -42,26 +42,15 @@
         <el-row :gutter="16">
           <el-col :xs="24" :sm="8" :md="6" :lg="5" class="left-column">
             <dataset-action-box />
-            <similar-datasets-info-box :associated-projects="associatedProjects" :dataset-type-name="datasetTypeName" />
           </el-col>
           <el-col :xs="24" :sm="16" :md="18" :lg="19" class="right-column">
-            <dataset-header class="dataset-header" :latestVersionRevision="latestVersionRevision"
-              :latestVersionDate="latestVersionDate" :numCitations="numCitations" :numDownloads="numDownloads" />
             <client-only>
               <content-tab-card class="mt-32" id="datasetDetailsTabsContainer" :tabs="tabs" :active-tab-id="activeTabId"
                 @tab-changed="tabChanged" routeName="datasetDetailsTab">
                 <dataset-description-info class="body1" v-show="activeTabId === 'abstract'" :markdown="markdown"
-                  :dataset-records="datasetRecords" :loading-markdown="loadingMarkdown" :dataset-tags="datasetTags" />
-                <dataset-about-info class="body1" v-show="activeTabId === 'about'"
-                  :latestVersionRevision="latestVersionRevision" :latestVersionDate="latestVersionDate"
-                  :associated-projects="associatedProjects" />
+                  :loading-markdown="loadingMarkdown"/>
                 <citation-details class="body1" v-show="activeTabId === 'cite'" :doi-value="datasetInfo.doi" />
                 <dataset-files-info class="body1" v-if="hasFiles" v-show="activeTabId === 'files'" />
-                <images-gallery class="body1" :markdown="markdown.markdownTop" v-show="activeTabId === 'images'" />
-                <dataset-references v-if="hasCitations" class="body1" v-show="activeTabId === 'references'"
-                  :primary-publications="primaryPublications" :associated-publications="associatedPublications" />
-                <version-history v-if="canViewVersions" class="body1" v-show="activeTabId === 'versions'"
-                  :versions="versions" />
               </content-tab-card>
             </client-only>
           </el-col>
@@ -81,18 +70,12 @@ import { useMainStore } from '../store/index.js'
 import { mapState, mapActions } from 'pinia'
 import DatasetVersionMessage from '@/components/DatasetVersionMessage/DatasetVersionMessage.vue'
 import DatasetActionBox from '@/components/DatasetDetails/DatasetActionBox.vue'
-import SimilarDatasetsInfoBox from '@/components/DatasetDetails/SimilarDatasetsInfoBox.vue'
 import Scaffolds from '@/static/js/scaffolds.js'
-import DatasetHeader from '@/components/DatasetDetails/DatasetHeader.vue'
 import DateUtils from '@/mixins/format-date'
 import FormatStorage from '@/mixins/bf-storage-metrics'
 import DatasetDescriptionInfo from '@/components/DatasetDetails/DatasetDescriptionInfo.vue'
-import DatasetAboutInfo from '@/components/DatasetDetails/DatasetAboutInfo.vue'
 import CitationDetails from '@/components/CitationDetails/CitationDetails.vue'
 import DatasetFilesInfo from '@/components/DatasetDetails/DatasetFilesInfo.vue'
-import ImagesGallery from '@/components/ImagesGallery/ImagesGallery.vue'
-import DatasetReferences from '~/components/DatasetDetails/DatasetReferences.vue'
-import VersionHistory from '@/components/VersionHistory/VersionHistory.vue'
 import error404 from '@/components/Error/404.vue'
 import error400 from '@/components/Error/400.vue'
 import { getLicenseLink, getLicenseAbbr } from '@/static/js/license-util'
@@ -133,21 +116,6 @@ const getDatasetVersions = async (config, datasetId, axios) => {
   }
 }
 
-const getDownloadsSummary = async (config, axios) => {
-  try {
-    const startDate = new Date('2000','1');
-    const currentDate = new Date()
-    const url = `${config.public.discover_api_host}/metrics/dataset/downloads/summary`
-    return axios.get(url, {
-        params: { startDate: startDate, endDate: currentDate }
-      }).then(({ data }) => {
-      return data
-    })
-  } catch (error) {
-    return 0
-  }
-}
-
 const getOrganizationNames = async (algoliaIndex) => {
   try {
     await algoliaIndex.search('', {
@@ -173,16 +141,8 @@ const tabs = [
     id: 'abstract'
   },
   {
-    label: 'About',
-    id: 'about'
-  },
-  {
     label: 'Cite',
     id: 'cite'
-  },
-  {
-    label: 'Gallery',
-    id: 'images'
   },
 ]
 
@@ -193,15 +153,9 @@ export default {
     Tombstone,
     DatasetVersionMessage,
     DatasetActionBox,
-    SimilarDatasetsInfoBox,
-    DatasetHeader,
     DatasetDescriptionInfo,
-    DatasetAboutInfo,
     CitationDetails,
     DatasetFilesInfo,
-    ImagesGallery,
-    DatasetReferences,
-    VersionHistory,
     error400,
     error404
   },
@@ -221,11 +175,9 @@ export default {
       return data
     })
 
-    const typeFacet = datasetFacetsData.find(child => child.key === 'item.types.name')
-    const datasetTypeName = typeFacet !== undefined ? typeFacet.children[0].label : 'dataset'
     const store = useMainStore()
     try {
-      let [datasetDetails, versions, downloadsSummary, sparcOrganizationNames] = await Promise.all([
+      let [datasetDetails, versions, sparcOrganizationNames] = await Promise.all([
         getDatasetDetails(
           config,
           datasetId,
@@ -234,7 +186,6 @@ export default {
           $pennsieveApiClient
         ),
         getDatasetVersions(config, datasetId, $axios),
-        getDownloadsSummary(config, $axios),
         getOrganizationNames(algoliaIndex)
       ])
       
@@ -242,7 +193,6 @@ export default {
       const latestVersion = compose(propOr(1, 'version'), head)(versions)
       store.setDatasetInfo({ ...datasetDetails, 'latestVersion': latestVersion })
       store.setDatasetFacetsData(datasetFacetsData)
-      store.setDatasetTypeName(datasetTypeName)
       // Creator data
       const org = [
         {
@@ -278,8 +228,6 @@ export default {
       return {
         tabs: tabsData,
         versions,
-        datasetTypeName,
-        downloadsSummary,
         showTombstone,
         algoliaIndex,
         hasError: false,
@@ -317,11 +265,9 @@ export default {
       ],
       activeTabId: this.$route.query.datasetDetailsTab ? this.$route.query.datasetDetailsTab : 'abstract',
       markdown: {},
-      associatedProjects: [],
       loadingMarkdown: false,
       isLoadingDataset: false,
       errorLoading: false,
-      datasetRecords: [],
       sparcAwardNumbers: [],
       showCopySuccess: false,
       subtitles: [],
@@ -376,22 +322,6 @@ export default {
 
       return true
     },
-    latestVersionRevision() {
-      if (this.versions === undefined) {
-        return ''
-      }
-      let revision = compose(propOr(0, 'revision'), head)(this.versions)
-      let version = compose(propOr(1, 'version'), head)(this.versions)
-      return `${version}.${revision}`
-    },
-    latestVersionDate() {
-      if (this.versions === undefined) {
-        return ''
-      }
-      let version = compose(head)(this.versions)
-      const date = version.revisedAt || version.versionPublishedAt
-      return this.formatDate(date)
-    },
     licenseLink: function () {
       return getLicenseLink(this.datasetLicense)
     },
@@ -411,12 +341,6 @@ export default {
     datasetTitle: function () {
       return propOr('', 'name', this.datasetInfo)
     },
-    getRecordsUrl: function () {
-      return `${this.$config.public.discover_api_host}/search/records?datasetId=${this.datasetId}`
-    },
-    getProtocolRecordsUrl: function () {
-      return `${this.getRecordsUrl}&model=protocol`
-    },
     datasetId: function () {
       return pathOr('', ['params', 'datasetId'], this.$route)
     },
@@ -425,9 +349,6 @@ export default {
     },
     fileCount: function () {
       return propOr('0', 'fileCount', this.datasetInfo)
-    },
-    datasetTags: function () {
-      return propOr([], 'tags', this.datasetInfo)
     },
     externalPublications: function () {
       return propOr([], 'externalPublications', this.datasetInfo)
@@ -451,64 +372,11 @@ export default {
     },
     scaffold: function () {
       return Scaffolds[this.organType.toLowerCase()]
-    },
-    primaryPublications: function () {
-      const valObj = this.externalPublications.filter(function (elem) {
-        return elem.relationshipType == 'IsDescribedBy'
-      })
-      return valObj.length > 0 ? valObj : null
-    },
-    associatedPublications: function () {
-      const valObj = this.externalPublications.filter(function (elem) {
-        return elem.relationshipType == 'IsReferencedBy' || elem.relationshipType == 'IsSupplementedBy'
-      })
-      return valObj.length > 0 ? valObj : null
-    },
-    hasCitations: function () {
-      return (this.primaryPublications || this.associatedPublications) !== null
-    },
-    numCitations: function () {
-      let numPrimary = this.primaryPublications ? this.primaryPublications.length : 0;
-      let numAssociated = this.associatedPublications ? this.associatedPublications.length : 0;
-      return numPrimary + numAssociated;
-    },
-    numDownloads: function () {
-      let numDownloads = 0;
-      this.downloadsSummary.filter(download => download.datasetId == this.datasetId).forEach(item => {
-        numDownloads += item.downloads;
-      })
-      return numDownloads
-    },
-    embargoed: function () {
-      return propOr(false, 'embargo', this.datasetInfo)
-    },
-    canViewVersions: function () {
-      return !this.embargoed
     }
   },
 
   watch: {
     '$route.query': 'queryChanged',
-    getProtocolRecordsUrl: {
-      handler: function (val) {
-        if (isEmpty(this.datasetId))
-          return
-        if (val) {
-          this.getProtocolRecords()
-        }
-      },
-      immediate: true
-    },
-    getRecordsUrl: {
-      handler: function (val) {
-        if (isEmpty(this.datasetId))
-          return
-        if (val) {
-          this.getDatasetRecords()
-        }
-      },
-      immediate: true
-    },
     datasetInfo: {
       handler: function () {
         this.getMarkdown()
@@ -525,113 +393,13 @@ export default {
       },
       immediate: true
     },
-    hasCitations: {
-      handler: function (newValue) {
-        if (newValue && !this.hasError) {
-          const hasCitationsTab = this.tabs.find(tab => tab.id === 'references') !== undefined
-          if (!hasCitationsTab) {
-            this.tabs.splice(5, 0, { label: 'References', id: 'references' })
-          }
-        }
-      },
-      immediate: true
-    },
-    canViewVersions: {
-      handler: function (newValue) {
-        if (newValue && !this.hasError) {
-          const hasVersionsTab = this.tabs.find(tab => tab.id === 'versions') !== undefined
-          if (!hasVersionsTab) {
-            this.tabs.splice(6, 0, { label: 'Versions', id: 'versions' })
-          }
-        }
-      },
-      immediate: true
-    }
   },
   methods: {
     tabChanged(newTab) {
       this.activeTabId = newTab.id
       this.$router.replace({ path: this.$route.path, query: { ...this.$route.query, datasetDetailsTab: newTab.id } })
     },
-    ...mapActions(useMainStore, ['setDatasetInfo', 'setDatasetFacetData', 'setDatasetTypeName']),
-    /**
-     * Returns protocol records in a dataset's model if they exist.
-     * First, check if the dataset has external publications with type
-     * "isSupplementedBy" which is leveraged to contain the protocols in SPARC.
-     *
-     * To support backward compatibility, if this does not exist, check if there
-     * are records of type Protocol and only show those that are defined as a doi.
-     *
-     * This workflow allows datasets to be updated as a revision to update the protocols
-     * on the portal instead of requiring the dataset to be fully republished.
-     */
-    getProtocolRecords: function () {
-      if (
-        this.datasetInfo.externalPublications &&
-        this.datasetInfo.externalPublications.length !== 0
-      ) {
-        const allPubs = this.datasetInfo.externalPublications
-        const allProtocols = allPubs.filter(
-          x => x.relationshipType === 'IsSupplementedBy'
-        )
-        this.datasetRecords = allProtocols.map(obj => {
-          return { url: `https://doi.org/${obj.doi}` }
-        })
-      } else {
-        this.$axios
-          .get(this.getProtocolRecordsUrl)
-          .then(({ data }) => {
-            const records = propOr([], 'records', data)
-            if (records.length !== 0) {
-              // that means protocol records exist
-              const allProtocols = records.filter(protocol =>
-                protocol.properties.url.startsWith('https://doi.org')
-              )
-              this.datasetRecords = allProtocols.map(obj => {
-                return { url: obj.properties.url }
-              })
-            }
-          })
-          .catch(() => {
-            // handle error
-            this.errorLoading = true
-          })
-      }
-    },
-    getDatasetRecords: async function () {
-      try {
-        this.algoliaIndex
-          .getObject(this.datasetId, {
-            attributesToRetrieve: 'supportingAwards',
-          })
-          .then(({ supportingAwards }) => {
-            supportingAwards = supportingAwards.filter(award => propOr(null, 'identifier', award) != null)
-            supportingAwards.forEach(award => {
-              this.sparcAwardNumbers.push(`${award.identifier}`)
-            })
-          }).finally(async () => {
-            if (this.sparcAwardNumbers.length > 0) {
-              let projects = await this.getAssociatedProjects(this.sparcAwardNumbers)
-              this.associatedProjects = projects.length > 0 ? projects : null
-            }
-          })
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    getAssociatedProjects: async function (sparcAwardNumbers) {
-      try {
-        const projects = await this.$contentfulClient.getEntries({
-          content_type: this.$config.public.ctf_project_id,
-        })
-        const associatedProjects = projects.items?.filter((project) => {
-          return sparcAwardNumbers.includes(pathOr('', ['fields', 'awardId'], project))
-        })
-        return associatedProjects || []
-      } catch (error) {
-        return []
-      }
-    },
+    ...mapActions(useMainStore, ['setDatasetInfo', 'setDatasetFacetData']),
     queryChanged: function () {
       this.activeTabId = this.$route.query.datasetDetailsTab
         ? this.$route.query.datasetDetailsTab
