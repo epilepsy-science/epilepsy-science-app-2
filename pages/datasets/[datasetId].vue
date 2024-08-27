@@ -42,7 +42,6 @@
         <el-row :gutter="16">
           <el-col :xs="24" :sm="8" :md="6" :lg="5" class="left-column">
             <dataset-action-box />
-            <similar-datasets-info-box :associated-projects="associatedProjects" :dataset-type-name="datasetTypeName" />
           </el-col>
           <el-col :xs="24" :sm="16" :md="18" :lg="19" class="right-column">
             <client-only>
@@ -71,7 +70,6 @@ import { useMainStore } from '../store/index.js'
 import { mapState, mapActions } from 'pinia'
 import DatasetVersionMessage from '@/components/DatasetVersionMessage/DatasetVersionMessage.vue'
 import DatasetActionBox from '@/components/DatasetDetails/DatasetActionBox.vue'
-import SimilarDatasetsInfoBox from '@/components/DatasetDetails/SimilarDatasetsInfoBox.vue'
 import Scaffolds from '@/static/js/scaffolds.js'
 import DateUtils from '@/mixins/format-date'
 import FormatStorage from '@/mixins/bf-storage-metrics'
@@ -155,7 +153,6 @@ export default {
     Tombstone,
     DatasetVersionMessage,
     DatasetActionBox,
-    SimilarDatasetsInfoBox,
     DatasetDescriptionInfo,
     CitationDetails,
     DatasetFilesInfo,
@@ -178,8 +175,6 @@ export default {
       return data
     })
 
-    const typeFacet = datasetFacetsData.find(child => child.key === 'item.types.name')
-    const datasetTypeName = typeFacet !== undefined ? typeFacet.children[0].label : 'dataset'
     const store = useMainStore()
     try {
       let [datasetDetails, versions, sparcOrganizationNames] = await Promise.all([
@@ -198,7 +193,6 @@ export default {
       const latestVersion = compose(propOr(1, 'version'), head)(versions)
       store.setDatasetInfo({ ...datasetDetails, 'latestVersion': latestVersion })
       store.setDatasetFacetsData(datasetFacetsData)
-      store.setDatasetTypeName(datasetTypeName)
       // Creator data
       const org = [
         {
@@ -234,7 +228,6 @@ export default {
       return {
         tabs: tabsData,
         versions,
-        datasetTypeName,
         showTombstone,
         algoliaIndex,
         hasError: false,
@@ -272,7 +265,6 @@ export default {
       ],
       activeTabId: this.$route.query.datasetDetailsTab ? this.$route.query.datasetDetailsTab : 'abstract',
       markdown: {},
-      associatedProjects: [],
       loadingMarkdown: false,
       isLoadingDataset: false,
       errorLoading: false,
@@ -349,12 +341,6 @@ export default {
     datasetTitle: function () {
       return propOr('', 'name', this.datasetInfo)
     },
-    getRecordsUrl: function () {
-      return `${this.$config.public.discover_api_host}/search/records?datasetId=${this.datasetId}`
-    },
-    getProtocolRecordsUrl: function () {
-      return `${this.getRecordsUrl}&model=protocol`
-    },
     datasetId: function () {
       return pathOr('', ['params', 'datasetId'], this.$route)
     },
@@ -391,26 +377,6 @@ export default {
 
   watch: {
     '$route.query': 'queryChanged',
-    getProtocolRecordsUrl: {
-      handler: function (val) {
-        if (isEmpty(this.datasetId))
-          return
-        if (val) {
-          this.getProtocolRecords()
-        }
-      },
-      immediate: true
-    },
-    getRecordsUrl: {
-      handler: function (val) {
-        if (isEmpty(this.datasetId))
-          return
-        if (val) {
-          this.getDatasetRecords()
-        }
-      },
-      immediate: true
-    },
     datasetInfo: {
       handler: function () {
         this.getMarkdown()
@@ -433,79 +399,7 @@ export default {
       this.activeTabId = newTab.id
       this.$router.replace({ path: this.$route.path, query: { ...this.$route.query, datasetDetailsTab: newTab.id } })
     },
-    ...mapActions(useMainStore, ['setDatasetInfo', 'setDatasetFacetData', 'setDatasetTypeName']),
-    /**
-     * Returns protocol records in a dataset's model if they exist.
-     * First, check if the dataset has external publications with type
-     * "isSupplementedBy" which is leveraged to contain the protocols in SPARC.
-     *
-     * To support backward compatibility, if this does not exist, check if there
-     * are records of type Protocol and only show those that are defined as a doi.
-     *
-     * This workflow allows datasets to be updated as a revision to update the protocols
-     * on the portal instead of requiring the dataset to be fully republished.
-     */
-    getProtocolRecords: function () {
-      if (
-        this.datasetInfo.externalPublications &&
-        this.datasetInfo.externalPublications.length !== 0
-      ) {
-        const allPubs = this.datasetInfo.externalPublications
-        const allProtocols = allPubs.filter(
-          x => x.relationshipType === 'IsSupplementedBy'
-        )
-      } else {
-        this.$axios
-          .get(this.getProtocolRecordsUrl)
-          .then(({ data }) => {
-            const records = propOr([], 'records', data)
-            if (records.length !== 0) {
-              // that means protocol records exist
-              const allProtocols = records.filter(protocol =>
-                protocol.properties.url.startsWith('https://doi.org')
-              )
-            }
-          })
-          .catch(() => {
-            // handle error
-            this.errorLoading = true
-          })
-      }
-    },
-    getDatasetRecords: async function () {
-      try {
-        this.algoliaIndex
-          .getObject(this.datasetId, {
-            attributesToRetrieve: 'supportingAwards',
-          })
-          .then(({ supportingAwards }) => {
-            supportingAwards = supportingAwards.filter(award => propOr(null, 'identifier', award) != null)
-            supportingAwards.forEach(award => {
-              this.sparcAwardNumbers.push(`${award.identifier}`)
-            })
-          }).finally(async () => {
-            if (this.sparcAwardNumbers.length > 0) {
-              let projects = await this.getAssociatedProjects(this.sparcAwardNumbers)
-              this.associatedProjects = projects.length > 0 ? projects : null
-            }
-          })
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    getAssociatedProjects: async function (sparcAwardNumbers) {
-      try {
-        const projects = await this.$contentfulClient.getEntries({
-          content_type: this.$config.public.ctf_project_id,
-        })
-        const associatedProjects = projects.items?.filter((project) => {
-          return sparcAwardNumbers.includes(pathOr('', ['fields', 'awardId'], project))
-        })
-        return associatedProjects || []
-      } catch (error) {
-        return []
-      }
-    },
+    ...mapActions(useMainStore, ['setDatasetInfo', 'setDatasetFacetData']),
     queryChanged: function () {
       this.activeTabId = this.$route.query.datasetDetailsTab
         ? this.$route.query.datasetDetailsTab
