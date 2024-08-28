@@ -148,14 +148,14 @@ export default {
   width: 100%;
 }
 .property-table {
+  border: none;
+  padding: 0;
   td {
     background-color: transparent !important;
     padding: 0.25rem 0 0 0;
     border: none;
     cursor: default;
   }
-  border: none;
-  padding: 0;
 }
 // The outermost bottom border of the table. Element UI adds psuedo elements to create the bottom table border that we must hide to remove
 table:not([class^='el-table__'])::before {
