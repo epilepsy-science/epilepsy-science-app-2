@@ -78,41 +78,19 @@ export default {
 
   setup() {
     const config = useRuntimeConfig()
-    const visibleDatasetsFacetCategories = config.public.SHOW_HIERARCHAL_FACETS === 'true' ?
-      [
-        'anatomy.organ.category.name',
-        'anatomy.organ.subcategory.name',
-        'organisms.primary.species.name',
-        'item.modalities.keyword',
-        'attributes.subject.sex.value',
-        'attributes.subject.ageCategory.value',
-        'availability'
-      ] :
-      [
-        'anatomy.organ.name',
-        'organisms.primary.species.name',
-        'item.modalities.keyword',
-        'attributes.subject.sex.value',
-        'attributes.subject.ageCategory.value',
+    const visibleDatasetsFacetCategories =       [
+        'tags',
+        'contributors.lastName',
         'availability'
       ]
 
-    const visibleModelsAndSimulationsFacetCategories = config.public.SHOW_HIERARCHAL_FACETS === 'true' ?
-      ['anatomy.organ.category.name', 'anatomy.organ.subcategory.name', 'availability', 'organisms.primary.species.name'] :
-      ['anatomy.organ.name', 'availability', 'organisms.primary.species.name']
-
     return {
       visibleDatasetsFacetCategories,
-      visibleModelsAndSimulationsFacetCategories
     }
   },
 
   computed: {
     visibleCategories: function() {
-      const menuType = this.$route.query.type
-      if (menuType === 'simulation' || menuType === 'model') {
-        return this.visibleModelsAndSimulationsFacetCategories
-      }
       return this.visibleDatasetsFacetCategories
     },
     facetMenuVisibleFacets: function() {

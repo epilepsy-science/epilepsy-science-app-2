@@ -3,47 +3,16 @@ import { SearchIndex } from "algoliasearch";
 // Used for populating the Dataset Search Results facet menu dynamically
 export const facetPropPathMapping = [
   {
-    label: 'Type',
-    id: 'item.types',
-    facetPropPath: 'item.types.name',
-    facetSubpropPath: 'item.types.subcategory.name'
+    label: 'Tags',
+    id: 'tags',
+    facetPropPath: 'tags',
+    facetSubpropPath: ''
   },
   {
-    label: 'Anatomical Structure',
-    id: 'anatomy.organ.category',
-    facetPropPath: 'anatomy.organ.category.name',
-    facetSubpropPath: 'anatomy.organ.subcategory.name'
-  },
-  // This cannot be removed until the maps sidebar implements heirarchal facets. So in the meantime we simply don't make this category visible on the facet menu
-  {
-    label: 'Anatomical Structure',
-    id: 'anatomy.organ',
-    facetPropPath: 'anatomy.organ.name',
-    facetSubpropPath: 'anatomy.organ.subcategory.name'
-  },
-  {
-    label: 'Species',
-    id: 'organisms.primary.species',
-    facetPropPath: 'organisms.primary.species.name',
-    facetSubpropPath: 'organisms.primary.species.subcategory.name'
-  },
-  {
-    label: 'Experimental Approach',
-    id: 'item.modalities',
-    facetPropPath: 'item.modalities.keyword',
-    facetSubpropPath: 'item.modalities.subcategory.name'
-  },
-  {
-    label: 'Sex',
-    id: 'attributes.subject.sex',
-    facetPropPath: 'attributes.subject.sex.value',
-    facetSubpropPath: 'attributes.subject.sex.subcategory.name'
-  },
-  {
-    label: 'Age Categories',
-    id: 'attributes.subject.ageCategory',
-    facetPropPath: 'attributes.subject.ageCategory.value',
-    facetSubpropPath: 'attributes.subject.ageCategory.subcategory.name'
+    label: 'Contributors',
+    id: 'contributors.lastName',
+    facetPropPath: 'contributors.lastName',
+    facetSubpropPath: ''
   },
 ]
 
