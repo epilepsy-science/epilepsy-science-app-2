@@ -2,27 +2,24 @@
   <el-table :data="tableData" :show-header="false" empty-text="No Results">
     <el-table-column prop="banner" label="Image" width="160">
       <template v-slot="scope">
-        <div v-if="scope.row.pennsieve">
+        <div v-if="scope.row">
           <nuxt-link
             :to="{
               name: 'datasets-datasetId',
-              params: { datasetId: scope.row.object_id },
+              params: { datasetId: scope.row.objectID },
               query: {
-                type: getSearchResultsType(scope.row.item)
+                type: 'dataset'
               }
             }"
             class="img-dataset"
           > 
             <img
-              v-if="scope.row.pennsieve.banner"
-              :src="scope.row.pennsieve.banner.uri"
-              :alt="`Banner for ${scope.row.item.name}`"
+              v-if="scope.row.banner"
+              :src="scope.row.banner"
+              :alt="`Banner for ${scope.row.name}`"
               height="128"
               width="128"
             />
-            <sparc-pill v-if="scope.row.item.published" v-show='scope.row.item.published.status == "embargo"'>
-              Embargoed
-            </sparc-pill>
           </nuxt-link>
         </div>
       </template>
@@ -31,21 +28,21 @@
       min-width="400"
     >
       <template v-slot:default="scope">
-        <div v-if="scope.row.pennsieve">
+        <div v-if="scope.row">
           <nuxt-link
             :to="{
               name: 'datasets-datasetId',
-              params: {datasetId: scope.row.object_id },
+              params: {datasetId: scope.row.objectID },
               query: {
-                type: getSearchResultsType(scope.row.item)
+                type: 'dataset'
               }
             }"
-            v-html="scope.row._highlightResult.item.name.value"
+            v-html="scope.row.name"
           />
           <div
             class="my-8"
-            v-if="scope.row._highlightResult.item.description"
-            v-html="scope.row._highlightResult.item.description.value"
+            v-if="scope.row.description"
+            v-html="scope.row.description"
           />
           <table class="property-table">
             <tr
@@ -92,7 +89,6 @@ export default {
       PROPERTY_DATA: [
         {
           displayName: 'Publication Date',
-          propPath: 'pennsieve'
         }
       ]
     }
@@ -105,12 +101,11 @@ export default {
       }
       switch (property.displayName) {
         case 'Publication Date': {
-          const pennsieve = _.get(item, property.propPath)
-          if (pennsieve.firstPublishedAt == undefined || pennsieve.versionPublishedAt == undefined) {
+          if (item.firstPublishedAt == undefined || item.versionPublishedAt == undefined) {
             return undefined
           }
-          const firstPublishedAt = pennsieve.firstPublishedAt.timestamp.split(",")[0]
-          const versionPublishedAt = pennsieve.versionPublishedAt.timestamp.split(",")[0]
+          const firstPublishedAt = item.firstPublishedAt.split(",")[0]
+          const versionPublishedAt = item.versionPublishedAt.split(",")[0]
           return this.formatDate(firstPublishedAt) +
                     ' (Last updated ' +
                     this.formatDate(versionPublishedAt) +
@@ -121,11 +116,6 @@ export default {
         }
       }
     },
-    getSearchResultsType(item) {
-      return item !== undefined ? 
-        (item.types[0].name === 'computational model' ? 'simulation' : 'dataset') :
-        ''
-    }
   }
 }
 </script>
