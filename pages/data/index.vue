@@ -353,7 +353,7 @@ export default {
           this.searchFailed = true
         })
         .finally(() => {
-          var filters = ''
+          var filters = this.$refs.datasetFacetMenu?.getFilters()
           filters = filters === undefined ?
             '' :
             filters 
