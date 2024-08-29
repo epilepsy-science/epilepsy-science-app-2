@@ -129,7 +129,7 @@ export default defineNuxtConfig({
       ctf_contact_us_form_type_id: 'contactUsForm',
       ctf_apps_page_id: '4LyfrYarHrt8Fke5ufyjdy',
       ctf_consortia_content_type_id: 'consortia',
-      portal_api: process.env.PORTAL_API_HOST || 'https://sparc-api.herokuapp.com',
+      portal_api: process.env.PENNSIEVE_DISCOVER_API_HOST || 'https://api.pennsieve.io/discover',
       flatmap_api: process.env.FLATMAP_API_HOST || 'https://mapcore-demo.org/current/flatmap/v3/',
       DEPLOY_ENV: process.env.DEPLOY_ENV || 'development',
       ALGOLIA_API_KEY: process.env.ALGOLIA_API_KEY,
