@@ -25,7 +25,7 @@ Ensure that the following configuration variables are set in your environment pr
 * CTF_CDA_ACCESS_TOKEN
 * CTF_API_HOST
 * DEPLOY_ENV
-* PENNSIEVE_DISCOVER_API_HOST
+* PORTAL_API_HOST
 * AWS_USER_POOL_WEB_CLIENT_ID
 * RECAPTCHA_SECRET_KEY
 * RECAPTCHA_SITE_KEY

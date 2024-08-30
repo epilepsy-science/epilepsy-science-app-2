@@ -21,7 +21,7 @@ export default defineConfig({
       return dynamicConfig(config)
     },
     env: {
-      PORTAL_API: process.env.PENNSIEVE_DISCOVER_API_HOST ? process.env.PENNSIEVE_DISCOVER_API_HOST : 'https://sparc-api.herokuapp.com',
+      PORTAL_API: process.env.PORTAL_API_HOST ? process.env.PORTAL_API_HOST : 'https://sparc-api.herokuapp.com',
       // databrowser.js
       PAGE_LIMIT: process.env.PAGE_LIMIT ? process.env.PAGE_LIMIT : '20',
       SEARCH_KEYWORDS: process.env.SEARCH_KEYWORDS ? process.env.SEARCH_KEYWORDS : 'Spine, Neck',
