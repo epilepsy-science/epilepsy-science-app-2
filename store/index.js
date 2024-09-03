@@ -10,13 +10,7 @@ export const useMainStore = defineStore('main', {
     userProfile: null,
     datasetInfo: {},
     datasetTypeName: "",
-    datasetFacetsData: [],
-    formOptions: {
-      userTypes: [],
-      areasOfSparc: [],
-      services: [],
-      resourceCategories: []
-    },
+    datasetFacetsData: []
   }),
   getters: {
     username(state) {
@@ -54,9 +48,6 @@ export const useMainStore = defineStore('main', {
     },
     profileComplete (state) {
       return helperMethods.isProfileComplete(state.userProfile)
-    },
-    userTypes(state) {
-      return pathOr('', ['userTypes'], state.formOptions)
     }
   },
   actions: {
@@ -80,9 +71,6 @@ export const useMainStore = defineStore('main', {
     },
     setDatasetFacetsData(value) {
       this.datasetFacetsData = value
-    },
-    setFormOptions(value) {
-      this.formOptions = value
     },
     async fetchPortalNotification() {
       try {
