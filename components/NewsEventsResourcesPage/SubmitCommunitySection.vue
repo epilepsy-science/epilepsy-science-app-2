@@ -2,7 +2,6 @@
   <paper
     :text="parseMarkdown(searchPaperText)"
     :button-text="searchPaperCSButton"
-    :button-link="{ name: 'contact-us', query: { type: 'story'} }"
     new-tab
   />
 </template>

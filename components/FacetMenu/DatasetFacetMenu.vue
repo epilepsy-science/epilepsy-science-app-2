@@ -58,7 +58,7 @@ const embargoedFacetCategory = {
   ]
 }
 
-const embargoFacetCategoryTooltip = "SPARC datasets are subject to a 1 year embargo during which time<br/>the datasets are visible only to members of the SPARC consortium.<br/>During embargo, the public will be able to view basic metadata about<br/>these datasets as well as their release date."
+const embargoFacetCategoryTooltip = "Epilepsy.science datasets are subject to a 1 year embargo during which time<br/>the datasets are visible only to admins.<br/>During embargo, the public will be able to view basic metadata about<br/>these datasets as well as their release date."
 
 export default {
   name: 'DatasetFacetMenu',
@@ -77,42 +77,19 @@ export default {
   },
 
   setup() {
-    const config = useRuntimeConfig()
-    const visibleDatasetsFacetCategories = config.public.SHOW_HIERARCHAL_FACETS === 'true' ?
-      [
-        'anatomy.organ.category.name',
-        'anatomy.organ.subcategory.name',
-        'organisms.primary.species.name',
-        'item.modalities.keyword',
-        'attributes.subject.sex.value',
-        'attributes.subject.ageCategory.value',
-        'availability'
-      ] :
-      [
-        'anatomy.organ.name',
-        'organisms.primary.species.name',
-        'item.modalities.keyword',
-        'attributes.subject.sex.value',
-        'attributes.subject.ageCategory.value',
+    const visibleDatasetsFacetCategories =       [
+        'tags',
+        'contributors.lastName',
         'availability'
       ]
 
-    const visibleModelsAndSimulationsFacetCategories = config.public.SHOW_HIERARCHAL_FACETS === 'true' ?
-      ['anatomy.organ.category.name', 'anatomy.organ.subcategory.name', 'availability', 'organisms.primary.species.name'] :
-      ['anatomy.organ.name', 'availability', 'organisms.primary.species.name']
-
     return {
       visibleDatasetsFacetCategories,
-      visibleModelsAndSimulationsFacetCategories
     }
   },
 
   computed: {
     visibleCategories: function() {
-      const menuType = this.$route.query.type
-      if (menuType === 'simulation' || menuType === 'model') {
-        return this.visibleModelsAndSimulationsFacetCategories
-      }
       return this.visibleDatasetsFacetCategories
     },
     facetMenuVisibleFacets: function() {

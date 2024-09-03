@@ -336,10 +336,6 @@ export default {
       const query = this.$route.query.search
 
       const searchType = pathOr('dataset', ['query', 'type'], this.$route)
-      const datasetsFilter =
-        searchType === 'simulation' ? '(NOT item.types.name:Dataset AND NOT item.types.name:Scaffold)'
-          : searchType === 'model' ? '(NOT item.types.name:Dataset AND item.types.name:Scaffold)'
-          : "item.types.name:Dataset"
 
       /* First we need to find only those facets that are relevant to the search query.
        * If we attempt to do this in the same search as below than the response facets
@@ -348,7 +344,6 @@ export default {
       this.algoliaIndex
         .search(query, {
           facets: ['*'],
-          filters: `${datasetsFilter}`
         })
         .then(response => {
           this.visibleFacets = response.facets
@@ -360,8 +355,8 @@ export default {
         .finally(() => {
           var filters = this.$refs.datasetFacetMenu?.getFilters()
           filters = filters === undefined ?
-            `${datasetsFilter}` :
-            filters + ` AND ${datasetsFilter}`
+            '' :
+            filters 
 
           this.algoliaIndex
             .search(query, {
@@ -372,9 +367,6 @@ export default {
               attributesToHighlight: [
                 'item.name',
                 'item.description',
-                'item.modalities',
-                'anatomy.organ',
-                'organisms.primary.species.name'
               ],
               highlightPreTag: `<${HIGHLIGHT_HTML_TAG}>`,
               highlightPostTag: `</${HIGHLIGHT_HTML_TAG}>`

@@ -3,9 +3,9 @@
     <div class="header__nav">
       <div class="header__nav--parent">
         <svgo-icon-contact class="tab3 mr-4 mt-4" />
-        <nuxt-link :to="`/contact-us?source_url=${currentUrl}`" target="_blank">
+        <a href="https://forms.gle/FEFiDXQG3VB2aVW57" target="_blank">
           Contact Us
-        </nuxt-link>
+        </a>
       </div>
       <div class="header__nav--main">
         <div class="nav-main-container">
@@ -31,9 +31,9 @@
               <ul class="mobile-navigation__links">
                 <li>
                   <svgo-icon-contact class="tab2" />
-                  <nuxt-link :to="`/contact-us?source_url=${currentUrl}`" target="_blank">
+                  <a href="https://forms.gle/FEFiDXQG3VB2aVW57" target="_blank">
                     Contact Us
-                  </nuxt-link>
+                  </a>
                 </li>
               </ul>
               <div class="mobile-navigation__links--social">
@@ -99,9 +99,6 @@ export default {
         return path.substring(0)
       }
       return path.substring(0, endIndex)
-    },
-    currentUrl: function() {
-      return encodeURIComponent(this.$route.fullPath)
     },
   },
 
