@@ -122,7 +122,6 @@ export default defineNuxtConfig({
       ctf_resource_id: 'epilepsyResource',
       ctf_news_and_events_page_id: '27g94v7HnxrqsCKKA8Wf7o',
       ctf_tools_and_resources_page_id: '5gOQBmYpDBRPtJh7Yzj8SP',
-      ctf_osparc_resource_entry_id: '4LkLiH5s4FV0LVJd3htsvH',
       ctf_apps_page_id: '4LyfrYarHrt8Fke5ufyjdy',
       ctf_consortia_content_type_id: 'consortia',
       portal_api: process.env.PORTAL_API_HOST || 'https://sparc-api.herokuapp.com',
