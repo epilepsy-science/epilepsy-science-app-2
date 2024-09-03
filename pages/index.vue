@@ -109,18 +109,6 @@ export default {
       $contentfulClient.getEntry(config.public.ctf_home_page_id)
     ]).then(async ([homepage]) => {
       let fields = getHomepageFields(homepage.fields)
-      const datasetSectionTitle = homepage.fields.datasetSectionTitle
-      const url = `${config.public.portal_api}/get_featured_dataset`
-      await $axios.get(url).then(({data}) => {
-        const datasets = data?.datasets
-        fields = { ...fields, 'featuredDataset': { 'title': datasets[0].name, 'description': datasets[0].description, 'banner': datasets[0].banner, 'id': datasets[0].id }, 'datasetSectionTitle': datasetSectionTitle }
-      })
-      if (pathOr(undefined, ["featuredProject","fields","institution"], fields) != undefined) {
-        const institutionId = pathOr("", ["featuredProject","fields","institution","sys","id"], fields)
-        await $contentfulClient.getEntry(institutionId).then(( response ) => {
-          fields.featuredProject.fields = { ...fields.featuredProject.fields, 'banner': response.fields.logo.fields?.file.url }
-        })
-      }
       return fields
     }).catch(e => {
       console.error(e);
@@ -163,9 +151,6 @@ export default {
       exploreData: [],
       newsAndEvents: [],
       portalFeatures: [],
-      featuredProject: {},
-      datasetSectionTitle: '',
-      featuredDataset: {},
       heroCopy: '',
       heroHeading: '',
       heroImage: {}
