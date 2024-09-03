@@ -126,9 +126,6 @@ export default {
   },
   computed: {
     ...mapState(useMainStore, ['userToken']),
-    ...mapState('pages/contact-us', {
-      userTypes: state => state.formOptions.userTypes,
-    }),
     formRules() {
       let formRules = {}
       const formRuleValue = [{

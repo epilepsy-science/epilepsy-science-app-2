@@ -83,7 +83,6 @@ export default defineNuxtConfig({
     '/resources/information-services': { redirect: '/tools-and-resources/tools?resourceType=Information+Services' },
     '/resources/software': { redirect: '/tools-and-resources/tools?resourceType=Software' },
     '/resources/osparc-services': { redirect: '/tools-and-resources/4LkLiH5s4FV0LVJd3htsvH' },
-    '/resources/submit': { redirect: '/contact-us?type=tool' },
   },
   hooks: {
     'pages:extend'(pages) {
@@ -130,6 +129,7 @@ export default defineNuxtConfig({
       ctf_apps_page_id: '4LyfrYarHrt8Fke5ufyjdy',
       ctf_consortia_content_type_id: 'consortia',
       portal_api: process.env.PORTAL_API_HOST || 'https://sparc-api.herokuapp.com',
+      // portal_api: process.env.PORTAL_API_HOST || 'https://api.pennsieve.io/discover',
       flatmap_api: process.env.FLATMAP_API_HOST || 'https://mapcore-demo.org/current/flatmap/v3/',
       DEPLOY_ENV: process.env.DEPLOY_ENV || 'development',
       ALGOLIA_API_KEY: process.env.ALGOLIA_API_KEY,
