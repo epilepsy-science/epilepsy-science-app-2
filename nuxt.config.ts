@@ -81,8 +81,7 @@ export default defineNuxtConfig({
     '/resources/databases': { redirect: '/tools-and-resources/tools?resourceType=Data+and+Models' },
     '/resources/devices': { redirect: '/tools-and-resources/tools?resourceType=Devices' },
     '/resources/information-services': { redirect: '/tools-and-resources/tools?resourceType=Information+Services' },
-    '/resources/software': { redirect: '/tools-and-resources/tools?resourceType=Software' },
-    '/resources/osparc-services': { redirect: '/tools-and-resources/4LkLiH5s4FV0LVJd3htsvH' },
+    '/resources/software': { redirect: '/tools-and-resources/tools?resourceType=Software' }
   },
   hooks: {
     'pages:extend'(pages) {
@@ -153,7 +152,6 @@ export default defineNuxtConfig({
       ORCID_API_URL: process.env.ORCID_API_URL || 'https://pub.orcid.org/v2.1',
       crosscite_api_host: process.env.CROSSCITE_API_HOST || 'https://citation.crosscite.org',
       max_download_size: parseInt(process.env.MAX_DOWNLOAD_SIZE || '5000000000'),
-      osparc_host: process.env.OSPARC_HOST || 'https://osparc.io',
       MBF_SPARC_API: process.env.MBF_SPARC_API || 'https://mbfsparcapi.com',
       BL_API_URL: 'https://sparc.biolucida.net/api/v1/',
       BL_SERVER_URL: 'https://sparc.biolucida.net',
