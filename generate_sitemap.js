@@ -43,7 +43,6 @@ const contentfulClient = contentful.createClient({
 const urls = new Set([
   '/data',
   '/about',
-  '/share-data'
 ])
 
 // DATA

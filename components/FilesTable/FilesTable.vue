@@ -262,27 +262,6 @@
                 </sparc-tooltip>
               </div>
               <div
-                class="circle"
-                @click="setDialogSelectedFile(scope)"
-              >
-                <sparc-tooltip
-                  placement="bottom-center"
-                >
-                  <template #data>
-                    <div class="osparc-service-btn-tooltip">
-                      Open in o<sup>2</sup>S<sup>2</sup>PARC. Login is required, 
-                      <a href="/resources/4LkLiH5s4FV0LVJd3htsvH#user-accounts" target="_blank">
-                        <u>here</u>
-                      </a>
-                      you can find more information on how to get an account.
-                    </div>
-                  </template>
-                  <template #item>
-                    <svgo-icon-osparc fill="red" class="action-icon" />
-                  </template>
-                </sparc-tooltip>
-              </div>
-              <div
                 v-if="isTimeseriesViewFile(scope.row)"
                 class="circle"
                 @click="openViewerFile(scope)"
@@ -317,12 +296,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <osparc-file-viewers-dialog
-        :show-dialog="dialogSelectedFile !== null"
-        :viewers="osparcViewers"
-        :selected-file="dialogSelectedFile"
-        @dialog-closed="() => setDialogSelectedFile(null)"
-      />
     </div>
     <sparc-tooltip
       v-if="selected.length == 0"
@@ -384,7 +357,6 @@ import {
 } from 'ramda'
 
 import BfDownloadFile from '@/components/BfDownloadFile/BfDownloadFile'
-import OsparcFileViewersDialog from '@/components/FilesTable/OsparcFileViewersDialog.vue'
 import { mapState } from 'pinia'
 import { useMainStore } from '../../store'
 
@@ -414,19 +386,12 @@ export default {
   name: 'FilesTable',
 
   components: {
-    BfDownloadFile,
-    OsparcFileViewersDialog
+    BfDownloadFile
   },
 
   mixins: [FormatStorage],
 
   props: {
-    osparcViewers: {
-      type: Object,
-      default: function() {
-        return {}
-      }
-    },
     datasetScicrunch: {
       type: Object,
       default: () => {
@@ -444,7 +409,6 @@ export default {
       hasError: false,
       limit: 500,
       selected: [],
-      dialogSelectedFile: null,
       zipData: ''
     }
   },
@@ -658,13 +622,6 @@ export default {
      */
     formatStorage: function(row, column, cellValue) {
       return this.formatMetric(cellValue)
-    },
-
-    /**
-     * Shows the oSPARC viewers selector
-     */
-    setDialogSelectedFile: function(scope) {
-      this.dialogSelectedFile = scope ? scope.row : null
     },
 
     getViewFileUrl(scope) {
@@ -1063,16 +1020,6 @@ export default {
       padding: 0 16px;
       text-overflow: unset;
     }
-  }
-}
-.osparc-service-btn-tooltip {
-  sup, sub {
-    vertical-align: baseline;
-    position: relative;
-    top: -0.4em;
-  }
-  sub {
-    top: 0.4em;
   }
 }
 .action-icon {
