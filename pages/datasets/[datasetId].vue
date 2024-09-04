@@ -80,17 +80,11 @@ import error404 from '@/components/Error/404.vue'
 import error400 from '@/components/Error/400.vue'
 import { getLicenseLink, getLicenseAbbr } from '@/static/js/license-util'
 
-const getDatasetDetails = async (config, datasetId, version, $axios, $pennsieveApiClient) => {
-  const url = `${config.public.portal_api}/sim/dataset/${datasetId}`
-  var datasetUrl = version ? `${url}/versions/${version}` : url
+const getDatasetDetails = async (config, datasetId, version, $pennsieveApiClient) => {
 
-  const datasetDetails = await $axios.get(datasetUrl).catch(async (error) => { 
-    const status = propOr('', 'status', error.response)
-    // If not found, then try accessing it directly from Pennsieve in case it has been unpublished
-    if (status == 404) {
-      const pennsieveUrl = `${config.public.discover_api_host}/datasets/${datasetId}`
-      var pennsieveDatasetUrl = version ? `${pennsieveUrl}/versions/${version}` : pennsieveUrl
-      return await $pennsieveApiClient.value.get(pennsieveDatasetUrl).catch((error) => {
+  const pennsieveUrl = `${config.public.discover_api_host}/datasets/${datasetId}`
+  var pennsieveDatasetUrl = version ? `${pennsieveUrl}/versions/${version}` : pennsieveUrl
+  const datasetDetails = await $pennsieveApiClient.value.get(pennsieveDatasetUrl).catch((error) => {
         const status = pathOr('', ['data', 'status'], error.response)
         if (status === 'UNPUBLISHED') {
           const details = error.response.data
@@ -100,8 +94,6 @@ const getDatasetDetails = async (config, datasetId, version, $axios, $pennsieveA
           }
         }
       })
-    }
-  })
   return datasetDetails
 }
 
@@ -182,7 +174,6 @@ export default {
           config,
           datasetId,
           route.params.version,
-          $axios,
           $pennsieveApiClient
         ),
         getDatasetVersions(config, datasetId, $axios),
@@ -275,17 +266,8 @@ export default {
   },
 
   async created() {
-    const datasetOwnerId = propOr('', 'ownerId', this.datasetInfo)
-    const datasetOwnerEmail = await this.$axios
-      .get(`${this.$config.public.portal_api}/get_owner_email/${datasetOwnerId}`)
-      .then(({ data }) => {
-        return data.email
-      })
-      .catch(() => {
-        return ''
-      })
     if (this.datasetInfo) {
-      this.setDatasetInfo({ ...this.datasetInfo, 'ownerEmail': datasetOwnerEmail })
+      this.setDatasetInfo({ ...this.datasetInfo })
     }
   },
 
@@ -334,9 +316,6 @@ export default {
     },
     datasetContributors: function () {
       return propOr([], 'contributors', this.datasetInfo)
-    },
-    datasetOwnerEmail: function () {
-      return this.datasetInfo.ownerEmail || ''
     },
     datasetTitle: function () {
       return propOr('', 'name', this.datasetInfo)
