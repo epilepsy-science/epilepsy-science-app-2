@@ -220,20 +220,6 @@
                 </sparc-tooltip>
               </div>
               <div
-                v-if="isPlotViewFile(scope.row.path)"
-                class="circle"
-                @click="openViewerFile(scope)"
-              >
-                <sparc-tooltip
-                  placement="bottom-center"
-                  content="Open Plot Viewer"
-                >
-                  <template #item>
-                    <svgo-icon-view class="action-icon" />
-                  </template>
-                </sparc-tooltip>
-              </div>
-              <div
                 v-if="isVideoViewFile(scope.row.path)"
                 class="circle"
                 @click="openViewerFile(scope)"
@@ -241,20 +227,6 @@
                 <sparc-tooltip
                   placement="bottom-center"
                   content="Open Video Viewer"
-                >
-                  <template #item>
-                    <svgo-icon-view class="action-icon" />
-                  </template>
-                </sparc-tooltip>
-              </div>
-              <div
-                v-if="isSegmentationViewFile(scope.row.path)"
-                class="circle"
-                @click="openViewerFile(scope)"
-              >
-                <sparc-tooltip
-                  placement="bottom-center"
-                  content="Open Segmentation Viewer"
                 >
                   <template #item>
                     <svgo-icon-view class="action-icon" />
@@ -825,21 +797,6 @@ export default {
       }
       return false
     },
-    isPlotViewFile: function (path) {
-      if (
-        path &&
-        this.datasetScicrunch &&
-        this.datasetScicrunch['abi-plot']
-      ) {
-        let plotObjects = this.datasetScicrunch['abi-plot']
-        path = path.replace('files/', '')
-        for (let i = 0; i < plotObjects.length; i++) {
-          if (plotObjects[i].dataset.path === path)
-            return true
-        }
-      }
-      return false
-    },
     isVideoViewFile: function (path) {
       if (
         path &&
@@ -850,21 +807,6 @@ export default {
         path = path.replace('files/', '')
         for (let i = 0; i < videoObjects.length; i++) {
           if (videoObjects[i].dataset.path == path)
-            return true
-        }
-      }
-      return false
-    },
-    isSegmentationViewFile: function (path) {
-      if (
-        path &&
-        this.datasetScicrunch &&
-        this.datasetScicrunch['mbf-segmentation']
-      ) {
-        let segmentationObjects = this.datasetScicrunch['mbf-segmentation']
-        path = path.replace('files/', '')
-        for (let i = 0; i < segmentationObjects.length; i++) {
-          if (segmentationObjects[i].dataset.path === path)
             return true
         }
       }
