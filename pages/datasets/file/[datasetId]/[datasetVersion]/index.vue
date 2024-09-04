@@ -10,7 +10,7 @@
         <content-tab-card v-if="hasViewer" class="mt-24" :tabs="tabs" :active-tab-id="activeTabId">
           <biolucida-viewer v-if="hasBiolucidaViewer" v-show="activeTabId === 'imageViewer'" :data="biolucidaData"
             :datasetInfo="datasetInfo" :file="file" />
-          <plot-viewer v-if="hasPlotViewer" v-show="activeTabId === 'plotViewer'" :plotData="plotData"
+          <plot-viewer v-show="activeTabId === 'plotViewer'"
             :datasetInfo="datasetInfo" :file="file" />
           <video-viewer v-if="hasVideoViewer" v-show="activeTabId === 'videoViewer'" :videoData="videoData"
             :videoSource="signedUrl" :datasetInfo="datasetInfo" :file="file" />
@@ -23,11 +23,9 @@
 </template>
 
 <script>
-import discover from '@/services/discover'
 import biolucida from '@/services/biolucida'
 import scicrunch from '@/services/scicrunch'
 import BiolucidaViewer from '@/components/BiolucidaViewer/BiolucidaViewer'
-import PlotViewer from '@/components/PlotViewer/PlotViewer'
 import VideoViewer from '@/components/VideoViewer/VideoViewer'
 import FileViewerMetadata from '@/components/ViewersMetadata/FileViewerMetadata.vue'
 import FormatDate from '@/mixins/format-date'
@@ -43,7 +41,6 @@ export default {
 
   components: {
     BiolucidaViewer,
-    PlotViewer,
     VideoViewer,
     FileViewerMetadata
   },
@@ -126,13 +123,6 @@ export default {
     } catch(e) {
       console.log(`Error retrieving sci crunch data (possibly because there is none for this file): ${e}`)
     }
-    
-    let plotData = {}
-    const matchedPlotData = scicrunchData['abi-plot']?.filter(function(el) {
-      return el.identifier == expectedScicrunchIdentifier
-    })
-    plotData = matchedPlotData?.length > 0 ? matchedPlotData[0] : {}
-    const hasPlotViewer = !isEmpty(plotData)
 
     let videoData = {}
     const matchedVideoData = scicrunchData['video']?.filter(function(el) {
@@ -168,17 +158,14 @@ export default {
 
     let activeTabId = hasBiolucidaViewer ? 'imageViewer' :
       hasTimeseriesViewer ? 'timeseriesViewer' :
-      hasPlotViewer ? 'plotViewer' :
       hasVideoViewer ? 'videoViewer' : ''
 
     return {
       biolucidaData,
       videoData,
-      plotData,
 
       file,
       hasBiolucidaViewer,
-      hasPlotViewer,
       hasVideoViewer,
       sourcePackageId,
       signedUrl,
@@ -205,7 +192,7 @@ export default {
 
   computed: {
     hasViewer: function() {
-      return this.hasBiolucidaViewer || this.hasPlotViewer || this.hasVideoViewer
+      return this.hasBiolucidaViewer || this.hasVideoViewer
     },
     datasetId: function() {
       return this.$route.params.datasetId
@@ -263,19 +250,6 @@ export default {
           })
         } else {
           this.tabs = this.tabs.filter(tab => tab.id !== 'imageViewer')
-        }
-      },
-      immediate: true
-    },
-    hasPlotViewer: {
-      handler: function(hasViewer) {
-        if (hasViewer) {
-          this.tabs.push({
-            label: 'Plot Viewer',
-            id: 'plotViewer'
-          })
-        } else {
-          this.tabs = this.tabs.filter(tab => tab.id !== 'plotViewer')
         }
       },
       immediate: true
