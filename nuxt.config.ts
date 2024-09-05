@@ -66,13 +66,6 @@ export default defineNuxtConfig({
     define: {
       'window.global': {}
     }
-    /*css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@use "sparc-design-system-components-2/dist/style.css" as *;',
-        },
-      },
-    },*/
   },
   routeRules: {
     '/resources': { redirect: '/tools-and-resources/tools' },

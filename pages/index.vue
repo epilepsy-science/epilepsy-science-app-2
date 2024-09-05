@@ -36,7 +36,7 @@ import marked from '@/mixins/marked/index'
 import getHomepageFields from '@/utils/homepageFields'
 import { useMainStore } from '../store/index.js'
 import { mapState } from 'pinia'
-import { clone, pathOr } from 'ramda'
+import { clone } from 'ramda'
 
 export default {
   name: 'EpilepsyScienceHomepage',
@@ -51,9 +51,9 @@ export default {
 
   async setup() {
     const config = useRuntimeConfig()
-    const { $contentfulClient, $axios } = useNuxtApp()
+    const { $contentfulClient } = useNuxtApp()
     useHead({
-      title: 'Epilepsy Science Portal',
+      title: 'Epilepsy.Science - Advancing Epilepsy Research Worldwide',
       meta: [
         {
           hid: 'description',
@@ -68,20 +68,20 @@ export default {
         {
           hid: 'og:title',
           property: 'og:title',
-          content: 'Epilepsy Science Portal'
+          content: 'Epilepsy.Science'
         },
         {
           hid: 'og:image',
           property: 'og:image',
-          content: 'https://images.ctfassets.net/6bya4tyw8399/7r5WTb92QnHkub8RsExuc1/2ac134de2ddfd65eb6316421df7578f9/sparc-logo-primary.png'
+          content: 'https://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png'
         },
         {
           hid: 'og:image:secure_url', property: 'og:image:secure_url',
-          content: 'https://images.ctfassets.net/6bya4tyw8399/7r5WTb92QnHkub8RsExuc1/2ac134de2ddfd65eb6316421df7578f9/sparc-logo-primary.png'
+          content: 'https://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png'
         },
         {
           name: 'og:site_name',
-          content: 'Epilepsy Science Portal'
+          content: 'Epilepsy.Science'
         },
         {
           name: 'twitter:card',
@@ -89,7 +89,7 @@ export default {
         },
         {
           name: 'twitter:site',
-          content: '@sparc_science'
+          content: '@epilepsy_science'
         },
         {
           name: 'twitter:title',
@@ -97,11 +97,11 @@ export default {
         },
         {
           name: 'twitter:image',
-          content: 'https://images.ctfassets.net/6bya4tyw8399/7r5WTb92QnHkub8RsExuc1/2ac134de2ddfd65eb6316421df7578f9/sparc-logo-primary.png'
+          content: 'https://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png'
         },
         {
           name: 'twitter:description',
-          content: 'The open community platform for bridging the body and the brain through neuroscience and systems physiology data, computational and spatial modeling, and device design.'
+          content: 'Advancing Epilepsy Research through Open Science'
         }
       ]
     })
