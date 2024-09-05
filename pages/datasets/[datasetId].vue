@@ -63,6 +63,7 @@
 </template>
 
 <script>
+// TODO - Not urgent: clean up organizationName, doiLink and other organization name references that are not applicable to ES
 import Tombstone from '@/components/Tombstone/Tombstone.vue'
 import { clone, isEmpty, propOr, pathOr, head, compose } from 'ramda'
 import { getAlgoliaFacets, facetPropPathMapping } from '../../utils/algolia'
@@ -210,11 +211,6 @@ export default {
       const doiLink = doi ? `https://doi.org/${doi}` : ''
       let originallyPublishedDate = propOr('', 'firstPublishedAt', datasetDetails)
       const showTombstone = propOr(false, 'isUnpublished', datasetDetails)
-      // Redirect them to doi if user tries to navigate directly to a dataset ID that is not a part of SPARC
-      if (!sparcOrganizationNames.includes(propOr('', 'organizationName', datasetDetails)) && !isEmpty(doiLink) && !showTombstone)
-      {
-        navigateTo(doiLink, { external: true, redirectCode: 301 })
-      }
 
       return {
         tabs: tabsData,
