@@ -2,7 +2,7 @@ import { simpleSitemapAndIndex } from 'sitemap'
 import algoliasearch from 'algoliasearch'
 import contentful from 'contentful'
 
-const PORTAL_BASE_URL = process.env.ROOL_URL || 'https://staging.sparc.science'
+const PORTAL_BASE_URL = process.env.ROOL_URL || 'https://staging.epilepsy.science'
 
 // Algolia creds
 const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID

@@ -153,7 +153,7 @@ export default defineNuxtConfig({
       BL_SERVER_URL: 'https://sparc.biolucida.net',
       BL_SHARE_LINK_PREFIX: 'https://sparc.biolucida.net/image?c=',
       ROOT_URL: process.env.ROOT_URL || 'http://localhost:3000',
-      METRICS_URL: process.env.METRICS_URL || 'https://metrics.sparc.science',
+      METRICS_URL: process.env.METRICS_URL || 'https://metrics.epilepsy.science',
       BITLY_ACCESS_TOKEN: process.env.BITLY_ACCESS_TOKEN,
       bitly_expand_endpoint: 'https://api-ssl.bitly.com/v4/expand',
       INTERNAL_TRAFFIC_KEY: process.env.INTERNAL_TRAFFIC_KEY || 'internal_traffic',

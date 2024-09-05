@@ -32,7 +32,7 @@
         <ul>
           <li>
             Email:
-            <a href="mailto:support@sparc.science">support@sparc.science</a>
+            <a href="mailto:support@epilepsy.science">support@epilepsy.science</a>
           </li>
         </ul>
         <p>We try to respond to feedback within 3-5 business days.</p>

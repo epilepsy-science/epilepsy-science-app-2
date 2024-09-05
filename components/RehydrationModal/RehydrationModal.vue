@@ -24,7 +24,7 @@
         </p>
       </div>
       <p>
-        Please contact SPARC Support at <a href="mailto:support@sparc.science">support@sparc.science</a> if you have any
+        Please contact SPARC Support at <a href="mailto:support@epilepsy.science">support@epilepsy.science</a> if you have any
         questions.
       </p>
       <div v-if="!isUserAuthenticated">
