@@ -11,9 +11,7 @@
       metadata about these datasets as well
       as their release date. The embargoed release
       date for this dataset is <b>{{ embargoedReleaseDate }}</b>
-      and will become available to the public on that day.
-      <a class="sign-in-link" @click="showLoginDialog = true">
-        Sign in</a> to the SPARC Portal to request
+      and will become available to the public on that day. To the SPARC Portal to request
       access to or view the status of an access request to embargoed data.
       <div>
         <sparc-tooltip content="Sign in to request access" placement="top-center">
@@ -155,7 +153,6 @@
     </div>
     <data-use-agreement-popup :show-dialog="showAgreementPopup" @agreement-loaded="agreementLoaded"
       @dialog-closed="showAgreementPopup = false" @agreement-signed="requestAccess" />
-    <login-modal :show-dialog="showLoginDialog" @dialog-closed="showLoginDialog = false" />
     <rehydration-modal v-model="showRehydrationModal" append-to-body
       @close-rehydration-dialog="showRehydrationModal = false" :version="versionId" :dataset-id="datasetId" />
   </div>
@@ -166,7 +163,6 @@ import { mapActions, mapState } from 'pinia'
 import { useMainStore } from '../../store'
 import { propOr } from 'ramda'
 
-import LoginModal from '@/components/LoginModal/LoginModal.vue'
 import DataUseAgreementPopup from '@/components/DataUseAgreementPopup/DataUseAgreementPopup.vue'
 import FilesTable from '@/components/FilesTable/FilesTable.vue'
 import FormatMetric from '@/mixins/bf-storage-metrics'
@@ -179,8 +175,7 @@ export default {
 
   components: {
     DataUseAgreementPopup,
-    FilesTable,
-    LoginModal
+    FilesTable
   },
 
   mixins: [DateUtils, FormatMetric],
@@ -263,7 +258,6 @@ export default {
     return {
       awsMessage: 'us-east-1',
       showAgreementPopup: false,
-      showLoginDialog: false,
       showRehydrationModal: false,
       agreementId: null
     }
@@ -388,9 +382,5 @@ hr {
 }
 .aws-block {
   border: 1px solid $lineColor1;
-}
-
-.sign-in-link:hover {
-  cursor: pointer;
 }
 </style>
