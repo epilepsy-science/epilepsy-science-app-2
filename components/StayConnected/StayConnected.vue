@@ -12,7 +12,7 @@
           <div class="heading2">Connect with our team</div>
           <div class="body1 mb-16 mt-8">Reach out to our team to see how your dataset can be included in the repository.</div>
           <!-- TODO: replace the URL below -->
-          <a href="https://docs.sparc.science/docs/sparc-drc-open-office-hours" target="_blank">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSf4fzc1JysckHNI7RYLe3F5T8W2-0Nreb18JfZ3GaRqOdOpNQ/viewform" target="_blank">
             <el-button class="secondary">
               Find Out More
             </el-button>
