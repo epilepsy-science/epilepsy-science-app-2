@@ -220,20 +220,6 @@
                 </sparc-tooltip>
               </div>
               <div
-                v-if="isPlotViewFile(scope.row.path)"
-                class="circle"
-                @click="openViewerFile(scope)"
-              >
-                <sparc-tooltip
-                  placement="bottom-center"
-                  content="Open Plot Viewer"
-                >
-                  <template #item>
-                    <svgo-icon-view class="action-icon" />
-                  </template>
-                </sparc-tooltip>
-              </div>
-              <div
                 v-if="isVideoViewFile(scope.row.path)"
                 class="circle"
                 @click="openViewerFile(scope)"
@@ -244,41 +230,6 @@
                 >
                   <template #item>
                     <svgo-icon-view class="action-icon" />
-                  </template>
-                </sparc-tooltip>
-              </div>
-              <div
-                v-if="isSegmentationViewFile(scope.row.path)"
-                class="circle"
-                @click="openViewerFile(scope)"
-              >
-                <sparc-tooltip
-                  placement="bottom-center"
-                  content="Open Segmentation Viewer"
-                >
-                  <template #item>
-                    <svgo-icon-view class="action-icon" />
-                  </template>
-                </sparc-tooltip>
-              </div>
-              <div
-                class="circle"
-                @click="setDialogSelectedFile(scope)"
-              >
-                <sparc-tooltip
-                  placement="bottom-center"
-                >
-                  <template #data>
-                    <div class="osparc-service-btn-tooltip">
-                      Open in o<sup>2</sup>S<sup>2</sup>PARC. Login is required, 
-                      <a href="/resources/4LkLiH5s4FV0LVJd3htsvH#user-accounts" target="_blank">
-                        <u>here</u>
-                      </a>
-                      you can find more information on how to get an account.
-                    </div>
-                  </template>
-                  <template #item>
-                    <svgo-icon-osparc fill="red" class="action-icon" />
                   </template>
                 </sparc-tooltip>
               </div>
@@ -317,12 +268,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <osparc-file-viewers-dialog
-        :show-dialog="dialogSelectedFile !== null"
-        :viewers="osparcViewers"
-        :selected-file="dialogSelectedFile"
-        @dialog-closed="() => setDialogSelectedFile(null)"
-      />
     </div>
     <sparc-tooltip
       v-if="selected.length == 0"
@@ -384,7 +329,6 @@ import {
 } from 'ramda'
 
 import BfDownloadFile from '@/components/BfDownloadFile/BfDownloadFile'
-import OsparcFileViewersDialog from '@/components/FilesTable/OsparcFileViewersDialog.vue'
 import { mapState } from 'pinia'
 import { useMainStore } from '../../store'
 
@@ -414,19 +358,12 @@ export default {
   name: 'FilesTable',
 
   components: {
-    BfDownloadFile,
-    OsparcFileViewersDialog
+    BfDownloadFile
   },
 
   mixins: [FormatStorage],
 
   props: {
-    osparcViewers: {
-      type: Object,
-      default: function() {
-        return {}
-      }
-    },
     datasetScicrunch: {
       type: Object,
       default: () => {
@@ -444,7 +381,6 @@ export default {
       hasError: false,
       limit: 500,
       selected: [],
-      dialogSelectedFile: null,
       zipData: ''
     }
   },
@@ -660,13 +596,6 @@ export default {
       return this.formatMetric(cellValue)
     },
 
-    /**
-     * Shows the oSPARC viewers selector
-     */
-    setDialogSelectedFile: function(scope) {
-      this.dialogSelectedFile = scope ? scope.row : null
-    },
-
     getViewFileUrl(scope) {
       let uri = `${pathOr('', ['row', 'uri'], scope).replace("s3://", "")}`
       let s3BucketName = uri.substring(0, uri.indexOf("/"))
@@ -868,21 +797,6 @@ export default {
       }
       return false
     },
-    isPlotViewFile: function (path) {
-      if (
-        path &&
-        this.datasetScicrunch &&
-        this.datasetScicrunch['abi-plot']
-      ) {
-        let plotObjects = this.datasetScicrunch['abi-plot']
-        path = path.replace('files/', '')
-        for (let i = 0; i < plotObjects.length; i++) {
-          if (plotObjects[i].dataset.path === path)
-            return true
-        }
-      }
-      return false
-    },
     isVideoViewFile: function (path) {
       if (
         path &&
@@ -893,21 +807,6 @@ export default {
         path = path.replace('files/', '')
         for (let i = 0; i < videoObjects.length; i++) {
           if (videoObjects[i].dataset.path == path)
-            return true
-        }
-      }
-      return false
-    },
-    isSegmentationViewFile: function (path) {
-      if (
-        path &&
-        this.datasetScicrunch &&
-        this.datasetScicrunch['mbf-segmentation']
-      ) {
-        let segmentationObjects = this.datasetScicrunch['mbf-segmentation']
-        path = path.replace('files/', '')
-        for (let i = 0; i < segmentationObjects.length; i++) {
-          if (segmentationObjects[i].dataset.path === path)
             return true
         }
       }
@@ -1063,16 +962,6 @@ export default {
       padding: 0 16px;
       text-overflow: unset;
     }
-  }
-}
-.osparc-service-btn-tooltip {
-  sup, sub {
-    vertical-align: baseline;
-    position: relative;
-    top: -0.4em;
-  }
-  sub {
-    top: 0.4em;
   }
 }
 .action-icon {

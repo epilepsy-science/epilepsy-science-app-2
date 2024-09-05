@@ -14,16 +14,6 @@
         <div class="image-button-container">
           <div class="image-container mr-16 mb-8">
             <img v-if="resourceLogoUrl" class="resource-image" :src="resourceLogoUrl" :alt="resourceLogoAlt" />
-            <div class="osparc-buttons-container" v-if="showOsparcServices">
-              <a :href="fullResourceUrl" target="_blank">
-                <el-button :style="'width: 100%'" class="mb-8">
-                  Launch o²S²PARC
-                </el-button>
-              </a>
-              <el-button class="secondary mb-8" @click="scrollToServices()">
-                View o²S²PARC services
-              </el-button>
-            </div>
           </div>
         </div>
         <div class="truncated">
@@ -79,9 +69,6 @@
         </div>
       </div>
     </tools-and-resources-page>
-    <div v-if="showOsparcServices" id="osparcServicesContainer" class="container">
-      <client-only><osparc-services /></client-only>
-    </div>
     <div class="container">
       <nuxt-link class="back-link" to="/tools-and-resources/tools">
         View All Tools & Resources >
@@ -93,7 +80,6 @@
 <script>
 import { pathOr } from 'ramda'
 import ToolsAndResourcesPage from '@/components/ToolAndResourcesPage/ToolsAndResourcesPage.vue'
-import OsparcServices from '@/components/OsparcServices/OsparcServices.vue'
 import ShareLinks from '@/components/ShareLinks/ShareLinks'
 
 export default {
@@ -101,7 +87,6 @@ export default {
 
   components: {
     ToolsAndResourcesPage,
-    OsparcServices,
     ShareLinks
   },
 
@@ -158,9 +143,6 @@ export default {
     resourceLogoAlt: function () {
       return pathOr('', ['fields', 'logo', 'fields', 'title'], this.resource)
     },
-    showOsparcServices() {
-      return this.$route.params.resourceId == this.$config.public.ctf_osparc_resource_entry_id
-    },
     fullResourceUrl() {
       const url = pathOr('', ['fields','url'], this.resource)
       if (url.indexOf('://') > 0 || url.indexOf('//') === 0) {
@@ -172,12 +154,6 @@ export default {
     fundingPrograms() {
       return this.resource.fields.program.join(", ")
     }
-  },
-
-  methods: {
-    scrollToServices: function () {
-      document.getElementById('osparcServicesContainer').scrollIntoView()
-    },
   }
 }
 </script>
@@ -234,11 +210,5 @@ export default {
 }
 .image-button-container {
   text-align: center;
-}
-.osparc-buttons-container {
-  display: flex;
-  flex-direction: column;
-  width: fit-content;
-  margin: auto;
 }
 </style>

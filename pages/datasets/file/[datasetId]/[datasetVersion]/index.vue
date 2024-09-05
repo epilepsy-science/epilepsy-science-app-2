@@ -10,9 +10,7 @@
         <content-tab-card v-if="hasViewer" class="mt-24" :tabs="tabs" :active-tab-id="activeTabId">
           <biolucida-viewer v-if="hasBiolucidaViewer" v-show="activeTabId === 'imageViewer'" :data="biolucidaData"
             :datasetInfo="datasetInfo" :file="file" />
-          <segmentation-viewer v-if="hasSegmentationViewer" v-show="activeTabId === 'segmentationViewer'"
-            :data="segmentationData" :datasetInfo="datasetInfo" :file="file" />
-          <plot-viewer v-if="hasPlotViewer" v-show="activeTabId === 'plotViewer'" :plotData="plotData"
+          <plot-viewer v-show="activeTabId === 'plotViewer'"
             :datasetInfo="datasetInfo" :file="file" />
           <video-viewer v-if="hasVideoViewer" v-show="activeTabId === 'videoViewer'" :videoData="videoData"
             :videoSource="signedUrl" :datasetInfo="datasetInfo" :file="file" />
@@ -25,12 +23,9 @@
 </template>
 
 <script>
-import discover from '@/services/discover'
 import biolucida from '@/services/biolucida'
 import scicrunch from '@/services/scicrunch'
 import BiolucidaViewer from '@/components/BiolucidaViewer/BiolucidaViewer'
-import SegmentationViewer from '@/components/SegmentationViewer/SegmentationViewer'
-import PlotViewer from '@/components/PlotViewer/PlotViewer'
 import VideoViewer from '@/components/VideoViewer/VideoViewer'
 import FileViewerMetadata from '@/components/ViewersMetadata/FileViewerMetadata.vue'
 import FormatDate from '@/mixins/format-date'
@@ -46,8 +41,6 @@ export default {
 
   components: {
     BiolucidaViewer,
-    SegmentationViewer,
-    PlotViewer,
     VideoViewer,
     FileViewerMetadata
   },
@@ -131,30 +124,6 @@ export default {
       console.log(`Error retrieving sci crunch data (possibly because there is none for this file): ${e}`)
     }
 
-    let segmentationData = {}
-    // We should just be able to just pull from scicrunch response as shown below, but due to discrepancies we pull from the sparc api endpoint
-    // const matchedSegmentationData = scicrunchData['mbf-segmentation']?.filter(function(el) {
-    //   return el.identifier == expectedScicrunchIdentifier
-    // })
-    // segmentationData = segmentationData?.length > 0 ? matchedSegmentationData[0] : {}*/
-    try {
-      if (packageType == 'Unsupported') {
-        await discover.getSegmentationInfo(route.params.datasetId, filePath, s3Bucket).then(({ data }) => {
-          segmentationData = data
-        })
-      }
-    } catch(e) {
-      console.log(`Error retrieving segmentation data (possibly because there is none for this file): ${e}`)
-    }
-    const hasSegmentationViewer = !isEmpty(segmentationData)
-    
-    let plotData = {}
-    const matchedPlotData = scicrunchData['abi-plot']?.filter(function(el) {
-      return el.identifier == expectedScicrunchIdentifier
-    })
-    plotData = matchedPlotData?.length > 0 ? matchedPlotData[0] : {}
-    const hasPlotViewer = !isEmpty(plotData)
-
     let videoData = {}
     const matchedVideoData = scicrunchData['video']?.filter(function(el) {
       return el.identifier == expectedScicrunchIdentifier
@@ -189,23 +158,15 @@ export default {
 
     let activeTabId = hasBiolucidaViewer ? 'imageViewer' :
       hasTimeseriesViewer ? 'timeseriesViewer' :
-      hasSegmentationViewer ? 'segmentationViewer' : 
-      hasPlotViewer ? 'plotViewer' :
       hasVideoViewer ? 'videoViewer' : ''
 
     return {
       biolucidaData,
       videoData,
-      plotData,
-      segmentationData: {
-        share_link: `${config.public.NL_LINK_PREFIX}/dataviewer?datasetId=${route.params.datasetId}&version=${route.params.datasetVersion}&path=${filePath}`,
-        status: ''
-      },
+
       file,
       hasBiolucidaViewer,
-      hasPlotViewer,
       hasVideoViewer,
-      hasSegmentationViewer,
       sourcePackageId,
       signedUrl,
       packageType,
@@ -231,7 +192,7 @@ export default {
 
   computed: {
     hasViewer: function() {
-      return this.hasBiolucidaViewer || this.hasSegmentationViewer || this.hasPlotViewer || this.hasVideoViewer
+      return this.hasBiolucidaViewer || this.hasVideoViewer
     },
     datasetId: function() {
       return this.$route.params.datasetId
@@ -293,19 +254,6 @@ export default {
       },
       immediate: true
     },
-    hasPlotViewer: {
-      handler: function(hasViewer) {
-        if (hasViewer) {
-          this.tabs.push({
-            label: 'Plot Viewer',
-            id: 'plotViewer'
-          })
-        } else {
-          this.tabs = this.tabs.filter(tab => tab.id !== 'plotViewer')
-        }
-      },
-      immediate: true
-    },
     hasVideoViewer: {
       handler: function(hasViewer) {
         if (hasViewer) {
@@ -319,19 +267,6 @@ export default {
       },
       immediate: true
     },
-    hasSegmentationViewer: {
-      handler: function(hasViewer) {
-        if (hasViewer) {
-          this.tabs.push({
-            label: 'Segmentation Viewer',
-            id: 'segmentationViewer'
-          })
-        } else {
-          this.tabs = this.tabs.filter(tab => tab.id !== 'segmentationViewer')
-        }
-      },
-      immediate: true
-    }
   },
 
   methods: {

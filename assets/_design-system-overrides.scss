@@ -1,6 +1,6 @@
 :root body {
     --el-color-primary: #e76f50 !important;
-  }
+}
 
 #epilepsy-science-app {
     .tab3 {
@@ -82,4 +82,15 @@
     // .container {
     //   max-width: 1024px;
     // }
+    .tab-link.active.style1, .tab-link:hover.style1 {
+      border: 1px solid #e76f50;
+      border-bottom: .125em solid #e76f50;
+      color: #e76f50;
+      background-color: #fbefeb;
+          }
+}
+
+div.el-popper.is-customized {
+  background: #fbefeb !important;
+  border: 1px solid #e76f50 !important;
 }

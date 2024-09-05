@@ -151,7 +151,7 @@
           </a>
         </span>
       </div>
-      <files-table :osparc-viewers="osparcViewers" :dataset-scicrunch="datasetScicrunch" />
+      <files-table :dataset-scicrunch="datasetScicrunch" />
     </div>
     <data-use-agreement-popup :show-dialog="showAgreementPopup" @agreement-loaded="agreementLoaded"
       @dialog-closed="showAgreementPopup = false" @agreement-signed="requestAccess" />
@@ -184,22 +184,6 @@ export default {
   },
 
   mixins: [DateUtils, FormatMetric],
-
-  async setup() {
-    const config = useRuntimeConfig()
-    const { $axios } = useNuxtApp()
-    // Get oSPARC file viewers
-    const osparcViewers = 
-      await $axios
-        .get(`${config.public.portal_api}/sim/file`)
-        .then(({ data }) => data['file_viewers'])
-        .catch(() => {
-          return {}
-        })
-    return {
-      osparcViewers
-    }
-  },
 
   computed: {
     /**
