@@ -9,8 +9,9 @@
       easy, the SPARC Portal provides the full data citation, including the
       option of different formats, under the Cite tab of each dataset page. For
       more Information, please see our
+      <!-- TODO - Not urgent: update correct URL below, this is temp -->
       <a
-        href="https://docs.sparc.science/docs/instructions-for-sparc-investigators-to-cite-their-datasets-in-manuscripts-1"
+        href="https://docs.pennsieve.io/"
         target="_blank"
       >
         Help page

@@ -310,10 +310,9 @@ export default {
   white-space: nowrap;
   margin-right: 48px;
   @media (max-width: 1120px) {
-    height: 2rem;
-    width: 100%;
+    height: 32px;
+    width: 68px;
     margin-right: 0;
-    padding-top: 0.1rem;
   }
 }
 

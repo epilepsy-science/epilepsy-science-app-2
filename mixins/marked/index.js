@@ -23,7 +23,7 @@ export const isInternalLink = str => {
   const config = useRuntimeConfig()
   return isAnchor(str)
     ? true
-    : str.includes(config.public.ROOT_URL) || str.includes("sparc.science") || str.startsWith('/')
+    : str.includes(config.public.ROOT_URL) || str.includes("epilepsy.science") || str.startsWith('/')
 }
 
 // docs.sparc.science is considered an internal link, but should always open in new tab

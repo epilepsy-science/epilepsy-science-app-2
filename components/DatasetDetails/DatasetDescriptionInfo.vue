@@ -16,9 +16,10 @@
         placement="left-center"
       >
         <template #data>
-          <div v-if="embargoed && embargoAccess !== EMBARGO_ACCESS.GRANTED">
+          <!-- TODO - Not urgent: find if embargoed datasets supported in epilepsy.science -->
+          <!-- <div v-if="embargoed && embargoAccess !== EMBARGO_ACCESS.GRANTED">
             This dataset is currently <a href="https://docs.sparc.science/docs/embargoed-data" target="_blank">embargoed</a>.<br />SPARC datasets are subject to a 1-year<br />embargo during which time the datasets<br />are visible only to members of the<br />SPARC consortium. During embargo, the<br />public will be able to view basic<br />metadata about these datasets as well<br />as their release date.
-          </div>
+          </div> -->
         </template>
       </sparc-tooltip>
     </div>

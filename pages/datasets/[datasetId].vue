@@ -14,9 +14,9 @@
     <Meta name="og:title" :content="datasetTitle" />
     <Meta name="og:image" :content="datasetInfo?.banner" />
     <Meta name="og:image:alt" :content="`${datasetTitle} Banner Image`" />
-    <Meta name="og:site_name" content="SPARC Portal" />
+    <Meta name="og:site_name" content="Epilepsy.science" />
     <Meta name="twitter:card" content="summary" />
-    <Meta name="twitter:site" content="@sparc_science" />
+    <Meta name="twitter:site" content="" />
     <Meta name="twitter:image" :content="datasetInfo?.banner" />
     <Meta name="DC.creator" :content="JSON.stringify(creators)" />
     <Meta name="DC.identifier" :content="doiLink" scheme="DCTERMS.URI" />

@@ -3,8 +3,8 @@
   <div id="mc_embed_signup">
     <form
       id="mc-embedded-subscribe-form"
-      action="https://eepurl.com/hgBxgv"
-      method="post"
+      action="https://forms.gle/Z77Mt7ULRcPirA849"
+      method="get"
       name="mc-embedded-subscribe-form"
       class="validate"
       target="_blank"

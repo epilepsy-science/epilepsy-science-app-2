@@ -28,7 +28,7 @@ export default defineNuxtConfig({
       { hid: 'og:image:secure_url', property: 'og:image:secure_url',
         content: 'http://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png'
       },
-      { hid: 'og:url', property: 'og:url', content: process.env.ROOT_URL || 'epilepsy.science' },
+      { hid: 'og:url', property: 'og:url', content: process.env.ROOT_URL || 'https://epilepsy.science' },
       { hid: 't-type', name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:site', content: '@epilepsy_science' },
       { name: 'twitter:title', content: 'Epilepsy.Science' },
@@ -66,13 +66,6 @@ export default defineNuxtConfig({
     define: {
       'window.global': {}
     }
-    /*css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@use "sparc-design-system-components-2/dist/style.css" as *;',
-        },
-      },
-    },*/
   },
   routeRules: {
     '/resources': { redirect: '/tools-and-resources/tools' },
@@ -153,7 +146,7 @@ export default defineNuxtConfig({
       BL_SERVER_URL: 'https://sparc.biolucida.net',
       BL_SHARE_LINK_PREFIX: 'https://sparc.biolucida.net/image?c=',
       ROOT_URL: process.env.ROOT_URL || 'http://localhost:3000',
-      METRICS_URL: process.env.METRICS_URL || 'https://metrics.sparc.science',
+      METRICS_URL: process.env.METRICS_URL || 'https://metrics.epilepsy.science',
       BITLY_ACCESS_TOKEN: process.env.BITLY_ACCESS_TOKEN,
       bitly_expand_endpoint: 'https://api-ssl.bitly.com/v4/expand',
       INTERNAL_TRAFFIC_KEY: process.env.INTERNAL_TRAFFIC_KEY || 'internal_traffic',
