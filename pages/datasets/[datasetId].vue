@@ -266,24 +266,7 @@ export default {
       this.setDatasetInfo({ ...this.datasetInfo })
     }
   },
-
-  mounted() {
-    this.$gtm.trackEvent({
-      event: "",
-      category: "",
-      dataset_id: propOr(this.$route.params.datasetId, 'id', this.datasetInfo),
-      version_id: propOr('', 'version', this.datasetInfo),
-      doi: propOr('', 'doi', this.datasetInfo),
-      event_name: "",
-      citation_type: "",
-      location: "",
-      files: "",
-      file_name: "",
-      file_path: "",
-      file_type: "",
-    })
-  },
-
+  
   computed: {
     ...mapState(useMainStore, ['datasetInfo', 'datasetFacetsData']),
     defaultTab() {
