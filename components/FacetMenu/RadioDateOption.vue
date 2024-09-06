@@ -109,11 +109,11 @@ export default {
 
 <style>
 .el-radio__input.is-checked + .el-radio__label {
-  color: #8300bf;
+  color: #e76f50;
 }
 .el-radio__input.is-checked .el-radio__inner {
-  border-color: #8300bf;
-  background: #8300bf;
+  border-color: #e76f50;
+  background: #e76f50;
 }
 </style>
 

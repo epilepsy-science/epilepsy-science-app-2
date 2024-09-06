@@ -69,7 +69,7 @@
               metadata directly to your computer free of charge. Please note that the files will be compressed upon
               download.</div>
             <a :href="downloadUrl">
-              <el-button @click="sendGtmEvent" class="my-16">Download Full Dataset</el-button>
+              <el-button class="my-16">Download Full Dataset</el-button>
             </a>
           </div>
           <div v-else>
@@ -308,22 +308,6 @@ export default {
       }
 
       this.setDatasetInfo(newDatasetInfo)
-    },
-    sendGtmEvent() {
-      this.$gtm.trackEvent({
-        event: 'interaction_event',
-        event_name: 'download_full_dataset',
-        dataset_id: this.datasetId,
-        version_id: propOr('', 'version', this.datasetInfo),
-        doi: propOr('', 'doi', this.datasetInfo),
-        location: "",
-        category: "",
-        citation_type: "",
-        files: "",
-        file_name: "",
-        file_path: "",
-        file_type: "",
-      })
     }
   }
 }

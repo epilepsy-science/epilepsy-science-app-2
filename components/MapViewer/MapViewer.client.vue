@@ -10,7 +10,6 @@
       :useHelpModeDialog="true"
       @updateShareLinkRequested="$emit('updateShareLinkRequested')"
       @isReady="$emit('isReady')"
-      @trackEvent="onTrackEvent"
     />
   </div>
 </template>
@@ -58,9 +57,6 @@
       getInstance: function(){
         return this.$refs.map;
       },
-      onTrackEvent: function(eventData) {
-        this.$gtm.push(eventData);
-      },
     },
   }
 </script>
@@ -78,7 +74,7 @@
   box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.06);
 
   .map-icon {
-    color: #8300bf;
+    color: #e76f50;
   }
 
   .background-popper.el-popover.el-popper,
@@ -106,7 +102,7 @@
 
 .gallery-popper {
   background: #f3ecf6 !important;
-  border: 1px solid #8300bf;
+  border: 1px solid #e76f50;
   border-radius: 4px;
   color: #303133 !important;
   font-size: 12px;
@@ -116,7 +112,7 @@
 
   &.el-popper[x-placement^='top'] {
     .popper__arrow {
-      border-top-color: #8300bf !important;
+      border-top-color: #e76f50 !important;
     }
 
     .popper__arrow:after {
