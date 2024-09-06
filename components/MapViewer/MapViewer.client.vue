@@ -10,7 +10,6 @@
       :useHelpModeDialog="true"
       @updateShareLinkRequested="$emit('updateShareLinkRequested')"
       @isReady="$emit('isReady')"
-      @trackEvent="onTrackEvent"
     />
   </div>
 </template>
@@ -57,9 +56,6 @@
     methods: {
       getInstance: function(){
         return this.$refs.map;
-      },
-      onTrackEvent: function(eventData) {
-        this.$gtm.push(eventData);
       },
     },
   }

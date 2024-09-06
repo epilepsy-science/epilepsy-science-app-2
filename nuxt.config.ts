@@ -55,7 +55,6 @@ export default defineNuxtConfig({
     'nuxt-svgo',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
-    '@zadigetvoltaire/nuxt-gtm',
     '@nuxtjs/turnstile',
     '@nuxtjs/sitemap'
   ],
@@ -150,18 +149,6 @@ export default defineNuxtConfig({
       INTERNAL_TRAFFIC_KEY: process.env.INTERNAL_TRAFFIC_KEY || 'internal_traffic',
       INTERNAL_TRAFFIC_VALUE: process.env.INTERNAL_TRAFFIC_VALUE || 'internal',
       SHOW_REHYDRATION_FEATURE: process.env.SHOW_REHYDRATION_FEATURE || 'false',
-      gtm: {
-        id: process.env.GOOGLE_TAG_MANAGER_ID || 'GTM-TPT2CVCS',
-        defer: true,
-        compatibility: false,
-        source: 'https://www.googletagmanager.com/gtm.js',
-        enabled: process.env.ROOT_URL == 'http://localhost:3000' ? false : true,
-        debug: true,
-        loadScript: true,
-        enableRouterSync: true,
-        trackOnNextTick: false,
-        devtools: true,
-      }
     },
     turnstile: {
       secretKey: process.env.NUXT_TURNSTILE_SECRET_KEY
