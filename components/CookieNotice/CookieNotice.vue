@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <el-button class="btn-close" @click="closeNotice">
+    <el-button id="cookie-close-btn" class="btn-close" @click="closeNotice">
       <svgo-icon-remove class="body4"/>
     </el-button>
     <accessibility-dialog
@@ -116,7 +116,7 @@ h2 {
 }
 a {
   font-size: 1em;
-  color: #e76f50;
+  color: #303133;
   text-decoration: none;
 }
 a:hover {
