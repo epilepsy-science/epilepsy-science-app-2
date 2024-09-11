@@ -77,8 +77,8 @@
         </p>
       </div>
       <div class="collaborators">
-        <span>Collaborators:</span>
-        <NuxtLink :to="{ name: 'about-collaborators-collaboratorId', params: { collaboratorId: 'pedquest' }}">View PedQuEST page</NuxtLink>
+        <h3>Collaborators</h3>
+        <NuxtLink :to="{ name: 'about-collaborators-collaboratorId', params: { collaboratorId: 'pedquest' }}">Visit PedQuEST page</NuxtLink>
       </div>
     </div>
   </div>
@@ -130,11 +130,5 @@ export default {
 @import 'sparc-design-system-components-2/src/assets/_variables.scss';
 .about-page {
   background-color: $background;
-}
-.collaborators {
-  span {
-    font-weight: 600;
-    margin-right: 16px;
-  }
 }
 </style>

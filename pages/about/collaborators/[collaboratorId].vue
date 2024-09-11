@@ -14,9 +14,18 @@
       <div v-html="parseMarkdown(heroCopy)"></div>
     </page-hero>
     <div class="page-wrap container">
-      <h2>{{ collaboratorName }}</h2>
+      <h2>More Information</h2>
       <div v-html="parseMarkdown(aboutCollaborator)"></div>
-
+      <div class="contact-card-wrapper">
+          <el-card 
+          style="max-width: 480px">
+            <template #header>
+              <span>Contact Information</span>
+            </template>
+            <p>Wagenaar Lab</p>
+            <p><span>Email :</span><a :href="collaboratorEmail">{{ collaboratorEmail }}</a></p>
+          </el-card>
+      </div>
     </div>
   </div>
 </template>
@@ -33,13 +42,20 @@ export default {
       heroCopy: '',
       aboutCollaborator: '',
       collaboratorName: '',
+      collaboratorEmail: '',
       breadcrumb: [
         {
           to: {
             name: 'index'
           },
           label: 'Home'
-        }
+        },
+        {
+          to: {
+            name: 'about'
+          },
+          label: 'About Epilepsy.science'
+        },
       ],
     }
   },
@@ -60,7 +76,6 @@ export default {
         $contentfulClient
         .getEntry(config.public.ctf_pedquest_collaborator_details)
         .then(({fields}) => {
-          console.log('fields', fields)
           return {...fields}
         })
         .catch(err => console.error('Could not fetch page data from Contentful.', err)),
@@ -77,5 +92,12 @@ export default {
 @import 'sparc-design-system-components-2/src/assets/_variables.scss';
 .about-page {
   background-color: $background;
+}
+.contact-card-wrapper {
+  margin-top: 24px;
+  span {
+    font-weight: 600;
+    margin-right: 12px;
+  }
 }
 </style>
