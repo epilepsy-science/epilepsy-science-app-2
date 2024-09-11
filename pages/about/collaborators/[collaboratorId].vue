@@ -56,6 +56,12 @@ export default {
           },
           label: 'About Epilepsy.science'
         },
+        {
+          to: {
+            name: 'about'
+          },
+          label: 'Collaborators'
+        },
       ],
     }
   },
