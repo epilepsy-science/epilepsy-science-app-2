@@ -112,6 +112,8 @@ export default defineNuxtConfig({
       ctf_news_and_events_page_id: '27g94v7HnxrqsCKKA8Wf7o',
       ctf_tools_and_resources_page_id: '5gOQBmYpDBRPtJh7Yzj8SP',
       ctf_consortia_content_type_id: 'consortia',
+      ctf_pedquest_about_page_id: '2GgKi7i5bruGNdLTrIBV7t',
+      ctf_pedquest_collaborator_details: '1tbeLijAKo4toaZoyOLkTu',
       portal_api: process.env.PORTAL_API_HOST || 'https://sparc-api.herokuapp.com',
       DEPLOY_ENV: process.env.DEPLOY_ENV || 'development',
       ALGOLIA_API_KEY: process.env.ALGOLIA_API_KEY,
