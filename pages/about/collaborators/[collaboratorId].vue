@@ -41,7 +41,6 @@ export default {
     return {
       heroCopy: '',
       aboutCollaborator: '',
-      collaboratorName: '',
       collaboratorEmail: '',
       breadcrumb: [
         {
