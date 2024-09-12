@@ -92,6 +92,13 @@
     a.link1 {
       color: #e76f50;
     }
+
+    .page-wrap {
+      @media (min-width: 48em) {
+        padding-bottom: 2em;
+        padding-top: 2em;
+      }
+    }
 }
 
 div.el-popper.is-customized {
