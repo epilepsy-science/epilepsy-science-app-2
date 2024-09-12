@@ -20,7 +20,7 @@
         <p>
           Epilepsy.Science is a new cloud-based platform for managing, analyzing,
           publishing, and sharing scientific datasets to accelerate epilepsy
-          research. Led by PennSieve and the Brain Data Science Platform (BDSP)
+          research. Led by Pennsieve and the Brain Data Science Platform (BDSP)
           and with support from the AWS Open Data Sponsorship Program, we are
           creating an unparalleled open data resource for the epilepsy community.
         </p>
