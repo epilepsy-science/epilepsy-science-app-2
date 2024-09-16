@@ -93,7 +93,7 @@
             <span class="label4">Option 2 - AWS download: </span>
             Download or transfer the dataset to your AWS Account. The files and metadata are stored in an AWS S3
             Requester Pays bucket. You can learn more about downloading data from AWS on our
-            <a href="https://docs.sparc.science/docs/accessing-public-datasets" target="_blank">Help Page</a>.
+            <a href="https://docs.pennsieve.io/docs/copy-a-public-dataset-to-your-own-aws-account" target="_blank">Help Page</a>.
           </div>
           <div class="aws-block mb-16 px-16 pb-16 pt-8">
             <template v-if="isLatestVersion || !showRehydrationFeature">
