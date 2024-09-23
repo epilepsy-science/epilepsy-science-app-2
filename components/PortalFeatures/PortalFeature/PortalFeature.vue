@@ -1,5 +1,5 @@
 <template>
-  <div class="feature-container pt-0 px-16 pb-16">
+  <div class="feature-container px-16 py-16">
     <img
       v-if="iconIsTopElement"
       class="icon"
