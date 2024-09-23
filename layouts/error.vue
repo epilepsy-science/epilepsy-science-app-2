@@ -4,8 +4,8 @@
   </div>
 </template>
 <script>
-import error404 from '~/components/Error/404.vue'
-import error400 from '~/components/Error/400.vue'
+import error404 from '~/components/Error/Error404.vue'
+import error400 from '~/components/Error/Error400.vue'
 export default {
   name: 'ErrorPage',
   props: {

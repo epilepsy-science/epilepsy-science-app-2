@@ -65,7 +65,7 @@
 <script>
 // TODO - Not urgent: clean up organizationName, doiLink and other organization name references that are not applicable to ES
 import Tombstone from '@/components/Tombstone/Tombstone.vue'
-import { clone, isEmpty, propOr, pathOr, head, compose } from 'ramda'
+import { clone, propOr, pathOr, head, compose } from 'ramda'
 import { getAlgoliaFacets, facetPropPathMapping } from '../../utils/algolia'
 import { useMainStore } from '../store/index.js'
 import { mapState, mapActions } from 'pinia'
@@ -77,9 +77,10 @@ import FormatStorage from '@/mixins/bf-storage-metrics'
 import DatasetDescriptionInfo from '@/components/DatasetDetails/DatasetDescriptionInfo.vue'
 import CitationDetails from '@/components/CitationDetails/CitationDetails.vue'
 import DatasetFilesInfo from '@/components/DatasetDetails/DatasetFilesInfo.vue'
-import error404 from '@/components/Error/404.vue'
-import error400 from '@/components/Error/400.vue'
+import error404 from '@/components/Error/Error404.vue'
+import error400 from '~/components/Error/Error400.vue'
 import { getLicenseLink, getLicenseAbbr } from '@/static/js/license-util'
+import { ref } from 'vue'
 
 const getDatasetDetails = async (config, datasetId, version, $pennsieveApiClient) => {
 
@@ -160,6 +161,8 @@ export default {
     const config = useRuntimeConfig()
     const { $algoliaClient, $axios, $pennsieveApiClient } = useNuxtApp()
     const algoliaIndex = await $algoliaClient.initIndex(config.public.ALGOLIA_INDEX_PUBLISHED_TIME_DESC)
+    let hasError = ref(false);
+    let errorType = null;
 
     let tabsData = clone(tabs)
     const datasetId = route.params.datasetId
@@ -217,16 +220,18 @@ export default {
         versions,
         showTombstone,
         algoliaIndex,
-        hasError: false,
         originallyPublishedDate,
-        creators
+        creators,
+        hasError,
+        errorType
       }
     } catch (error) {
+      // TODO: status code is not available from the error object, must retrieve error code alternatively
       const status = pathOr('', ['response', 'status'], error)
       store.setDatasetInfo({})
+      hasError = true
       return {
-        hasError: true,
-        errorType: status
+        hasError, errorType
       }
     }
   },
