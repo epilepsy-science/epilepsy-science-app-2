@@ -162,7 +162,7 @@ export default {
     const { $algoliaClient, $axios, $pennsieveApiClient } = useNuxtApp()
     const algoliaIndex = await $algoliaClient.initIndex(config.public.ALGOLIA_INDEX_PUBLISHED_TIME_DESC)
     let hasError = ref(false);
-    let errorType = null;
+    let errorType = ref("");
 
     let tabsData = clone(tabs)
     const datasetId = route.params.datasetId
