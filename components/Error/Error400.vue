@@ -3,10 +3,10 @@
     <div class="container">
       <div class="subpage">
         <!-- only display custom message if it is available -->
-        <p v-if="error?.display && error?.message">
+        <p v-if="error?.message">
           {{ error.message }}
         </p>
-        <p v-else>
+        <p>
           One of our external resources is down. This part of the site is not
           accessible. Please come back later.
         </p>
