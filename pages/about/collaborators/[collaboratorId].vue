@@ -11,11 +11,11 @@
     <breadcrumb :breadcrumb="breadcrumb" title="PedQuEST" />
     <page-hero class="py-24" v-if="heroCopy">
       <h1>{{ pageTitle }}</h1>
-      <div>parseMarkdown(heroCopy)</div>
+      <div v-html="parseMarkdown(heroCopy)"></div>
     </page-hero>
     <div class="page-wrap container">
       <h2>More Information</h2>
-      <div>parseMarkdown(aboutCollaborator)</div>
+      <div v-html="parseMarkdown(aboutCollaborator)"></div>
       <div class="contact-card-wrapper">
           <el-card 
           style="max-width: 480px">
