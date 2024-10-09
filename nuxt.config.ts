@@ -33,7 +33,8 @@ export default defineNuxtConfig({
       { name: 'twitter:site', content: '@epilepsy_science' },
       { name: 'twitter:title', content: 'Epilepsy.Science' },
       { name: 'twitter:image', content: 'http://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png' },
-      { name: 'twitter:description', content: 'Advancing Epilepsy Research through Open Science' }
+      { name: 'twitter:description', content: 'Advancing Epilepsy Research through Open Science' },
+      { hid: 'google-site-verification', name: 'google-site-verification', content: 'wim-FZOyN17pJet9TA8sQYZ-J6iMg1unI5YtANDP6sg' }
       ],
       link: [
         {
