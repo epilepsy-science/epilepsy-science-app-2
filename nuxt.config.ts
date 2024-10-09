@@ -18,7 +18,6 @@ export default defineNuxtConfig({
           name: 'keywords',
           content: 'Epilepsy, University of Pennsylvania, Harvard University, University of Pennsylvania Hospital, Massachusetts General Hospital'
         },
-        // default social cards information for site sharing url's
       { hid: 'og:type', property: 'og:type', content: 'website' },
       { hid: 'og:title', property: 'og:title', content: 'Epilepsy.Science' },
       { hid: 'og:description', property: 'og:description', content: 'Advancing Epilepsy Research through Open Science' },
