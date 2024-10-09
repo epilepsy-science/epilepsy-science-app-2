@@ -23,7 +23,7 @@
         fill : #e76f50;
     }
 
-    .el-button {
+    .el-button:not(#cookie-close-btn) {
         background: #e76f50 !important;
         border: 1px solid #e76f50 !important;
         &:hover,
@@ -91,6 +91,13 @@
 
     a.link1 {
       color: #e76f50;
+    }
+
+    .page-wrap {
+      @media (min-width: 48em) {
+        padding-bottom: 2em;
+        padding-top: 2em;
+      }
     }
 }
 
