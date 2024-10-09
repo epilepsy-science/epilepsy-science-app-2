@@ -10,7 +10,7 @@
         </p>
         <p>
           The link you clicked on may be broken or no longer exist. Click
-          <a>here</a> to go back to home page.
+          <a href="/">here</a> to go back to home page.
         </p>
         <p>
           Please reach out to
