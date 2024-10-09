@@ -34,7 +34,7 @@ export default defineNuxtConfig({
       { name: 'twitter:title', content: 'Epilepsy.Science' },
       { name: 'twitter:image', content: 'http://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png' },
       { name: 'twitter:description', content: 'Advancing Epilepsy Research through Open Science' },
-      { hid: 'google-site-verification', name: 'google-site-verification', content: 'wim-FZOyN17pJet9TA8sQYZ-J6iMg1unI5YtANDP6sg' }
+      { hid: 'google-site-verification', name: 'google-site-verification', content: 'wim-FZOyN17pJet9TA8sQYZ-J6iMg1unI5YtANDP6sg' },
       ],
       link: [
         {
@@ -47,7 +47,19 @@ export default defineNuxtConfig({
           href:
             'https://fonts.googleapis.com/css?family=Asap:400,400i,500,600,700&display=swap'
         }
-      ]
+      ],
+      script:[{
+        type:'application/ld+json',
+        innerHTML: JSON.stringify({
+          '@context': 'http://schema.org',
+          '@type': 'Organization',
+          "email": "support@pennsieve.io",
+          "name": "Pennsieve",
+          "logo": "https://www.example.com/images/logo.png",
+          "sameAs": "https://epilepsy.science/"
+          // Add your remaining properties here
+        })
+      }]
     }
   },
   devtools: { enabled: true },
