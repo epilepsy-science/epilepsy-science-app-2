@@ -18,7 +18,6 @@ export default defineNuxtConfig({
           name: 'keywords',
           content: 'Epilepsy, University of Pennsylvania, Harvard University, University of Pennsylvania Hospital, Massachusetts General Hospital'
         },
-        // default social cards information for site sharing url's
       { hid: 'og:type', property: 'og:type', content: 'website' },
       { hid: 'og:title', property: 'og:title', content: 'Epilepsy.Science' },
       { hid: 'og:description', property: 'og:description', content: 'Advancing Epilepsy Research through Open Science' },
@@ -35,6 +34,7 @@ export default defineNuxtConfig({
       { name: 'twitter:image', content: 'http://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png' },
       { name: 'twitter:description', content: 'Advancing Epilepsy Research through Open Science' },
       { hid: 'google-site-verification', name: 'google-site-verification', content: 'UysPtLm5pPtFdtBWFTBTMyqgBX4wYavMt7Fi-8KKKrk' },
+      { hid: 'google-site-verification', name: 'google-site-verification', content: 'UysPtLm5pPtFdtBWFTBTMyqgBX4wYavMt7Fi-8KKKrk' }
       ],
       link: [
         {
