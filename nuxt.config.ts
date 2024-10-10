@@ -56,7 +56,8 @@ export default defineNuxtConfig({
     'nuxt-svgo',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
-    '@nuxtjs/sitemap'
+    '@nuxtjs/sitemap',
+    '@nuxtjs/style-resources'
   ],
   vite: {
     define: {
@@ -154,6 +155,11 @@ export default defineNuxtConfig({
   ** Global CSS
   */
   css: ['sparc-design-system-components-2/dist/style.css', '@/assets/_base.scss', '@/assets/_design-system-overrides.scss'],
+  styleResources: {  //Do not import actual styles in this
+    scss: [
+      '@/assets/scss/_variables.scss',
+    ]
+  },
   sitemap: {
     xslColumns: [
       { label: 'URL', width: '100%' }
