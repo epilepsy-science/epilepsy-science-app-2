@@ -56,12 +56,8 @@ export default defineNuxtConfig({
     'nuxt-svgo',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
-    '@nuxtjs/turnstile',
     '@nuxtjs/sitemap'
   ],
-  turnstile: {
-    siteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAATLCwNJ5HNQWRsX'
-  },
   vite: {
     define: {
       'window.global': {}
@@ -153,9 +149,6 @@ export default defineNuxtConfig({
       INTERNAL_TRAFFIC_VALUE: process.env.INTERNAL_TRAFFIC_VALUE || 'internal',
       SHOW_REHYDRATION_FEATURE: process.env.SHOW_REHYDRATION_FEATURE || 'false',
     },
-    turnstile: {
-      secretKey: process.env.NUXT_TURNSTILE_SECRET_KEY
-    }
   },
   /*
   ** Global CSS
