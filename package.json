@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
-    "@nuxtjs/style-resources": "^1.2.2",
+    "@nuxtjs/style-resources": "2.0.0",
     "@zadigetvoltaire/nuxt-gtm": "^0.0.13",
     "cypress": "13.9.0",
     "nuxt": "^3.8.2",
