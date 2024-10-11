@@ -75,7 +75,7 @@ export default {
   background-color: transparent;
   font-size: 14px;
   font-weight: normal;
-  color: #e76f50;
+  color: $es-primary-color;
   margin-left: 5px;
 }
 

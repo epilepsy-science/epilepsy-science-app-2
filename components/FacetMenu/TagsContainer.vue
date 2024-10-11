@@ -129,7 +129,7 @@ export default {
   .container-link {
     text-decoration: underline;
     text-transform: none;
-    color: #e76f50;
+    color: $es-primary-color;
     a:hover {
       text-decoration: none;
     }

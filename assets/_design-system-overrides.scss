@@ -1,5 +1,5 @@
 :root body {
-    --el-color-primary: #e76f50 !important;
+    --el-color-primary: $es-primary-color !important;
 }
 
 #epilepsy-science-app {
@@ -8,31 +8,31 @@
     }
 
     .tab1 {
-        color : #e76f50;
+        color : $es-primary-color;
     }
 
     .el-table a {
-        color: #e76f50;
+        color: $es-primary-color;
     }
 
     .filter-dropdown {
-        color : #e76f50;
+        color : $es-primary-color;
     }
 
     .help-icon {
-        fill : #e76f50;
+        fill : $es-primary-color;
     }
 
     .el-button:not(#cookie-close-btn) {
-        background: #e76f50 !important;
-        border: 1px solid #e76f50 !important;
+        background: $es-primary-color !important;
+        border: 1px solid $es-primary-color !important;
         &:hover,
         &:focus,
         &[disabled],
         &[disabled]:hover,
         &[disabled]:focus {
-          background: #e76f50 !important;
-          border: 1px solid #e76f50 !important;
+          background: $es-primary-color !important;
+          border: 1px solid $es-primary-color !important;
         }
 
         &.secondary,
@@ -40,13 +40,13 @@
         &.secondary[disabled]:hover,
         &.secondary[disabled]:focus {
           background: #fbefeb !important;
-          border: 1px solid #e76f50 !important;
-          color: #e76f50 !important;
+          border: 1px solid $es-primary-color !important;
+          color: $es-primary-color !important;
         }
     }
 
     .el-input__inner {
-        border-color: #e76f50 !important;
+        border-color: $es-primary-color !important;
     }
 
     .sparc-design-system-pagination {
@@ -54,27 +54,27 @@
 
             li.number {
                 background: #fbefeb;
-                border: 1.5px solid #e76f50;
-                color: #e76f50;
+                border: 1.5px solid $es-primary-color;
+                color: $es-primary-color;
             }
 
             .btn-next, .btn-prev {
-                background: #e76f50;
+                background: $es-primary-color;
             }
             li.number:hover {
-                background: #e76f50 !important;
+                background: $es-primary-color !important;
             }
         }
 
 
         li.number.is-active {
-            border-bottom-color:#e76f50;
+            border-bottom-color:$es-primary-color;
         }
     }
 
     .el-tree-node.is-checked {
         .custom-tree-node {
-          color: #e76f50;
+          color: $es-primary-color;
         }
     }
 
@@ -83,14 +83,14 @@
     //   max-width: 1024px;
     // }
     .tab-link.active.style1, .tab-link:hover.style1 {
-      border: 1px solid #e76f50;
-      border-bottom: .125em solid #e76f50;
-      color: #e76f50;
+      border: 1px solid $es-primary-color;
+      border-bottom: .125em solid $es-primary-color;
+      color: $es-primary-color;
       background-color: #fbefeb;
     }
 
     a.link1 {
-      color: #e76f50;
+      color: $es-primary-color;
     }
 
     .page-wrap {
@@ -103,9 +103,9 @@
 
 div.el-popper.is-customized {
   background: #fbefeb !important;
-  border: 1px solid #e76f50 !important;
+  border: 1px solid $es-primary-color !important;
   .el-popper__arrow:before {
     background-color: #fbefeb !important;
-    border: 1px solid #e76f50;
+    border: 1px solid $es-primary-color;
   }
 }
