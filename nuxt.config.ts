@@ -87,6 +87,13 @@ export default defineNuxtConfig({
     define: {
       "window.global": {},
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "~/assets/scss/_variables.scss" as *;',
+        },
+      },
+    },
   },
   routeRules: {
     "/resources": { redirect: "/tools-and-resources/tools" },
