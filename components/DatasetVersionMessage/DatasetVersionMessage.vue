@@ -75,7 +75,7 @@ export default {
 <style lang="scss" scoped>
 @import 'sparc-design-system-components-2/src/assets/_variables.scss';
 .version-message {
-  background: #e76f51 !important;
+  background: $es-primary-color !important;
   color: #fff !important;
   min-width: 17.5rem;
   padding: 1rem;

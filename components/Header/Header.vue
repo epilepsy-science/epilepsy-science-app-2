@@ -207,7 +207,7 @@ export default {
 }
 
 .header__nav {
-  background-color: #e76f51;
+  background-color: $es-primary-color;
   width: 100%;
 }
 
@@ -348,7 +348,7 @@ export default {
   -webkit-appearance: none;
 
   &:hover:not(:active) {
-    color: #e76f51;
+    color: $es-primary-color;
   }
 
   @media screen and (max-width: 1120px) {
@@ -378,7 +378,7 @@ export default {
 
       a {
         text-decoration: none;
-        color: #e76f51;
+        color: $es-primary-color;
         padding-bottom: 0.2rem;
         font-weight: 500;
 

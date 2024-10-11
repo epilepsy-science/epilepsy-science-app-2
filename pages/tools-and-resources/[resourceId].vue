@@ -205,7 +205,7 @@ export default {
   overflow: hidden;
 }
 .back-link {
-  color: #e76f51;
+  color: $es-primary-color;
   font-weight: 700;
 }
 .image-button-container {

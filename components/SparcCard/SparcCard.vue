@@ -68,7 +68,7 @@ $tablet-large: 64em;
   .sparc-card__content-wrap {
     display: flex;
     flex: 1;
-    background:#e76f51;
+    background:$es-primary-color;
   }
   .sparc-card__image,.sparc-card__content-wrap {
     flex: 1 0 0em; // Unit required for IE11

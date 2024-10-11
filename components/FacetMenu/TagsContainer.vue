@@ -140,7 +140,7 @@ export default {
     border: none;
   }
   .help-icon {
-    color: #e76f51;
+    color: $es-primary-color;
     height: 1.5rem;
     width: 1.5rem;
   }
