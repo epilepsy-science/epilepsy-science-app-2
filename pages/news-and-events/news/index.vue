@@ -352,7 +352,7 @@ export default {
   }
 }
 .search-tabs__button {
-  background: #fbefeb;
+  background: $es-primary-color-light;
   display: block;
   font-size: 0.75rem;
   font-weight: 500;

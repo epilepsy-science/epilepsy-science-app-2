@@ -145,7 +145,7 @@ export default {
     width: 1.5rem;
   }
   :deep(.popover) {
-    background-color: #fbefeb;
+    background-color: $es-primary-color-light;
   }
 }
 </style>
