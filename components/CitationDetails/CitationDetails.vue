@@ -118,7 +118,6 @@ export default {
             return response.text()
           })
           .then(text => {
-            console.log('citation text', text)
             citationType.citationText = text
           })
           .catch(() => {
