@@ -90,6 +90,7 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: { // Add partials under this
+          api: "modern-compiler",
           additionalData: '@use "@/assets/scss/_variables.scss" as *;',
         },
       },
@@ -229,4 +230,8 @@ export default defineNuxtConfig({
   sitemap: {
     xslColumns: [{ label: "URL", width: "100%" }],
   },
+  sourcemap: {
+    server: false,
+    client: false
+  }
 });

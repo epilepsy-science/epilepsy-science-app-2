@@ -44,7 +44,8 @@
         />
       </div>
     </div>
-    <div class="pb-16 container">
+    <client-only>
+      <div class="pb-16 container">
       <el-row :gutter="32" type="flex">
         <el-col :span="24">
           <el-row :gutter="32">
@@ -54,13 +55,11 @@
               :md="6"
               :lg="6"
             >
-              <client-only>
                 <events-facet-menu
                   ref="eventsFacetMenu"
                   class="events-facet-menu"
                   @events-selections-changed="onPaginationPageChange(1)"
                 />
-              </client-only>
             </el-col>
             <el-col
               :sm='24'
@@ -70,26 +69,21 @@
               <div class="search-heading mt-32 mb-16">
                 <div class="label1" v-show="events.items.length">
                   {{ events.total }} Results | Showing
-                  <client-only>
                     <pagination-menu
                       :page-size="events.limit"
                       @update-page-size="onPaginationLimitChange"
                     />
-                  </client-only>
                 </div>
                 <span class="label1">
                   Sort
-                  <client-only>
                     <sort-menu
                       :options="sortOptions"
                       :selected-option="selectedSortOption"
                       @update-selected-option="onSortOptionChange"
                     />
-                  </client-only>
                 </span>
               </div>
               <div ref="eventsWrap" class="subpage">
-                <client-only>
                   <event-list-item
                     v-for="item in events.items"
                     :key="item.sys.id"
@@ -101,19 +95,15 @@
                     :search-had-results="events.items.length > 0"
                     @vue:mounted="altResultsMounted"
                   />
-                </client-only>
               </div>
               <div class="search-heading">
                 <div class="label1" v-if="events.items.length">
                   {{ events.total }} Results | Showing
-                  <client-only>
                     <pagination-menu
                       :page-size="events.limit"
                       @update-page-size="onPaginationLimitChange"
                     />
-                  </client-only>
                 </div>
-                <client-only>
                   <pagination
                     v-if="events.limit < events.total"
                     :selected="curSearchPage"
@@ -121,13 +111,13 @@
                     :total-count="events.total"
                     @select-page="onPaginationPageChange"
                   />
-                </client-only>
               </div>
             </el-col>
           </el-row>
         </el-col>
       </el-row>
     </div>
+    </client-only>
     <div class="pb-16 pt-16 container">
       <submit-news-section/>
     </div>
