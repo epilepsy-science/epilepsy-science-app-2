@@ -107,7 +107,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .el-radio__input.is-checked + .el-radio__label {
   color: $es-primary-color;
 }

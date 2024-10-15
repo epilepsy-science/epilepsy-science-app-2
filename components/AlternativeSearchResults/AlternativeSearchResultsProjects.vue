@@ -78,7 +78,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 hr {
   border-top: none;
 }
