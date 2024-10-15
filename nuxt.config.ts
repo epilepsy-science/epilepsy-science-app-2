@@ -89,7 +89,7 @@ export default defineNuxtConfig({
     },
     css: {
       preprocessorOptions: {
-        scss: {
+        scss: { // Add partials under this
           additionalData: '@use "~/assets/scss/_variables.scss" as *;',
         },
       },
@@ -219,12 +219,12 @@ export default defineNuxtConfig({
     },
   },
   /*
-   ** Global CSS
+   ** Add global CSS styles under this
    */
   css: [
     "sparc-design-system-components-2/dist/style.css",
-    "@/assets/_base.scss",
-    "@/assets/_design-system-overrides.scss",
+    "~/assets/_base.scss",
+    "~/assets/_design-system-overrides.scss",
   ],
   sitemap: {
     xslColumns: [{ label: "URL", width: "100%" }],
