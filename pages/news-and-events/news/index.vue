@@ -74,7 +74,7 @@
                       <pagination-menu
                         :page-size="news.limit"
                         @update-page-size="onPaginationLimitChange"
-                      />
+                      ></pagination-menu>
                     </client-only>
                   </div>
                   <span class="label1">
@@ -109,7 +109,7 @@
                       <pagination-menu
                         :page-size="news.limit"
                         @update-page-size="onPaginationLimitChange"
-                      />
+                      ></pagination-menu>
                     </client-only>
                   </div>
                   <client-only>
@@ -119,7 +119,7 @@
                       :page-size="news.limit"
                       :total-count="news.total"
                       @select-page="onPaginationPageChange"
-                    />
+                    ></pagination>
                   </client-only>
                 </div>
               </el-col>
@@ -140,8 +140,8 @@ import NewsFacetMenu from '@/components/FacetMenu/NewsFacetMenu.vue'
 import NewsListItem from '@/components/NewsListItem/NewsListItem.vue'
 import SearchControlsContentful from '@/components/SearchControlsContentful/SearchControlsContentful.vue';
 import SortMenu from '@/components/SortMenu/SortMenu.vue'
-import SubmitNewsSection from '~/components/NewsEventsResourcesPage/SubmitNewsSection.vue'
-import AlternativeSearchResultsNews from '~/components/AlternativeSearchResults/AlternativeSearchResultsNews.vue'
+import SubmitNewsSection from '@/components/NewsEventsResourcesPage/SubmitNewsSection.vue'
+import AlternativeSearchResultsNews from '@/components/AlternativeSearchResults/AlternativeSearchResultsNews.vue'
 
 import { fetchNews } from '../model'
 

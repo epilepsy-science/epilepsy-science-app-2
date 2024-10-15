@@ -17,43 +17,45 @@
           }" v-html="highlightMatches(scope.row.fields.title, $route.query.search)" />
         <div class="mt-8 mb-8" v-html="highlightMatches(scope.row.fields.shortDescription, $route.query.search)" />
         <table class="property-table">
-          <tr v-if="scope.row.fields.focus">
-            <td class="property-name-column">
-              Focus
-            </td>
-            <td v-html="highlightMatches(scope.row.fields.focus.join(', '), $route.query.search)"/>
-          </tr>
-          <tr v-if="scope.row.fields.principalInvestigators">
-            <td class="property-name-column">
-              Principle Investigator(s)
-            </td>
-            <td v-html="highlightMatches(scope.row.fields.principalInvestigators.join(', '), $route.query.search)" />
-          </tr>
-          <tr v-if="scope.row.fields.institution">
-            <td class="property-name-column">
-              Institution(s)
-            </td>
-            <td>
-              {{ getInstitutionNames(scope.row.fields.institutions) }}
-            </td>
-          </tr>
-          <tr v-if="scope.row.fields.program.length > 0">
-            <td class="property-name-column">
-              Funding Program(s)
-            </td>
-            <td v-html="highlightMatches(scope.row.fields.program.join(', '), $route.query.search)" />
-          </tr>
-          <tr v-if="scope.row.fields.awardId">
-            <td class="property-name-column">
-              Award
-            </td>
-            <td>
-              <a :href="getNihReporterUrl(scope)" target="_blank">
-                {{ scope.row.fields.awardId }}
-                <svgo-icon-open class="open-icon" v-if="!isInternalLink(getNihReporterUrl(scope))" />
-              </a>
-            </td>
-          </tr>
+          <tbody>
+            <tr v-if="scope.row.fields.focus">
+              <td class="property-name-column">
+                Focus
+              </td>
+              <td v-html="highlightMatches(scope.row.fields.focus.join(', '), $route.query.search)" />
+            </tr>
+            <tr v-if="scope.row.fields.principalInvestigators">
+              <td class="property-name-column">
+                Principle Investigator(s)
+              </td>
+              <td v-html="highlightMatches(scope.row.fields.principalInvestigators.join(', '), $route.query.search)" />
+            </tr>
+            <tr v-if="scope.row.fields.institution">
+              <td class="property-name-column">
+                Institution(s)
+              </td>
+              <td>
+                {{ getInstitutionNames(scope.row.fields.institutions) }}
+              </td>
+            </tr>
+            <tr v-if="scope.row.fields.program.length > 0">
+              <td class="property-name-column">
+                Funding Program(s)
+              </td>
+              <td v-html="highlightMatches(scope.row.fields.program.join(', '), $route.query.search)" />
+            </tr>
+            <tr v-if="scope.row.fields.awardId">
+              <td class="property-name-column">
+                Award
+              </td>
+              <td>
+                <a :href="getNihReporterUrl(scope)" target="_blank">
+                  {{ scope.row.fields.awardId }}
+                  <svgo-icon-open class="open-icon" v-if="!isInternalLink(getNihReporterUrl(scope))" />
+                </a>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </template>
     </el-table-column>
