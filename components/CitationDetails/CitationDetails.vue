@@ -3,7 +3,7 @@
     <div class="heading2 mb-8">
       Dataset Citation
     </div>
-    <body>
+    <div>
       To promote reproducibility and give credit to investigators who publish
       their data, we recommend citing your usage of SPARC datasets. To make it
       easy, the SPARC Portal provides the full data citation, including the
@@ -17,7 +17,7 @@
         Help page
       </a>
       .
-    </body>
+    </div>
     <br />
     <div v-for="citationType in citationTypes" :key="citationType.type">
       <div class="label4 mb-8">{{citationType.label}}</div>
@@ -29,7 +29,7 @@
           class="citation-text"
           aria-live="polite"
           v-html="citationType.citationText"
-        />
+        ></div>
       </div>
       <div class="info-citation mb-16 py-16 pl-16 pr-24" v-else>
         <span class="label4">Internal Server Error</span><br />
@@ -118,6 +118,7 @@ export default {
             return response.text()
           })
           .then(text => {
+            console.log('citation text', text)
             citationType.citationText = text
           })
           .catch(() => {
