@@ -152,5 +152,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/_viewer.scss';
+@import '@/assets/viewer.scss';
 </style>
