@@ -45,18 +45,17 @@
             v-html="scope.row.description"
           />
           <table class="property-table">
-            <tr
+            <tbody>
+              <tr
               v-for="(property, index) in PROPERTY_DATA"
               v-show="getPropertyValue(scope.row, property)"
-              :key="index"
-            >
+              :key="index">
               <td class="property-name-column">
                 {{ property.displayName }}
               </td>
-              <td
-                v-html="getPropertyValue(scope.row, property)"
-              />
+              <td v-html="getPropertyValue(scope.row, property)"></td>
             </tr>
+            </tbody>
           </table>
         </div>
       </template>

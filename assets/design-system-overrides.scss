@@ -1,0 +1,118 @@
+@use "@/assets/scss/_variables.scss" as *;
+
+:root body {
+    --el-color-primary:  #{$es-primary-color} !important; // Interpolation required here 
+}
+
+#epilepsy-science-app {
+    .tab3 {
+        background-color: $es-primary-color;
+    }
+
+    .tab1 {
+        color : $es-primary-color;
+    }
+
+    .el-table a {
+        color: $es-primary-color;
+    }
+
+    .filter-dropdown {
+        color : $es-primary-color;
+    }
+
+    .help-icon {
+        fill : $es-primary-color;
+    }
+
+    .el-button:not(#cookie-close-btn) {
+        background: $es-primary-color !important;
+        border: 1px solid $es-primary-color !important;
+        &:hover,
+        &:focus,
+        &[disabled],
+        &[disabled]:hover,
+        &[disabled]:focus {
+          background: $es-primary-color !important;
+          border: 1px solid $es-primary-color !important;
+        }
+
+        &.secondary,
+        &.secondary[disabled],
+        &.secondary[disabled]:hover,
+        &.secondary[disabled]:focus {
+          background: $es-primary-color-light !important;
+          border: 1px solid $es-primary-color !important;
+          color: $es-primary-color !important;
+        }
+    }
+
+    .el-input__inner {
+        border-color: $es-primary-color !important;
+    }
+
+    .sparc-design-system-pagination {
+        .is-background {
+
+            li.number {
+                background: $es-primary-color-light;
+                border: 1.5px solid $es-primary-color;
+                color: $es-primary-color;
+            }
+
+            .btn-next, .btn-prev {
+                background: $es-primary-color;
+            }
+            li.number:hover {
+                background: $es-primary-color !important;
+            }
+        }
+
+
+        li.number.is-active {
+            border-bottom-color:$es-primary-color;
+        }
+    }
+
+    .el-tree-node.is-checked {
+        .custom-tree-node {
+          color: $es-primary-color;
+        }
+    }
+
+    
+    // .container {
+    //   max-width: 1024px;
+    // }
+    .tab-link.active.style1, .tab-link:hover.style1 {
+      border: 1px solid $es-primary-color;
+      border-bottom: .125em solid $es-primary-color;
+      color: $es-primary-color;
+      background-color: $es-primary-color-light;
+    }
+
+    a.link1 {
+      color: $es-primary-color;
+    }
+
+    .page-wrap {
+      @media (min-width: 48em) {
+        padding-bottom: 2em;
+        padding-top: 2em;
+      }
+    }
+}
+
+div.el-popper.is-customized {
+  background: $es-primary-color-light !important;
+  border: 1px solid $es-primary-color !important;
+  .el-popper__arrow:before {
+    background-color: $es-primary-color-light !important;
+    border: 1px solid $es-primary-color;
+  }
+}
+
+div.el-popper.el-popover {
+  background: $es-primary-color-light !important;
+  border: 1px solid $es-primary-color !important;
+}

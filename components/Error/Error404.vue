@@ -32,7 +32,7 @@ export default {
   },
 };
 </script>
-<style>
+<style lang="scss">
 .error-404 a {
   cursor: pointer;
 }

@@ -92,7 +92,7 @@ export default {
 .btn-copy-permalink {
   border: none;
   background: none;
-  color: #e76f50;
+  color: $es-primary-color;
   cursor: pointer;
   padding: 0;
   &:active {

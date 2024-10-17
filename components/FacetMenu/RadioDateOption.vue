@@ -107,13 +107,13 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .el-radio__input.is-checked + .el-radio__label {
-  color: #e76f50;
+  color: $es-primary-color;
 }
 .el-radio__input.is-checked .el-radio__inner {
-  border-color: #e76f50;
-  background: #e76f50;
+  border-color: $es-primary-color;
+  background: $es-primary-color;
 }
 </style>
 

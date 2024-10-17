@@ -83,7 +83,7 @@ export default {
   background: #fff;
   bottom: 0;
   box-shadow: 0px -2px 8px 0px rgba(0, 0, 0, 0.07);
-  color: #e76f51;
+  color: $es-primary-color;
   left: 0;
   right: 0;
   padding: 2rem 0;

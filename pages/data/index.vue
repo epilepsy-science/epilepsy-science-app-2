@@ -438,7 +438,7 @@ export default {
 
 .alternative-links {
   text-decoration: underline;
-  color: #e76f50;
+  color: $es-primary-color;
 }
 
 .page-data {
@@ -528,7 +528,7 @@ export default {
   }
 
   :deep(.el-checkbox__label) {
-    color: #e76f50;
+    color: $es-primary-color;
   }
 }
 </style>

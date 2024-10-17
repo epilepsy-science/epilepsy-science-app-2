@@ -102,7 +102,7 @@ export default {
     }
     h2 {
       font-size: 1em;
-      color: #e76f50;
+      color: $es-primary-color;
       margin-bottom: 0.375rem;
       line-height: 22px;
       font-weight: 500;
@@ -153,7 +153,7 @@ export default {
 }
 
 .resource-category {
-  background: #e76f50;
+  background: $es-primary-color;
   border-radius: 15px;
   color: #fff;
   font-size: 0.875rem;

@@ -90,7 +90,7 @@ input {
   margin: 0;
   padding: 0.5rem 2.25rem 0.5rem 0.8125rem;
   &:focus {
-    border-color: #e76f50;
+    border-color: $es-primary-color;
   }
   &::-ms-clear {
     display: none;

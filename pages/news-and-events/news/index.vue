@@ -74,7 +74,7 @@
                       <pagination-menu
                         :page-size="news.limit"
                         @update-page-size="onPaginationLimitChange"
-                      />
+                      ></pagination-menu>
                     </client-only>
                   </div>
                   <span class="label1">
@@ -109,7 +109,7 @@
                       <pagination-menu
                         :page-size="news.limit"
                         @update-page-size="onPaginationLimitChange"
-                      />
+                      ></pagination-menu>
                     </client-only>
                   </div>
                   <client-only>
@@ -119,7 +119,7 @@
                       :page-size="news.limit"
                       :total-count="news.total"
                       @select-page="onPaginationPageChange"
-                    />
+                    ></pagination>
                   </client-only>
                 </div>
               </el-col>
@@ -140,8 +140,8 @@ import NewsFacetMenu from '@/components/FacetMenu/NewsFacetMenu.vue'
 import NewsListItem from '@/components/NewsListItem/NewsListItem.vue'
 import SearchControlsContentful from '@/components/SearchControlsContentful/SearchControlsContentful.vue';
 import SortMenu from '@/components/SortMenu/SortMenu.vue'
-import SubmitNewsSection from '~/components/NewsEventsResourcesPage/SubmitNewsSection.vue'
-import AlternativeSearchResultsNews from '~/components/AlternativeSearchResults/AlternativeSearchResultsNews.vue'
+import SubmitNewsSection from '@/components/NewsEventsResourcesPage/SubmitNewsSection.vue'
+import AlternativeSearchResultsNews from '@/components/AlternativeSearchResults/AlternativeSearchResultsNews.vue'
 
 import { fetchNews } from '../model'
 
@@ -338,21 +338,21 @@ export default {
   overflow: auto;
   margin: 0 0 0 0;
   padding: 0 0;
-  outline: 0.1rem solid #e76f50;
+  outline: 0.1rem solid $es-primary-color;
   @media (max-width: 40rem) {
     display: block;
   }
   li {
     width: 100%;
     text-align: center;
-    color: #e76f50;
+    color: $es-primary-color;
   }
   li:last-child > a {
     border-right: none;
   }
 }
 .search-tabs__button {
-  background: #fbefeb;
+  background: $es-primary-color-light;
   display: block;
   font-size: 0.75rem;
   font-weight: 500;
@@ -363,7 +363,7 @@ export default {
   line-height: 3.5rem;
   @media (min-width: 40rem) {
     font-size: 0.65rem;
-    border-right: 0.1rem solid #e76f50;
+    border-right: 0.1rem solid $es-primary-color;
   }
   @media (min-width: 50rem) {
     font-size: .75rem;
@@ -376,7 +376,7 @@ export default {
   &:hover,
   &.active {
     color: white;
-    background-color: #e76f50;
+    background-color: $es-primary-color;
     font-weight: 500;
   }
 }

@@ -41,7 +41,7 @@ export default {
   height: fit-content;
   a {
     text-decoration: none;
-    color: #e76f51;
+    color: $es-primary-color;
   }
   & sup {
     vertical-align: baseline;
