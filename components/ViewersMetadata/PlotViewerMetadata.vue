@@ -90,5 +90,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/_viewer.scss';
+@import '@/assets/viewer.scss';
 </style>

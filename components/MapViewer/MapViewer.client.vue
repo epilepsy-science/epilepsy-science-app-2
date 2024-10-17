@@ -74,7 +74,7 @@
   box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.06);
 
   .map-icon {
-    color: #e76f50;
+    color: $es-primary-color;
   }
 
   .background-popper.el-popover.el-popper,
@@ -102,7 +102,7 @@
 
 .gallery-popper {
   background: #f3ecf6 !important;
-  border: 1px solid #e76f50;
+  border: 1px solid $es-primary-color;
   border-radius: 4px;
   color: #303133 !important;
   font-size: 12px;
@@ -112,7 +112,7 @@
 
   &.el-popper[x-placement^='top'] {
     .popper__arrow {
-      border-top-color: #e76f50 !important;
+      border-top-color: $es-primary-color !important;
     }
 
     .popper__arrow:after {

@@ -23,7 +23,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .channel_colour_box {
   float: left;
   height: 1rem;

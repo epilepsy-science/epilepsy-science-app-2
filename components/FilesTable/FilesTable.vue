@@ -876,7 +876,7 @@ export default {
 .breadcrumb-link {
   word-break: break-word;
   text-decoration: underline;
-  color: #e76f50;
+  color: $es-primary-color;
 }
 .breadcrumb-separator {
   margin: 0 4px;
@@ -896,7 +896,7 @@ export default {
   text-overflow: ellipsis;
 }
 .file-name {
-  color: #e76f50;
+  color: $es-primary-color;
 }
 .file-icon {
   color: #000;
@@ -912,7 +912,7 @@ export default {
   margin-right: 4px;
   -moz-border-radius: 0.75em; /* or 50% */
   border-radius: 0.75em; /* or 50% */
-  background-color: #e76f50;
+  background-color: $es-primary-color;
   color: #fff;
   cursor: pointer;
   writing-mode: vertical-rl;

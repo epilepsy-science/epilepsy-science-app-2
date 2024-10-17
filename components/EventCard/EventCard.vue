@@ -108,7 +108,7 @@ export default {
 .upcoming-event {
   background: #fff;
   border: 1px solid $lineColor1;
-  color: #e76f51;
+  color: $es-primary-color;
   padding: 1.5em 1em;
   &__image {
     margin-bottom: 1rem;
@@ -153,7 +153,7 @@ export default {
     text-overflow: ellipsis;
   }
   a {
-    color: #e76f50;
+    color: $es-primary-color;
     text-decoration: none;
     &:hover,
     &:focus {

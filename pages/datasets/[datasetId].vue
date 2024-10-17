@@ -419,7 +419,7 @@ export default {
 :deep(.card-container) {
   .content {
       a {
-        color: #e76f50;
+        color: $es-primary-color;
       }
   }
 }

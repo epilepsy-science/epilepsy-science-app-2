@@ -2,12 +2,12 @@
   <div class="file-detail-page">
     <div class="container">
       <h1 hidden>{{ title }} timeseries</h1>
-      <content-tab-card
+      <client-only>
+        <content-tab-card
         v-if="hasTimeseriesViewer"
         class="tabs p-32 pt-48"
         :tabs="tabs"
-        :active-tab-id="activeTabId"
-      >
+        :active-tab-id="activeTabId">
         <ts-viewer
           v-if="userToken"
           v-show="activeTabId === 'timeseriesViewer'"
@@ -18,7 +18,8 @@
         <div v-else>
           <b>Sign in</b> to the SPARC Portal to view timeseries data
         </div>
-      </content-tab-card>
+        </content-tab-card>
+      </client-only>
       <div class="subpage pt-0 pb-16">
         <div class="file-detail">
           <strong class="file-detail__column_1">Dataset</strong>
@@ -151,5 +152,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/_viewer.scss';
+@import '@/assets/viewer.scss';
 </style>

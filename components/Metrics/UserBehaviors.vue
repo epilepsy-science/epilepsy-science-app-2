@@ -286,7 +286,7 @@ hr {
 .col-data {
   font-size: 2rem;
   line-height: 2.75rem;
-  color: #e76f50;
+  color: $es-primary-color;
   font-weight: bold;
 }
 </style>

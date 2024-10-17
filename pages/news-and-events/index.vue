@@ -184,7 +184,7 @@ export default {
 .btn-load-more {
   background: none;
   border: none;
-  color: #e76f50;
+  color: $es-primary-color;
   cursor: pointer;
   display: block;
   font-size: 1rem;

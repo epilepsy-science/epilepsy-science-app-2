@@ -136,6 +136,6 @@ h1 {
 }
 
 a {
-  color: #e76f50;
+  color: $es-primary-color;
 }
 </style>

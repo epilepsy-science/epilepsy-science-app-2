@@ -109,7 +109,7 @@ export default {
 }
 
 .purple-fill {
-  fill: #e76f50;
+  fill: $es-primary-color;
 }
 
 .disabled {

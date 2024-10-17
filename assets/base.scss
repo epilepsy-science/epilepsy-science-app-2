@@ -1,3 +1,4 @@
+@use "@/assets/scss/_variables.scss" as *;
 @import 'sparc-design-system-components-2/src/assets/_variables.scss';
 
 h1 {
@@ -49,7 +50,7 @@ h6 {
 }
 
 a {
-  color: #e76f50;
+  color: $es-primary-color;
   text-decoration: underline;
 }
 

@@ -167,7 +167,7 @@ export default {
 }
 
 .resource-category {
-  background: #e76f50;
+  background: $es-primary-color;
   border-radius: 15px;
   color: #fff;
   margin-right: .25rem;
@@ -205,7 +205,7 @@ export default {
   overflow: hidden;
 }
 .back-link {
-  color: #e76f51;
+  color: $es-primary-color;
   font-weight: 700;
 }
 .image-button-container {
