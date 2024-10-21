@@ -1,4 +1,5 @@
 <template>
+
   <Head>
     <Title>{{ pageTitle }}</Title>
     <Meta name="og:title" hid="og:title" :content="pageTitle" />
@@ -17,14 +18,13 @@
       <h2>More Information</h2>
       <div v-html="parseMarkdown(aboutCollaborator)"></div>
       <div class="contact-card-wrapper">
-          <el-card 
-          style="max-width: 480px">
-            <template #header>
-              <span>Contact Information</span>
-            </template>
-            <p>Wagenaar Lab</p>
-            <p><span>Email :</span><a :href="collaboratorEmail">{{ collaboratorEmail }}</a></p>
-          </el-card>
+        <el-card style="max-width: 480px">
+          <template #header>
+            <span>Contact Information</span>
+          </template>
+          <p>Wagenaar Lab</p>
+          <p><span>Email :</span><a :href="collaboratorEmail">{{ collaboratorEmail }}</a></p>
+        </el-card>
       </div>
     </div>
   </div>
@@ -74,20 +74,20 @@ export default {
        */
       $contentfulClient
         .getEntry(config.public.ctf_pedquest_about_page_id)
-        .then(({fields}) => {
-          return {...fields}
+        .then(({ fields }) => {
+          return { ...fields }
         })
         .catch(err => console.error('Could not fetch page data from Contentful.', err)),
-        $contentfulClient
+      $contentfulClient
         .getEntry(config.public.ctf_pedquest_collaborator_details)
-        .then(({fields}) => {
-          return {...fields}
+        .then(({ fields }) => {
+          return { ...fields }
         })
         .catch(err => console.error('Could not fetch page data from Contentful.', err)),
     ]).then(([header, details]) => {
       return ({
-      ...header, ...details
-    })
+        ...header, ...details
+      })
     })
   }
 }
@@ -95,11 +95,14 @@ export default {
 
 <style scoped lang="scss">
 @import 'sparc-design-system-components-2/src/assets/_variables.scss';
+
 .about-page {
   background-color: $background;
 }
+
 .contact-card-wrapper {
   margin-top: 24px;
+
   span {
     font-weight: 600;
     margin-right: 12px;
