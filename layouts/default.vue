@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import EpilepsyHeader from '@/components/Header/Header.vue'
+import EpilepsyHeader from '@/components/Header/EpilepsyHeader.vue'
 import EpilepsyFooter from '@/components/Footer/Footer.vue'
 import CookieNotice from '@/components/CookieNotice/CookieNotice.vue'
 import { propOr } from 'ramda'
