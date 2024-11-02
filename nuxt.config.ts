@@ -217,6 +217,7 @@ export default defineNuxtConfig({
         process.env.INTERNAL_TRAFFIC_KEY || "internal_traffic",
       INTERNAL_TRAFFIC_VALUE: process.env.INTERNAL_TRAFFIC_VALUE || "internal",
       SHOW_REHYDRATION_FEATURE: process.env.SHOW_REHYDRATION_FEATURE || "false",
+      FEATURE_NEW_HEADER: process.env.FEATURE_NEW_HEADER === 'true',
     },
   },
   /*

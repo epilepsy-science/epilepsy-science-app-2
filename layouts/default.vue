@@ -1,6 +1,7 @@
 <template>
   <div id="epilepsy-science-app" :class="[disableScrolling ? 'layout' : '']">
-    <AppHeader/>
+    <ModernizedAppHeader v-if="featureNewHeader"/>
+    <AppHeader v-else/>
     <slot />
     <AppFooter />
     <cookie-notice v-if="!hasAcceptedGDPR" />
@@ -10,6 +11,7 @@
 <script>
 import AppHeader from '~/components/AppHeader/AppHeader.vue'
 import AppFooter from '@/components/AppFooter/AppFooter.vue'
+import ModernizedAppHeader from '~/components/AppHeader/ModernizedAppHeader.vue'
 import CookieNotice from '@/components/CookieNotice/CookieNotice.vue'
 import { propOr } from 'ramda'
 import DOMPurify from 'isomorphic-dompurify'
@@ -20,7 +22,8 @@ export default {
   components: {
     CookieNotice,
     AppHeader,
-    AppFooter
+    AppFooter,
+    ModernizedAppHeader
   },
   data() {
     return {
@@ -96,6 +99,13 @@ export default {
           }
         }
       }
+    }
+  },
+
+  setup() {
+    const config = useRuntimeConfig();
+    return {
+      featureNewHeader : config.public.FEATURE_NEW_HEADER
     }
   }
 }
