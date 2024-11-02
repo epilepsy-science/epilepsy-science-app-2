@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 
 const menuOpen = ref(false);
 const windowWidth = ref(typeof window !== "undefined" ? window.innerWidth : 0);
@@ -41,9 +41,17 @@ const updateWindowWidth = () => {
   }
 };
 
+// Watch for changes in windowWidth and close the menu if switching to larger screens
+watch(windowWidth, (newWidth) => {
+  if (newWidth >= 768 && menuOpen.value) {
+    menuOpen.value = false;
+  }
+});
+
 onMounted(() => {
   if (typeof window !== "undefined") {
     window.addEventListener("resize", updateWindowWidth);
+    updateWindowWidth(); // Set initial width on mount
   }
 });
 
@@ -83,25 +91,48 @@ onBeforeUnmount(() => {
   margin-right: 10px;
 }
 
-.logo-text {
+.logo-text, .logo-text-bold {
   font-size: 1.2rem;
 }
 
 .logo-text-bold {
-  font-size: 1.2rem;
   font-weight: bold;
   margin-right: 8px;
-  a {
-    color: black;
-    text-decoration: none;
-  }
 }
 
-/* Navigation styles */
+a {
+  color: black;
+  text-decoration: none;
+}
+
+.hamburger-menu {
+  display: inline-flex;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.header-nav {
+  display: none;
+}
+
+.header-nav.is-mobile-menu {
+  display: block;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  padding: 10px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 .header-nav ul {
   display: flex;
+  flex-direction: column;
   list-style: none;
-  gap: 15px;
+  gap: 10px;
 }
 
 .header-nav ul li a {
@@ -109,39 +140,21 @@ onBeforeUnmount(() => {
   color: #333;
 }
 
-/* Hamburger menu styles */
-.hamburger-menu {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.5rem;
-}
-
-/* Mobile styles */
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .hamburger-menu {
-    display: inline-flex;
-  }
-
-  .header-nav {
     display: none;
   }
 
-  .header-nav.is-mobile-menu {
-    display: block;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    background-color: white;
-    padding: 10px 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  .header-nav {
+    display: flex;
+    position: static;
+    box-shadow: none;
+    padding: 0;
   }
 
   .header-nav ul {
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: row;
+    gap: 15px;
   }
 }
 </style>
