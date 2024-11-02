@@ -138,6 +138,29 @@ a {
 .header-nav ul li a {
   text-decoration: none;
   color: #333;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Active link styling */
+.header-nav ul li a.router-link-active {
+  background-color: #f0f4f8; /* Light background for active */
+  color: #e76f50; /* Highlight color for active link text */
+  font-weight: bold;
+}
+
+/* Hover and focus styling for mild highlight */
+.header-nav ul li a:hover,
+.header-nav ul li a:focus-visible {
+  background-color: #e3eaf1; /* Milder background for hover and focus */
+  color: #e76f50;
+}
+
+/* Ensure keyboard-only focus with focus-visible */
+.header-nav ul li a:focus-visible {
+  outline: 2px solid #e76f50; /* Visible focus outline for keyboard navigation */
+  outline-offset: 2px;
 }
 
 @media (min-width: 768px) {
