@@ -81,7 +81,7 @@ const links = [
 ]
 
 export default {
-  name: 'EpilepsyHeader',
+  name: 'AppHeader',
   data: () => {
     return {
       EpilepsyLogo,

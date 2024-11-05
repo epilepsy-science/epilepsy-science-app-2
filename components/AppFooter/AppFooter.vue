@@ -28,7 +28,7 @@ import { useMainStore } from '../store/index.js'
 import EpilepsyLogo from '@/assets/epilepsy.science.png'
 
 export default {
-  name: 'EpilepsyFooter',
+  name: 'AppFooter',
   components: {
     FooterLink
   },
