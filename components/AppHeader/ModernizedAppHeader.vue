@@ -1,7 +1,6 @@
 <template>
   <header class="app-header">
     <div class="header-container">
-      <!-- Logo Section -->
       <div class="header-logo">
         <!--TODO: when assets available <img src="@/assets/image.png" alt="Logo" class="logo-img" /> -->
         <span class="logo-text-bold"><nuxt-link to="/">E.S</nuxt-link></span>
@@ -62,7 +61,7 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .app-header {
   background-color: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -143,23 +142,21 @@ a {
   transition: background-color 0.3s, color 0.3s;
 }
 
-/* Active link styling */
 .header-nav ul li a.router-link-active {
-  background-color: #f0f4f8; /* Light background for active */
-  color: #e76f50; /* Highlight color for active link text */
+  background-color: #f0f4f8;
+  color: $es-primary-color;
   font-weight: bold;
 }
 
-/* Hover and focus styling for mild highlight */
 .header-nav ul li a:hover,
 .header-nav ul li a:focus-visible {
-  background-color: #e3eaf1; /* Milder background for hover and focus */
-  color: #e76f50;
+  background-color: #e3eaf1;
+  color: $es-primary-color;
 }
 
-/* Ensure keyboard-only focus with focus-visible */
+
 .header-nav ul li a:focus-visible {
-  outline: 2px solid #e76f50; /* Visible focus outline for keyboard navigation */
+  outline: 2px solid $es-primary-color;
   outline-offset: 2px;
 }
 
