@@ -1,6 +1,6 @@
 <template>
   <div id="epilepsy-science-app" :class="[disableScrolling ? 'layout' : '']">
-    <ModernizedAppHeader v-if="featureNewHeader"/>
+    <ModernizedAppHeader v-if="featureNewUIDesign"/>
     <AppHeader v-else/>
     <slot />
     <AppFooter />
@@ -105,7 +105,7 @@ export default {
   setup() {
     const config = useRuntimeConfig();
     return {
-      featureNewHeader : config.public.FEATURE_NEW_HEADER
+      featureNewUIDesign : config.public.FEATURE_NEW_UI_DESIGN
     }
   }
 }
