@@ -10,7 +10,7 @@
           <li><nuxt-link to="/news-and-events">News & Events</nuxt-link></li>
         </ul>
       </div>
-
+      <!-- TODO: Replace the links in this section with the actual pages when available  -->
       <div class="footer-section">
         <h3 class="footer-title">Resources.</h3>
         <ul>
@@ -18,7 +18,7 @@
           <li><nuxt-link to="/about">What’s New</nuxt-link></li>
         </ul>
       </div>
-
+      <!-- TODO: Review the URLs and update as needed per the requirements from stakeholders -->
       <div class="footer-section">
         <h3 class="footer-title">Connections.</h3>
         <ul>
