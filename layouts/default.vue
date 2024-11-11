@@ -3,7 +3,8 @@
     <ModernizedAppHeader v-if="featureNewUIDesign"/>
     <AppHeader v-else/>
     <slot />
-    <AppFooter />
+    <ModernizedAppFooter v-if="featureNewUIDesign"/>
+    <AppFooter v-else/>
     <cookie-notice v-if="!hasAcceptedGDPR" />
   </div>
 </template>
@@ -12,6 +13,7 @@
 import AppHeader from '~/components/AppHeader/AppHeader.vue'
 import AppFooter from '@/components/AppFooter/AppFooter.vue'
 import ModernizedAppHeader from '~/components/AppHeader/ModernizedAppHeader.vue'
+import ModernizedAppFooter from '~/components/AppFooter/ModernizedAppFooter.vue'
 import CookieNotice from '@/components/CookieNotice/CookieNotice.vue'
 import { propOr } from 'ramda'
 import DOMPurify from 'isomorphic-dompurify'
@@ -23,7 +25,8 @@ export default {
     CookieNotice,
     AppHeader,
     AppFooter,
-    ModernizedAppHeader
+    ModernizedAppHeader,
+    ModernizedAppFooter
   },
   data() {
     return {
