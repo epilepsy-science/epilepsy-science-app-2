@@ -29,7 +29,7 @@
           <li><a href="https://forms.gle/FEFiDXQG3VB2aVW57" target="_blank">Share Data</a></li>
         </ul>
       </div>
-
+      <!-- TODO: update the icons after receiving assets from UX designer -->
       <div class="footer-socials">
         <a href="https://linkedin.com" aria-label="LinkedIn" target="_blank"><svgo-icon-share-linked /></a>
         <a href="https://x.com" aria-label="X" target="_blank"><svgo-icon-share-twitter /></a>
