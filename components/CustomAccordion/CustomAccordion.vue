@@ -3,27 +3,38 @@
     <h2 class="section-title">What can I do on Epilepsy.Science?</h2>
     <el-collapse v-model="activeName" accordion>
       <el-collapse-item
-        v-for="item in items"
-        :title="item.title"
-        :name="item.id"
+        v-for="(item, index) in items"
+        :key="index"
+        :title="item.accordionTitle"
+        :name="`item-${index}`"
       >
-        <p>{{ item.content }}</p>
+        <CustomAccordionItem :contentData="item.content" />
       </el-collapse-item>
     </el-collapse>
   </section>
 </template>
 
 <script setup lang="ts">
+interface AccordionItem {
+  accordionTitle: string;
+  content: AccordionItemContent;
+}
+
+interface AccordionItemContent {
+  title: string;
+  content: string;
+  imgSrc: string;
+  redirectLink1Text?: string;
+  redirectLink2Text?: string;
+  redirectLink1Url?: string;
+  redirectLink2Url?: string;
+}
 import { ref } from 'vue';
+import { mockAccordionData } from './mockData';
 
-const activeName = ref('1');
+const activeName = ref('item-0');
 
-const items = ref([
-  { id: '1', title: 'Access Worldwide Research', content: 'Access global research data sets, publications, and scientific findings relevant to epilepsy research.' },
-  { id: '2', title: 'Create Data Cohorts', content: 'Build and manage data cohorts for your research projects, tailored to specific study requirements.' },
-  { id: '3', title: 'Download Data', content: 'Here you can review abstracts, data overviews, and detailed file information. Understand data types, formats, and usage notes to support your research effectively.' },
-  { id: '4', title: 'Contribute Your Data', content: 'Share your own research data with the epilepsy science community to advance understanding and support collaborative efforts.' }
-]);
+const items = ref<AccordionItem[]>(mockAccordionData);
 </script>
 
 <style scoped lang="scss">

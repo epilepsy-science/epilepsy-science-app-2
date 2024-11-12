@@ -224,12 +224,12 @@ export default defineNuxtConfig({
    ** Add global CSS styles under this
    */
   css: [
-    "sparc-design-system-components-2/dist/style.css",
+    process.env.FEATURE_NEW_UI_DESIGN ? undefined : "sparc-design-system-components-2/dist/style.css",
     "@/assets/base.scss",
-    "@/assets/design-system-overrides.scss",
+    process.env.FEATURE_NEW_UI_DESIGN ? undefined : "@/assets/design-system-overrides.scss",
     "@/assets/viewer.scss",
     "@/assets/accordion-overrides.scss"
-  ],
+  ].filter(Boolean),
   sitemap: {
     xslColumns: [{ label: "URL", width: "100%" }],
   },
