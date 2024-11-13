@@ -108,7 +108,7 @@ export default {
   setup() {
     const config = useRuntimeConfig();
     return {
-      featureNewUIDesign : config.public.FEATURE_NEW_UI_DESIGN
+      featureNewUIDesign : config.public.FEATURE_NEW_UI_DESIGN === "true"
     }
   }
 }
