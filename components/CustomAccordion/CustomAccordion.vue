@@ -22,7 +22,7 @@ interface AccordionItem {
 
 interface AccordionItemContent {
   title: string;
-  content: string;
+  description: string;
   imgSrc: string;
   redirectLink1Text?: string;
   redirectLink2Text?: string;

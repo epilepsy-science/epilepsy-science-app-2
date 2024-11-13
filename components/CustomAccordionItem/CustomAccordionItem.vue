@@ -8,15 +8,7 @@
       >
         {{ contentData.title }}
       </div>
-      <!-- <p class="description" v-html="contentData.description"></p> -->
-      <p class="description">
-      <p>
-        Epilepsy research has focused on understanding neural mechanisms and developing innovative therapies to manage
-        seizures. Recent studies explore gene mutations linked to epilepsy, seeking insights into brain electrical
-        activities and seizure triggers. Advanced imaging techniques now allow researchers to map abnormal brain
-        regions, offering hope for targeted interventions and improved patient outcomes.
-      </p>
-      </p>
+      <p class="description" v-html="contentData.description"></p>
       <div class="cta-buttons">
         <el-button type="default" class="cta-button">{{ contentData.redirectLink1Text }}</el-button>
         <el-link :underline="false" href="#" class="cta-link">
@@ -109,6 +101,7 @@ const props = defineProps({
   }
 
   .image {
+    margin: 24px;
     width: 100%;
     max-width: 300px;
     object-fit: cover;
