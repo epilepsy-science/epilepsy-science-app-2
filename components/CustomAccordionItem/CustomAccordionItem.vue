@@ -24,9 +24,7 @@
         </el-link>
       </div>
     </div>
-    <!-- figure out why the src when path is binded using js not work -->
     <img :src="contentData.imgSrc" :alt="contentData.title" class="image" /> 
-    <!-- <img src="/assets/rejoin.jpg" :alt="contentData.title" class="image" /> -->
   </div>
 </template>
 

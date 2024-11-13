@@ -30,7 +30,7 @@ interface AccordionItemContent {
   redirectLink2Url?: string;
 }
 import { ref } from 'vue';
-import { mockAccordionData } from './mockData';
+import { mockAccordionData } from '../../assets/mocks/mockAccordionData';
 
 const activeName = ref('item-0');
 
