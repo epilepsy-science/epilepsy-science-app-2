@@ -197,7 +197,6 @@ export default defineNuxtConfig({
       LOGIN_API_URL: process.env.LOGIN_API_URL || "https://api.pennsieve.net",
       PENNSIEVE_API_VERSION_2:
         process.env.PENNSIEVE_API_VERSION_2 || "https://api2.pennsieve.net",
-      SHOW_HIERARCHAL_FACETS: process.env.SHOW_HIERARCHAL_FACETS || "false",
       SHOW_TIMESERIES_VIEWER: process.env.SHOW_TIMESERIES_VIEWER || "false",
       ORCID_API_URL: process.env.ORCID_API_URL || "https://pub.orcid.org/v2.1",
       crosscite_api_host:
@@ -216,8 +215,6 @@ export default defineNuxtConfig({
       INTERNAL_TRAFFIC_KEY:
         process.env.INTERNAL_TRAFFIC_KEY || "internal_traffic",
       INTERNAL_TRAFFIC_VALUE: process.env.INTERNAL_TRAFFIC_VALUE || "internal",
-      SHOW_REHYDRATION_FEATURE: process.env.SHOW_REHYDRATION_FEATURE || "false",
-      FEATURE_NEW_UI_DESIGN: process.env.FEATURE_NEW_UI_DESIGN === 'true',
     },
   },
   /*
