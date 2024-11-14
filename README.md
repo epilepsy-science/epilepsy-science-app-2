@@ -31,6 +31,8 @@ Ensure that the following configuration variables are set in your environment pr
 Add your env vars to `env_var_set.sh` and then run `source env_var_set.sh`
 ## Development Server
 
+In adddition to the above env variables, you can set the FEATURE_NEW_UI_DESIGN to true for rendering the new UI design
+
 Start the development server on `http://localhost:3000`:
 
 

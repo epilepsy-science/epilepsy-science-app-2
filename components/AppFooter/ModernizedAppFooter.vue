@@ -53,6 +53,7 @@
   font-family: Arial, sans-serif;
   color: #000;
   text-align: center;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .footer-container {

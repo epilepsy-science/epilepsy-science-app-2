@@ -96,7 +96,7 @@
             <a href="https://docs.pennsieve.io/docs/copy-a-public-dataset-to-your-own-aws-account" target="_blank">Help Page</a>.
           </div>
           <div class="aws-block mb-16 px-16 pb-16 pt-8">
-            <template v-if="isLatestVersion || !showRehydrationFeature">
+            <template v-if="isLatestVersion">
               <div class="heading3">Resource Type</div>
               <div class="mb-0"><span class="heading3">Amazon S3 Bucket</span> (Requester Pays) *</div>
               <div class="download-text-block mb-8 p-4">
@@ -248,9 +248,6 @@ export default {
         url += `&api_key=${this.userToken}`
       }
       return url
-    },
-    showRehydrationFeature() {
-      return this.$config.public.SHOW_REHYDRATION_FEATURE == 'true'
     }
   },
 
