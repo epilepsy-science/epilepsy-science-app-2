@@ -9,7 +9,12 @@
     </p>
   </section>
   <section class="main-content">
-      <custom-accordion></custom-accordion>
+        <div class="main-content-item">
+          <custom-accordion></custom-accordion>
+        </div>
+        <div class="main-content-item">
+          <subscription-banner></subscription-banner>
+        </div>
   </section>
 </template>
 
@@ -45,5 +50,8 @@
 .main-content {
     max-width: 1024px;
     margin: 32px auto;
+    .main-content-item {
+      margin-bottom: 64px;
+    }
 }
 </style>
