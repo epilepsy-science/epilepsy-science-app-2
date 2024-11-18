@@ -222,10 +222,10 @@ export default defineNuxtConfig({
    ** Add global CSS styles under this
    */
   css: [
-    process.env.FEATURE_NEW_UI_DESIGN === "true" ? undefined : "sparc-design-system-components-2/dist/style.css",
+    "sparc-design-system-components-2/dist/style.css",
     "@/assets/base.scss",
-    process.env.FEATURE_NEW_UI_DESIGN === "true" ? undefined : "@/assets/design-system-overrides.scss",
-    process.env.FEATURE_NEW_UI_DESIGN === "true" ? "@/assets/new-design-base.scss" : undefined,
+    "@/assets/design-system-overrides.scss",
+    "@/assets/new-design-base.scss",
     "@/assets/viewer.scss",
     "@/assets/accordion-overrides.scss"
   ].filter(Boolean),
