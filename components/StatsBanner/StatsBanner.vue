@@ -29,9 +29,9 @@
 
 <script setup>
 const stats = {
-  datasets: 351,
-  publicUsers: "1,000+",
-  universities: "67+",
+  datasets: 14,
+  publicUsers: "20+",
+  universities: "4+",
 };
 </script>
 
