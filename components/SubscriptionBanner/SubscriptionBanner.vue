@@ -9,10 +9,8 @@
         class="cta-button"
         type="default"
         size="large"
-        plain="true"
-        href="https://forms.google.com"
-        target="_blank"
-        rel="noopener noreferrer"
+        :plain="true"
+        @click="navigateToForm"
       >
         Subscribe here
       </el-button>
@@ -28,6 +26,18 @@
 </template>
 
 <script setup>
+const subscriptionFormLink = ref('https://docs.google.com/forms/d/e/1FAIpQLSfiYHwJqkU9N-UqyvbEvJWrdKKL6myURkUq1-xHI7a7FBVxCg/viewform')
+function navigateToForm() { 
+  navigateTo(subscriptionFormLink.value, {
+    open: {
+      target: '_blank',
+      windowFeatures: {
+        width: 600,
+        height: 600
+      }
+    }
+  })
+}
 </script>
 
 <style scoped lang="scss">
