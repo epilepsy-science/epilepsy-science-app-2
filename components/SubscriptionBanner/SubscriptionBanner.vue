@@ -61,7 +61,7 @@ function navigateToForm() {
   .title {
     font-size: 1.6rem;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   .subtitle {

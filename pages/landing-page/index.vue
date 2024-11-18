@@ -13,6 +13,9 @@
           <custom-accordion></custom-accordion>
         </div>
         <div class="main-content-item">
+          <stats-banner></stats-banner>
+        </div>
+        <div class="main-content-item">
           <subscription-banner></subscription-banner>
         </div>
   </section>
