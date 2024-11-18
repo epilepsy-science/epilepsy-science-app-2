@@ -8,8 +8,6 @@
 </template>
 
 <script>
-// import AppHeader from '~/components/AppHeader/AppHeader.vue'
-// import AppFooter from '@/components/AppFooter/AppFooter.vue'
 import CookieNotice from '@/components/CookieNotice/CookieNotice.vue'
 import { propOr } from 'ramda'
 import DOMPurify from 'isomorphic-dompurify'

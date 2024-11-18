@@ -1,4 +1,3 @@
-<!-- Replace this in pages/index.vue for new feature -->
 <template>
   <section class="hero-section">
     <h1 class="hero-heading">
