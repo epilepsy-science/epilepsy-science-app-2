@@ -1,0 +1,12 @@
+.main-content {
+  .el-collapse {
+    --el-collapse-header-height: 64px;
+  }
+  .el-collapse-item__header, .el-collapse-item__content {
+    font-size: 1.2rem;
+    padding-inline: 32px 16px;
+  }
+  .el-collapse-item__content {
+    padding-top: 32px;
+  }
+}

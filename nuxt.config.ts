@@ -215,7 +215,6 @@ export default defineNuxtConfig({
       INTERNAL_TRAFFIC_KEY:
         process.env.INTERNAL_TRAFFIC_KEY || "internal_traffic",
       INTERNAL_TRAFFIC_VALUE: process.env.INTERNAL_TRAFFIC_VALUE || "internal",
-      FEATURE_NEW_UI_DESIGN: process.env.FEATURE_NEW_UI_DESIGN || "false",
     },
   },
   /*
@@ -227,7 +226,7 @@ export default defineNuxtConfig({
     "@/assets/design-system-overrides.scss",
     "@/assets/new-design-base.scss",
     "@/assets/viewer.scss",
-    "@/assets/accordion-overrides.scss"
+    "@/assets/element-ui-accordion-overrides.scss"
   ].filter(Boolean),
   sitemap: {
     xslColumns: [{ label: "URL", width: "100%" }],

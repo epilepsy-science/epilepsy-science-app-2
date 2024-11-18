@@ -45,6 +45,7 @@ const stats = {
   border: 1px solid #000;
   max-width: 1200px;
   margin: 0 auto;
+  min-height: 168px;
 
   .stats-content {
     text-align: center;

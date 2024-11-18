@@ -1,7 +1,8 @@
 <template>
   <div class="content-section">
     <div class="text-content">
-      <div
+      <div class="text">
+        <div
         class="title"
         role="heading"
         :aria-level="headingLevel"
@@ -9,6 +10,7 @@
         {{ contentData.title }}
       </div>
       <p class="description" v-html="contentData.description"></p>
+      </div>
       <div class="cta-buttons">
         <el-button type="default" class="cta-button">{{ contentData.redirectLink1Text }}</el-button>
         <el-link :underline="false" :href="contentData.redirectLink2Url" class="cta-link">
@@ -60,14 +62,14 @@ const props = defineProps({
     margin-bottom: 20px;
 
     .title {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: bold;
-      margin-bottom: 15px;
+      margin-bottom: 8px;
     }
 
     .description {
       font-size: 1rem;
-      line-height: 1.6;
+      line-height: 1.4;
       color: #333;
       margin-bottom: 20px;
     }
@@ -112,10 +114,11 @@ const props = defineProps({
   // Larger screens
   @media (min-width: 768px) {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
 
     .text-content {
       align-items: flex-start;
+      justify-content: space-between;
       text-align: left;
       margin-bottom: 0;
       margin-right: 120px;
