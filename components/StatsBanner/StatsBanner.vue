@@ -10,15 +10,15 @@
 
     <div class="stats-boxes">
       <el-row :gutter="20" class="stats-row">
-        <el-col :span="8" xs="24" sm="8" class="stats-box">
+        <el-col :span="8" class="stats-box">
           <div class="stats-value">{{ stats.datasets }}</div>
           <div class="stats-label">Datasets</div>
         </el-col>
-        <el-col :span="8" xs="24" sm="8" class="stats-box">
+        <el-col :span="8" class="stats-box">
           <div class="stats-value">{{ stats.publicUsers }}</div>
           <div class="stats-label">Public Users</div>
         </el-col>
-        <el-col :span="8" xs="24" sm="8" class="stats-box">
+        <el-col :span="8" class="stats-box">
           <div class="stats-value">{{ stats.universities }}</div>
           <div class="stats-label">Universities</div>
         </el-col>
