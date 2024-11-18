@@ -1,105 +1,158 @@
 <template>
-  <div class="footer">
-    <div class="container">
-      <el-row :gutter="32">
-        <el-col :sm="{ span: 22, offset: 1 }" :md="{ span: 12, offset: 0 }">
-          <div class="footer__info">
-            <div class="footer__info--logo">
-              <nuxt-link :to="{ name: 'index' }">
-                <client-only><img class="logo" :src="EpilepsyLogo" alt="Logo for Epilepsy.science" /></client-only>
-              </nuxt-link>
-            </div>
-            <div class="footer__info--blurb">
-              <p>
-                {{ footerData.footerDescription }}
-              </p>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3 class="footer-title">Site Pages.</h3>
+        <ul>
+          <li><nuxt-link to="/data">Data & Models</nuxt-link></li>
+          <li><nuxt-link to="/about">About</nuxt-link></li>
+          <li><nuxt-link to="/tools-and-resources">Tools & Resources</nuxt-link></li>
+          <li><nuxt-link to="/news-and-events">News & Events</nuxt-link></li>
+        </ul>
+      </div>
+      <!-- TODO: Replace the links in this section with the actual pages when available  -->
+      <div class="footer-section">
+        <h3 class="footer-title">Resources.</h3>
+        <ul>
+          <li><nuxt-link to="/about">Help Center</nuxt-link></li>
+          <li><nuxt-link to="/about">What’s New</nuxt-link></li>
+        </ul>
+      </div>
+      <!-- TODO: Review the URLs and update as needed per the requirements from stakeholders -->
+      <div class="footer-section">
+        <h3 class="footer-title">Connections.</h3>
+        <ul>
+          <li><a href="https://forms.gle/FEFiDXQG3VB2aVW57" target="_blank">Contact Us</a></li>
+          <li><a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSf4fzc1JysckHNI7RYLe3F5T8W2-0Nreb18JfZ3GaRqOdOpNQ/viewform"
+              target="_blank">Join Us</a></li>
+          <li><a href="https://forms.gle/FEFiDXQG3VB2aVW57" target="_blank">Share Data</a></li>
+        </ul>
+      </div>
+      <!-- TODO: update the icons after receiving assets from UX designer -->
+      <div class="footer-socials">
+        <a href="https://linkedin.com" aria-label="LinkedIn" target="_blank"><svgo-icon-share-linked /></a>
+        <a href="https://x.com" aria-label="X" target="_blank"><svgo-icon-share-twitter /></a>
+        <a href="https://facebook.com" aria-label="Facebook" target="_blank"><svgo-icon-share-facebook /></a>
+      </div>
     </div>
-  </div>
+
+    <div class="footer-bottom">
+      © 2024 Epilepsy.Science
+    </div>
+  </footer>
 </template>
 
-<script>
-import { mapState } from 'pinia'
-import FooterLink from './FooterLink.vue'
-import { useMainStore } from '../store/index.js'
-import EpilepsyLogo from '@/assets/epilepsy.science.png'
-
-export default {
-  name: 'AppFooter',
-  components: {
-    FooterLink
-  },
-  computed: {
-    ...mapState(useMainStore, ['footerData'])
-  },
-  data() {
-    return {
-      EpilepsyLogo
-    }
-  }
-}
+<script setup>
 </script>
 
-<style scoped lang="scss">
-@import 'sparc-design-system-components-2/src/assets/_variables.scss';
-
+<style lang="scss" scoped>
 .footer {
+  padding: 20px;
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+  color: #000;
+  text-align: center;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.footer-container {
   display: flex;
-  flex-direction: row;
-  padding: 3rem 1rem;
-  background-color: #F8FAFF;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 80vw;
+  margin: 0 auto;
+}
 
-  &__info {
-    &--logo {
-      height: 4rem;
-      margin-bottom: 1.5rem;
-    }
+.footer-section {
+  text-align: center;
 
-    &--blurb {
-      margin-bottom: 3rem;
-      p {
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 5px;
+
+      a {
+        text-decoration: none;
+        color: #333;
         font-size: 1rem;
-        font-weight: normal;
-        line-height: 2rem;
-        color: $mediumGrey;
+      }
+      a:hover {
+        text-decoration: underline;
       }
     }
   }
 }
 
-@media screen and (max-width: 1023px) {
-  .footer {
-    &__info {
-      &--logo {
-        height: 2rem;
-      }
+.footer-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  position: relative;
 
-      &--blurb {
-        font-size: 0.75rem;
-        font-weight: normal;
-        line-height: 1.25rem;
+  &::after {
+    content: "";
+    display: block;
+    height: 2px;
+    background-color: black;
+    margin: 5px auto 0;
+  }
+}
 
-        p {
-          margin-bottom: 1rem;
-        }
-      }
+.footer-socials {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+
+  a {
+    color: #000;
+    font-size: 1.5rem;
+    display: inline-flex;
+  }
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Larger screens */
+@media (min-width: 768px) {
+  .footer-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    text-align: left;
+
+    .footer-section {
+      margin-bottom: 0;
+      text-align: left;
+    }
+
+    .footer-socials {
+      justify-content: center;
     }
   }
-}
 
-.footer__info--logo {
-  img {
-    height: 4rem;
-    width: 8rem;
+  .footer-bottom {
+    text-align: left;
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 20px;
+    max-width: 80vw;
+    margin-inline: auto;
   }
 }
 
-img {
-  display: block;
-  height: auto;
-  width: 100%;
+@media (min-width: 1024px) {
+  .footer-container {
+    gap: 128px;
+  }
 }
 </style>

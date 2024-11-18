@@ -4,7 +4,6 @@ import { pathOr, propOr } from 'ramda'
 
 export const useMainStore = defineStore('main', {
   state: () => ({
-    disableScrolling: false,
     footerData: {},
     portalNotification: {},
     userProfile: null,
@@ -53,9 +52,6 @@ export const useMainStore = defineStore('main', {
   actions: {
     async init() {
       await Promise.all([, this.fetchFooterData(), this.fetchPortalNotification()])
-    },
-    updateDisabledScrolling(value) {
-      this.disableScrolling = value
     },
     setFooterData(value) {
       this.footerData = value

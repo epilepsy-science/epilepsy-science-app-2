@@ -1,19 +1,13 @@
 <template>
-  <div id="epilepsy-science-app" :class="[disableScrolling ? 'layout' : '']">
-    <ModernizedAppHeader v-if="featureNewUIDesign"/>
-    <AppHeader v-else/>
+  <div id="epilepsy-science-app" >
+    <AppHeader />
     <slot />
-    <ModernizedAppFooter v-if="featureNewUIDesign"/>
-    <AppFooter v-else/>
+    <AppFooter/>
     <cookie-notice v-if="!hasAcceptedGDPR" />
   </div>
 </template>
 
 <script>
-import AppHeader from '~/components/AppHeader/AppHeader.vue'
-import AppFooter from '@/components/AppFooter/AppFooter.vue'
-import ModernizedAppHeader from '~/components/AppHeader/ModernizedAppHeader.vue'
-import ModernizedAppFooter from '~/components/AppFooter/ModernizedAppFooter.vue'
 import CookieNotice from '@/components/CookieNotice/CookieNotice.vue'
 import { propOr } from 'ramda'
 import DOMPurify from 'isomorphic-dompurify'
@@ -23,10 +17,6 @@ import { mapState } from 'pinia'
 export default {
   components: {
     CookieNotice,
-    AppHeader,
-    AppFooter,
-    ModernizedAppHeader,
-    ModernizedAppFooter
   },
   data() {
     return {
@@ -34,7 +24,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(useMainStore, ['disableScrolling', 'portalNotification']),
+    ...mapState(useMainStore, ['portalNotification']),
     hasAcceptedGDPR() {
       return useCookie('GDPR:accepted').value
     }
@@ -103,22 +93,6 @@ export default {
         }
       }
     }
-  },
-
-  setup() {
-    const config = useRuntimeConfig();
-    return {
-      featureNewUIDesign : config.public.FEATURE_NEW_UI_DESIGN === "true"
-    }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.layout {
-  @media screen and (max-width: 768px) {
-    overflow: hidden;
-    position: fixed;
-  }
-}
-</style>
