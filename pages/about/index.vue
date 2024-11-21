@@ -63,6 +63,9 @@ const content = {
 .body-wrapper {
   padding-inline: 32px;
   margin-top: 72px;
+  &:last-of-type {
+    margin-bottom: 72px;
+  }
 }
 
 .mission-section {

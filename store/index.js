@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import auth from '@/services/auth.js'
 import { pathOr, propOr } from 'ramda'
+import { mockPageStats } from '~/data/mockData';
 
 export const useMainStore = defineStore('main', {
   state: () => ({
@@ -9,7 +10,8 @@ export const useMainStore = defineStore('main', {
     userProfile: null,
     datasetInfo: {},
     datasetTypeName: "",
-    datasetFacetsData: []
+    datasetFacetsData: [],
+    pageStats: {}
   }),
   getters: {
     username(state) {
@@ -94,6 +96,17 @@ export const useMainStore = defineStore('main', {
     async logout(){
       await auth.logout()
     },
+    setPageStats(value) {
+      this.pageStats = {
+        datasets: value.datasets,
+        publicUsers: value.publicUsers,
+        universities: value.universities,
+        files: value.files
+      }
+    },
+    loadMockPageStats() {
+      this.setPageStats(mockPageStats);
+    }
   },
   persist: {
     storage: persistedState.localStorage,
