@@ -31,16 +31,18 @@
 </template>
 
 <script setup>
-// Content data for the page
+import { useMainStore } from '~/store/index';
+
+const stats = useMainStore().pageStats
 const content = {
   mission: {
     title: "Our mission is to open epilepsy science and share it for public & scientific collaboration.",
   },
   stats: [
-    { value: "2M", label: "Files" },
-    { value: "200+", label: "Labs" },
-    { value: "351", label: "Datasets" },
-    { value: "1,000+", label: "Public Users" },
+    { value: `${stats.files}`, label: "Files" },
+    { value: `${stats.labs}+`, label: "Labs" },
+    { value: `${stats.datasets}`, label: "Datasets" },
+    { value: `${stats.publicUsers}+`, label: "Public Users" },
   ],
   statsDescription:
     "The platform provides over 200,000 EEG recordings from diverse contexts including routine outpatient EEGs, critically ill patients, and epilepsy monitoring unit evaluations.",

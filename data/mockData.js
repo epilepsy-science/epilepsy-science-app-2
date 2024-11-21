@@ -3,4 +3,5 @@ export const mockPageStats = {
   publicUsers: 20,
   universities: 4,
   files: 200,
+  labs: 5,
 };

@@ -101,7 +101,8 @@ export const useMainStore = defineStore('main', {
         datasets: value.datasets,
         publicUsers: value.publicUsers,
         universities: value.universities,
-        files: value.files
+        files: value.files,
+        labs: value.labs,
       }
     },
     loadMockPageStats() {

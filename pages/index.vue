@@ -20,7 +20,11 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { useMainStore } from '~/store/index';
+
+const pageStore = useMainStore();
+pageStore.loadMockPageStats();
 </script>
 
 <style scoped lang="scss">
