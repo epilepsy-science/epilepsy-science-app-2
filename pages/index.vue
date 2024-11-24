@@ -31,6 +31,7 @@ pageStore.loadMockPageStats();
 .hero-section {
   text-align: center;
   padding: 40px 20px;
+  background-color: white;
 
   .hero-heading {
     font-size: 2.5rem;

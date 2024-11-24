@@ -46,6 +46,7 @@ const stats = pageStore.pageStats;
   max-width: 1200px;
   margin: 0 auto;
   min-height: 168px;
+  background-color: white;
 
   .stats-content {
     text-align: center;
