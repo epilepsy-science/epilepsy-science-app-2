@@ -12,6 +12,14 @@
   .el-collapse-item__wrap {
     border-bottom: 1px solid black;
   }
+  .el-collapse-item:last-of-type {
+    button.el-collapse-item__header {
+      border-bottom: none;
+    }
+    .el-collapse-item__wrap {
+      border-bottom: none;
+    }
+  }
 }
 button.el-collapse-item__header {
   border-bottom-color: black;
