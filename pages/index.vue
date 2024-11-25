@@ -1,13 +1,16 @@
 <template>
-  <section class="hero-section">
-    <h1 class="hero-heading">
-      Help Us Accelerate Epilepsy Research
-    </h1>
-    <p class="hero-subheading">
-      <span class="highlight-text">EPILEPSY.SCIENCE</span> is a new cloud-based platform for managing, analyzing, publishing, and sharing scientific datasets.
-    </p>
-  </section>
-  <section class="main-content">
+  <div class="landing-page background-with-dots">
+    <div class="landing-page-wrapper">
+      <section class="hero-section">
+        <h1 class="hero-heading">
+          Help Us Accelerate Epilepsy Research
+        </h1>
+        <p class="hero-subheading">
+          <span class="highlight-text">EPILEPSY.SCIENCE</span> is a new cloud-based platform for managing, analyzing,
+          publishing, and sharing scientific datasets.
+        </p>
+      </section>
+      <section class="main-content">
         <div class="main-content-item">
           <custom-accordion></custom-accordion>
         </div>
@@ -17,7 +20,9 @@
         <div class="main-content-item">
           <subscription-banner></subscription-banner>
         </div>
-  </section>
+      </section>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -28,6 +33,18 @@ pageStore.loadMockPageStats();
 </script>
 
 <style scoped lang="scss">
+.landing-page.background-with-dots {
+  background-color: white;
+  background-image: radial-gradient(#83CFAB 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.landing-page-wrapper {
+  max-width: 1024px;
+  margin: auto;
+  padding-block: 72px 64px;
+}
+
 .hero-section {
   text-align: center;
   padding: 40px 20px;
@@ -54,11 +71,12 @@ pageStore.loadMockPageStats();
     }
   }
 }
+
 .main-content {
-    max-width: 1024px;
-    margin: 32px auto;
-    .main-content-item {
-      margin-bottom: 64px;
-    }
+  margin-top: 72px;
+
+  .main-content-item {
+    margin-top: 64px;
+  }
 }
 </style>

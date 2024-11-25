@@ -40,13 +40,17 @@ const items = ref<AccordionItem[]>(mockAccordionData);
 <style scoped lang="scss">
 .epilepsy-science-accordion {
   background-color:#F5F5F5;
-  border: 2px solid #F5F5F5;
+  border: 1px solid black;
 
   .section-title {
     font-size: 1.8rem;
     font-weight: 500;
     text-align: center;
     padding: 20px;
+    border-bottom: 1px solid black;
+  }
+  h2 {
+    margin-block: 0px;
   }
 }
 </style>
