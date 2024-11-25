@@ -53,6 +53,7 @@ const props = defineProps({
 .content-section {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 
   .text-content {
     display: flex;
