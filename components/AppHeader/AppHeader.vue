@@ -2,9 +2,8 @@
   <header class="app-header">
     <div class="header-container">
       <div class="header-logo">
-        <!--TODO: when assets available <img src="@/assets/image.png" alt="Logo" class="logo-img" /> -->
-        <span class="logo-text-bold"><nuxt-link to="/">E.S</nuxt-link></span>
-        <span class="logo-text">EPILEPSY.SCIENCE</span>
+        <nuxt-link to="/"><img src="/logos/epilepsy-science-short-logo.svg" alt="epilepsy-science-logo" class="logo-img"/></nuxt-link>
+        <img src="/logos/epilepsy-science-descriptive-logo.svg" alt="epilepsy-science-descriptive-logo"/>
       </div>
 
       <button class="hamburger-menu" @click="toggleMenu">
@@ -86,7 +85,6 @@ onBeforeUnmount(() => {
 }
 
 .logo-img {
-  height: 40px;
   margin-right: 10px;
 }
 

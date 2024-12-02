@@ -11,6 +11,14 @@ h1 {
   text-transform: uppercase;
 }
 
+h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 32px;
+}
+
 
 // these are for larger screens, default will be mobile
 @media (min-width: 1024px) {
