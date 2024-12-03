@@ -53,5 +53,11 @@ export const aboutCollaboratorsContent = {
         "Ut enim ad minim veniam, quis. Nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
       link: { text: "Explore PennSieve >", url: "/" }
     },
+    {
+      title: "PedQuEST is a research and clinical practice work group dedicated to advancing brain-focused care of critically ill children using qEEG.",
+      description:
+        "Ut enim ad minim veniam, quis. Nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      link: { text: "Explore PedQuest >", url: "/about/collaborators/pedquest" }
+    },
   ],
 }
