@@ -30,3 +30,28 @@ export const aboutPageContent = {
     footer: "Epilepsy.Science offers unprecedented opportunities for open, collaborative epilepsy research through its powerful data resources, analytics tools, and cloud-based platform."
   },
 };
+
+export const aboutCollaboratorsContent = {
+  title: "This collaboration brings together",
+  subtitle: "PennSieve + BDSP + AWS OpenData + PedQuest",
+  cards: [
+    {
+      title: "PennSieve’s scalable data management and sharing capabilities and graph-based data integration model.",
+      description:
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur in culpa qui officia deserunt mollit anim.",
+      link: { text: "Explore PennSieve >", url: "/" }
+    },
+    {
+      title: "BDSP’s extensive data resources includes over 200,000 EEG recordings and genetics, imaging, and clinical data.",
+      description:
+        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      link: { text: "Search the data >", url: "/" }
+    },
+    {
+      title: "The AWS Open Data Sponsorship Program covers the cost of storage...",
+      description:
+        "Ut enim ad minim veniam, quis. Nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      link: { text: "Explore PennSieve >", url: "/" }
+    },
+  ],
+}

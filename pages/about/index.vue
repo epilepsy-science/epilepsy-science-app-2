@@ -49,16 +49,32 @@
         </div>
       </div>
     </section>
+
+    <section class="body-wrapper collaboration-section">
+    <h2 class="collaboration-title">{{ collaboratorSectionContent.title }}</h2>
+    <p class="collaboration-subtitle">{{ collaboratorSectionContent.subtitle }}</p>
+
+    <div class="cards-container">
+      <CollaboratorCard
+        v-for="(card, index) in collaboratorSectionContent.cards"
+        :key="index"
+        :title="card.title"
+        :description="card.description"
+        :link="card.link"
+      />
+    </div>
+  </section>
   </div>
 </template>
 
 <script setup>
 import { useMainStore } from '~/store/index';
-import { aboutPageContent } from '../../assets/content/aboutPageContent';
+import { aboutPageContent, aboutCollaboratorsContent } from '../../assets/content/aboutPageContent';
 import { ref } from 'vue';
 
 const stats = useMainStore().pageStats
 const content = ref(aboutPageContent)
+const collaboratorSectionContent = ref(aboutCollaboratorsContent)
 
 const displayStats = [
     { value: `${stats.files}`, label: "Files" },
@@ -200,6 +216,34 @@ const displayStats = [
   .mission-details-section .content-container {
     flex-direction: row;
     align-items: flex-start;
+  }
+}
+
+.collaboration-section {
+  text-align: center;
+
+  .collaboration-title {
+    color: #297fca;
+  }
+
+  .collaboration-subtitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #000;
+  }
+
+  .cards-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 }
 </style>
