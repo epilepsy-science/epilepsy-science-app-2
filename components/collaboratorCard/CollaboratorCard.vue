@@ -13,6 +13,11 @@
 <script setup>
 
 function isExternal(url) {
+  if (typeof window === 'undefined') {
+    // If `window` is not available (e.g., during SSR), assume the URL is not external
+    return false;
+  }
+  
   if(url) {
     const linkUrl = new URL(url, window.location.origin);
     return linkUrl.origin !== window.location.origin;
