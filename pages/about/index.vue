@@ -66,6 +66,11 @@
         </el-carousel>
       </div>
   </section>
+  <section class="body-wrapper collaboration-form">
+    <h2 class="collaboration-form-title"> We'd LOVE to collaborate! </h2>
+    <p class="collaboration-form-subtitle"> What excites you about partnering? </p>
+    <CollaboratorForm />
+  </section>
   </div>
 </template>
 
@@ -240,6 +245,19 @@ const displayStats = [
     font-size: 24px;
     margin-bottom: 20px;
     color: #000;
+  }
+}
+
+.collaboration-form {
+  text-align: center;
+
+  .collaboration-form-title {
+    color: #297fca;
+  }
+
+  .collaboration-form-subtitle {
+    font-size: 24px;
+    margin-bottom: 32px;
   }
 }
 </style>
