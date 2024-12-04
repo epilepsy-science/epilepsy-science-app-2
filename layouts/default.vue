@@ -1,15 +1,14 @@
 <template>
-  <div id="epilepsy-science-app" :class="[disableScrolling ? 'layout' : '']">
-    <epilepsy-header />
+  <div id="epilepsy-science-app" >
+    <AnnouncementBanner />
+    <AppHeader />
     <slot />
-    <epilepsy-footer />
+    <AppFooter/>
     <cookie-notice v-if="!hasAcceptedGDPR" />
   </div>
 </template>
 
 <script>
-import EpilepsyHeader from '@/components/Header/Header.vue'
-import EpilepsyFooter from '@/components/Footer/Footer.vue'
 import CookieNotice from '@/components/CookieNotice/CookieNotice.vue'
 import { propOr } from 'ramda'
 import DOMPurify from 'isomorphic-dompurify'
@@ -19,8 +18,6 @@ import { mapState } from 'pinia'
 export default {
   components: {
     CookieNotice,
-    EpilepsyHeader,
-    EpilepsyFooter
   },
   data() {
     return {
@@ -28,7 +25,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(useMainStore, ['disableScrolling', 'portalNotification']),
+    ...mapState(useMainStore, ['portalNotification']),
     hasAcceptedGDPR() {
       return useCookie('GDPR:accepted').value
     }
@@ -100,12 +97,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.layout {
-  @media screen and (max-width: 768px) {
-    overflow: hidden;
-    position: fixed;
-  }
-}
-</style>

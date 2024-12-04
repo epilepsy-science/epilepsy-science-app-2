@@ -1,0 +1,19 @@
+<template>
+  <div class="announcement-banner">
+    <p>This site is under construction — soon, powerful tools for groundbreaking science will be at your fingertips!</p>
+  </div>
+</template>
+
+<script>
+</script>
+
+<style lang="scss" scoped>
+.announcement-banner p {
+  color: white;
+  background-color: #297fca;
+  text-align: center;
+  padding-inline: 20px;
+  padding-block: 4px;
+  font-size: 16px;
+}
+</style>

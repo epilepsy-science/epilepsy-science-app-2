@@ -1,134 +1,265 @@
 <template>
-  <Head>
-    <Title>{{ pageTitle }}</Title>
-    <Meta name="og:title" hid="og:title" :content="pageTitle" />
-    <Meta name="twitter:title" :content="pageTitle" />
-    <Meta name="description" hid="description" :content="heroCopy" />
-    <Meta name="og:description" hid="og:description" :content="heroCopy" />
-    <Meta name="twitter:description" :content="heroCopy" />
-  </Head>
-  <div class="about-page pb-16">
-    <breadcrumb :breadcrumb="breadcrumb" title="About" />
-    <page-hero class="py-24" v-if="heroCopy">
-      <h1>{{ pageTitle }}</h1>
-      <div v-html="parseMarkdown(heroCopy)"></div>
-    </page-hero>
-    <div class="page-wrap container">
-      <div class="epilepsy-about">
-        <h3>What are we doing here at Epilepsy.Science?</h3>
+  <div class="about-page">
+    <section class="body-wrapper mission-section">
+      <h1 class="mission-title">{{ content.mission.title }}</h1>
+    </section>
 
-        <p>
-          Epilepsy.Science is a new cloud-based platform for managing, analyzing,
-          publishing, and sharing scientific datasets to accelerate epilepsy
-          research. Led by Pennsieve and the Brain Data Science Platform (BDSP)
-          and with support from the AWS Open Data Sponsorship Program, we are
-          creating an unparalleled open data resource for the epilepsy community.
-        </p>
-
-        <p>
-          The mission of Epilepsy.Science is to drive progress in understanding,
-          treating, and ultimately curing epilepsy through open access to
-          multidimensional epilepsy data at scale. The platform provides over
-          200,000 EEG recordings from diverse contexts including routine
-          outpatient EEGs, critically ill patients, and epilepsy monitoring unit
-          evaluations. As it grows, it will also include extensive accompanying
-          clinical data like medications, imaging, genetics, and more from
-          institutions worldwide.
-        </p>
-
-        <p>
-          Researchers can use Epilepsy.Science to easily build customized cohorts
-          by connecting data points across datasets. The platform enables
-          scientists to publish -- at no cost -- high quality datasets for
-          citation, reuse, and reproducible research. By promoting open science,
-          Epilepsy.Science aims to accelerate discoveries and improve patient
-          outcomes.
-        </p>
-
-        <p>This collaboration brings together:</p>
-
-        <ul>
-          <li>
-            Pennsieve’s scalable data management and sharing capabilities and
-            graph-based data integration model.
-          </li>
-
-          <li>
-            BDSP’s extensive data resources including over 200,000 EEG recordings
-            and genetics, imaging, and clinical data. BDSP also contributes a
-            library of open-source analytics tools.
-          </li>
-
-          <li>
-            The AWS Open Data Sponsorship Program covers the cost of storage for
-            publicly available high-value cloud-optimized datasets. We work with
-            data providers who seek to democratize access to data by making it
-            available for analysis on AWS, develop new cloud-native techniques,
-            formats, and tools that lower the cost of working with data, and
-            encourage the development of communities that benefit from access to
-            shared datasets.
-          </li>
-        </ul>
-
-        <p>
-          Epilepsy.Science offers unprecedented opportunities for open,
-          collaborative epilepsy research through its powerful data resources,
-          analytics tools, and cloud-based platform.
-        </p>
+    <section class="body-wrapper stats-section">
+      <div class="stats-container">
+        <el-row class="stats-row">
+          <el-col v-for="(stat, index) in displayStats" :key="index" :span="6" :xs="12" :md="6" class="stat-box">
+            <div class="stat-value">{{ stat.value }}</div>
+            <div class="stat-label">{{ stat.label }}</div>
+          </el-col>
+        </el-row>
+        <hr>
+        <p class="stats-description">{{ content.statsDescription }}</p>
       </div>
-      <div class="collaborators">
-        <h3>Collaborators</h3>
-        <NuxtLink :to="{ name: 'about-collaborators-collaboratorId', params: { collaboratorId: 'pedquest' }}">Visit PedQuEST page</NuxtLink>
+    </section>
+
+    <section class="body-wrapper what-we-do-section">
+      <h2 class="section-title">{{ content.whatWeDo.title }}</h2>
+      <div class="what-we-do-container">
+        <el-row :gutter="20" class="stats-row">
+          <el-col v-for="(text, index) in content.whatWeDo.textItems" :key="index" :span="12" :xs="24">
+            <p class="text-section">{{ text }}</p>
+          </el-col>
+        </el-row>
       </div>
-    </div>
+    </section>
+
+    <section class="body-wrapper mission-details-section">
+      <h2 class="section-title">{{ content.missionDetails.title }}</h2>
+      <p class="section-subtitle">{{ content.missionDetails.subtitle }}</p>
+      <div class="content-container">
+        <div class="text-column">
+          <p class="bold-text mb-8">{{ content.missionDetails.additionalInfo }}</p>
+          <p class="mb-8">{{ content.missionDetails.introduction }}</p>
+          <p class="bold-text mb-8">{{ content.missionDetails.highlightsTitle }}</p>
+          <ul class="highlights">
+            <li v-for="(highlight, index) in content.missionDetails.highlights" :key="index">
+              {{ highlight }}
+            </li>
+          </ul>
+          <p class="bold-text">{{ content.missionDetails.footer }}</p>
+        </div>
+
+        <div class="image-column">
+          <img :src="content.missionDetails.imageSrc" alt="Epilepsy data platform" />
+        </div>
+      </div>
+    </section>
+
+    <section class="body-wrapper collaboration-section">
+      <h2 class="collaboration-title">{{ collaboratorSectionContent.title }}</h2>
+      <p class="collaboration-subtitle">{{ collaboratorSectionContent.subtitle }}</p>
+
+      <div class="cards-container">
+        <el-carousel type="card" height="300px" :interval="6000">
+          <el-carousel-item v-for="(card, index) in collaboratorSectionContent.cards" :key="index">
+            <CollaboratorCard
+              :title="card.title"
+              :description="card.description"
+              :link="card.link"
+            />
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+  </section>
+  <!-- TODO: display this form once the endpoint to accept form submissions is available -->
+  <!-- <section class="body-wrapper collaboration-form">
+    <h2 class="collaboration-form-title"> We'd LOVE to collaborate! </h2>
+    <p class="collaboration-form-subtitle"> What excites you about partnering? </p>
+    <CollaboratorForm />
+  </section> -->
   </div>
 </template>
 
-<script>
-import marked from '@/mixins/marked';
+<script setup>
+import { useMainStore } from '~/store/index';
+import { aboutPageContent, aboutCollaboratorsContent } from '../../assets/content/aboutPageContent';
+import { ref } from 'vue';
 
-export default {
-  name: 'AboutPage',
+const stats = useMainStore().pageStats
+const content = ref(aboutPageContent)
+const collaboratorSectionContent = ref(aboutCollaboratorsContent)
 
-  mixins: [marked],
+const displayStats = [
+    { value: `${stats.files}`, label: "Files" },
+    { value: `${stats.labs}+`, label: "Labs" },
+    { value: `${stats.datasets}`, label: "Datasets" },
+    { value: `${stats.publicUsers}+`, label: "Public Users" },
+  ]
 
-  data: () => {
-    return {
-      heroCopy: '',
-      breadcrumb: [
-        {
-          to: {
-            name: 'index'
-          },
-          label: 'Home'
-        }
-      ],
-    }
-  },
-
-  setup() {
-    const config = useRuntimeConfig()
-    const { $contentfulClient } = useNuxtApp()
-    return Promise.all([
-      /**
-       * Page data
-       */
-      $contentfulClient
-        .getEntry(config.public.ctf_about_page_id)
-        .then(({fields}) => {
-          return fields
-        })
-        .catch(err => console.error('Could not fetch page data from Contentful.', err)),
-    ]).then(([cfPage]) => ({
-      ...cfPage
-    }))
-  }
-}
 </script>
 
 <style scoped lang="scss">
-@import 'sparc-design-system-components-2/src/assets/_variables.scss';
 .about-page {
-  background-color: $background;
+  max-width: 1024px;
+  margin: 0 auto;
+
+  .section-title {
+    text-align: center;
+  }
 }
+
+.body-wrapper {
+  padding-inline: 32px;
+  margin-top: 72px;
+
+  &:last-of-type {
+    margin-bottom: 72px;
+  }
+}
+
+.mission-section {
+  text-align: center;
+
+  .mission-title {
+    color: #297fca;
+    text-transform: none;
+  }
+}
+
+.stats-section {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+
+  .stats-container {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .stats-row {
+    justify-content: center;
+  }
+
+  .stat-box {
+    text-align: center;
+    padding: 20px;
+
+    .stat-value {
+      font-size: 40px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+    }
+
+    .stat-label {
+      font-size: 16px;
+    }
+  }
+}
+
+.what-we-do-section {
+  padding: 20px;
+  color: #297fca;
+
+  .what-we-do-container {
+    margin-top: 24px;
+  }
+}
+
+.mission-details-section {
+  background-color: #297fca;
+  color: white;
+  padding: 40px;
+
+  .section-subtitle {
+    font-size: 16px;
+    margin-bottom: 32px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .content-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .text-column {
+    flex: 1;
+
+    .bold-text {
+      font-weight: bold;
+    }
+
+    .mb-8 {
+      margin-bottom: 8px
+    }
+
+    .highlights {
+      list-style-type: disc;
+      font-size: 14px;
+
+      li {
+        margin-bottom: 8px;
+      }
+    }
+  }
+
+  .image-column {
+    flex: 1;
+    text-align: center;
+
+    img {
+      width: 250px;
+      height: 500px;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .mission-section {
+    text-align: center;
+    padding-inline: 0;
+    margin-top: 72px;
+  }
+
+  .stat-box {
+    padding: 30px;
+  }
+
+  .mission-details-section .content-container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .mission-details-section.body-wrapper {
+    padding-inline: 32px;
+  }
+
+  .body-wrapper {
+    padding-inline: 0px;
+  }
+}
+
+.collaboration-section {
+  text-align: center;
+
+  .collaboration-title {
+    color: #297fca;
+  }
+
+  .collaboration-subtitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #000;
+  }
+}
+
+// TODO: display this form once the endpoint to accept form submissions is available
+// .collaboration-form {
+//   text-align: center;
+
+//   .collaboration-form-title {
+//     color: #297fca;
+//   }
+
+//   .collaboration-form-subtitle {
+//     font-size: 24px;
+//     margin-bottom: 32px;
+//   }
+// }
 </style>

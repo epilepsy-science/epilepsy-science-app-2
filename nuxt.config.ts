@@ -68,11 +68,17 @@ export default defineNuxtConfig({
           type: "image/x-icon",
           href: "/favicon.ico",
         },
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
         {
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css?family=Asap:400,400i,500,600,700&display=swap",
         },
-      ],
+        { 
+          rel: 'stylesheet', 
+          href: 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap' 
+        },
+      ]
     },
   },
   devtools: { enabled: true },
@@ -197,7 +203,6 @@ export default defineNuxtConfig({
       LOGIN_API_URL: process.env.LOGIN_API_URL || "https://api.pennsieve.net",
       PENNSIEVE_API_VERSION_2:
         process.env.PENNSIEVE_API_VERSION_2 || "https://api2.pennsieve.net",
-      SHOW_HIERARCHAL_FACETS: process.env.SHOW_HIERARCHAL_FACETS || "false",
       SHOW_TIMESERIES_VIEWER: process.env.SHOW_TIMESERIES_VIEWER || "false",
       ORCID_API_URL: process.env.ORCID_API_URL || "https://pub.orcid.org/v2.1",
       crosscite_api_host:
@@ -216,7 +221,6 @@ export default defineNuxtConfig({
       INTERNAL_TRAFFIC_KEY:
         process.env.INTERNAL_TRAFFIC_KEY || "internal_traffic",
       INTERNAL_TRAFFIC_VALUE: process.env.INTERNAL_TRAFFIC_VALUE || "internal",
-      SHOW_REHYDRATION_FEATURE: process.env.SHOW_REHYDRATION_FEATURE || "false",
     },
   },
   /*
@@ -226,8 +230,10 @@ export default defineNuxtConfig({
     "sparc-design-system-components-2/dist/style.css",
     "@/assets/base.scss",
     "@/assets/design-system-overrides.scss",
-    "@/assets/viewer.scss"
-  ],
+    "@/assets/new-design-base.scss",
+    "@/assets/viewer.scss",
+    "@/assets/element-ui-accordion-overrides.scss"
+  ].filter(Boolean),
   sitemap: {
     xslColumns: [{ label: "URL", width: "100%" }],
   },

@@ -1,16 +1,23 @@
 import { defineStore } from 'pinia'
 import auth from '@/services/auth.js'
 import { pathOr, propOr } from 'ramda'
+import { mockPageStats } from '~/data/mockData';
 
 export const useMainStore = defineStore('main', {
   state: () => ({
-    disableScrolling: false,
     footerData: {},
     portalNotification: {},
     userProfile: null,
     datasetInfo: {},
     datasetTypeName: "",
-    datasetFacetsData: []
+    datasetFacetsData: [],
+    pageStats: {
+      datasets: 0,
+      publicUsers: 0,
+      universities: 0,
+      files: 0,
+      labs: 0,
+    }
   }),
   getters: {
     username(state) {
@@ -54,9 +61,6 @@ export const useMainStore = defineStore('main', {
     async init() {
       await Promise.all([, this.fetchFooterData(), this.fetchPortalNotification()])
     },
-    updateDisabledScrolling(value) {
-      this.disableScrolling = value
-    },
     setFooterData(value) {
       this.footerData = value
     },
@@ -98,6 +102,18 @@ export const useMainStore = defineStore('main', {
     async logout(){
       await auth.logout()
     },
+    setPageStats(value) {
+      this.pageStats = {
+        datasets: value.datasets,
+        publicUsers: value.publicUsers,
+        universities: value.universities,
+        files: value.files,
+        labs: value.labs,
+      }
+    },
+    loadMockPageStats() {
+      this.setPageStats(mockPageStats);
+    }
   },
   persist: {
     storage: persistedState.localStorage,
