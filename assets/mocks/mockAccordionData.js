@@ -18,7 +18,7 @@ export const mockAccordionData = [
       description: 'Create cohorts of data from across multiple datasets worldwide. Choose from filters such as age, sex and other medical factors',
       imgSrc: 'https://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png',
       redirectLink1Text: 'Explore Cohort Tools',
-      redirectLink2Text: 'Coming soon!',
+      redirectLink2Text: '',
       redirectLink1Url: '/cohorts/tools',
       redirectLink2Url: '/'
     }
