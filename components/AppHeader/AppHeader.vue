@@ -14,9 +14,6 @@
         <ul>
           <li><nuxt-link to="/data?type=dataset">Data</nuxt-link></li>
           <li><nuxt-link to="/about">About</nuxt-link></li>
-          <li><nuxt-link to="/tools-and-resources">Tools</nuxt-link></li>
-          <li><nuxt-link to="/news-and-events/news">News</nuxt-link></li>
-          <li><nuxt-link to="/news-and-events/events">Events</nuxt-link></li>
         </ul>
       </nav>
     </div>

@@ -6,8 +6,6 @@
         <ul>
           <li><nuxt-link to="/data?type=dataset">Data & Models</nuxt-link></li>
           <li><nuxt-link to="/about">About</nuxt-link></li>
-          <li><nuxt-link to="/tools-and-resources">Tools & Resources</nuxt-link></li>
-          <li><nuxt-link to="/news-and-events">News & Events</nuxt-link></li>
         </ul>
       </div>
       <!-- TODO: Replace the links in this section with the actual pages when available  -->
