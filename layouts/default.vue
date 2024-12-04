@@ -1,5 +1,6 @@
 <template>
   <div id="epilepsy-science-app" >
+    <AnnouncementBanner />
     <AppHeader />
     <slot />
     <AppFooter/>

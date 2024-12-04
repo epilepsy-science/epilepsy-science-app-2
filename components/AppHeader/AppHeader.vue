@@ -2,9 +2,8 @@
   <header class="app-header">
     <div class="header-container">
       <div class="header-logo">
-        <!--TODO: when assets available <img src="@/assets/image.png" alt="Logo" class="logo-img" /> -->
-        <span class="logo-text-bold"><nuxt-link to="/">E.S</nuxt-link></span>
-        <span class="logo-text">EPILEPSY.SCIENCE</span>
+        <nuxt-link to="/"><img src="/logos/epilepsy-science-short-logo.svg" alt="epilepsy-science-logo" class="logo-img"/></nuxt-link>
+        <img src="/logos/epilepsy-science-descriptive-logo.svg" alt="epilepsy-science-descriptive-logo"/>
       </div>
 
       <button class="hamburger-menu" @click="toggleMenu">
@@ -86,7 +85,6 @@ onBeforeUnmount(() => {
 }
 
 .logo-img {
-  height: 40px;
   margin-right: 10px;
 }
 
@@ -99,9 +97,47 @@ onBeforeUnmount(() => {
   margin-right: 8px;
 }
 
-a {
-  color: black;
+.header-nav a {
+  color: #297fca;
   text-decoration: none;
+  text-transform: uppercase;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  padding: 5px 10px;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background-color: #297FCA;
+    transition: width 0.4s ease;
+  }
+}
+
+.header-nav a.router-link-active {
+  color: black;
+  font-weight: bold;
+  &::after {
+    width: 100%;
+  }
+}
+
+
+.header-nav a:hover,
+.header-nav a:focus-visible {
+  color: black;
+  &::after {
+    width: 100%;
+  }
+}
+
+.header-nav ul li a:focus-visible {
+  outline: 2px solid #297fca;
+  outline-offset: 2px;
 }
 
 .hamburger-menu {
@@ -132,32 +168,6 @@ a {
   flex-direction: column;
   list-style: none;
   gap: 10px;
-}
-
-.header-nav ul li a {
-  text-decoration: none;
-  color: #333;
-  padding: 5px 10px;
-  border-radius: 4px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.header-nav ul li a.router-link-active {
-  background-color: #f0f4f8;
-  color: $es-primary-color;
-  font-weight: bold;
-}
-
-.header-nav ul li a:hover,
-.header-nav ul li a:focus-visible {
-  background-color: #e3eaf1;
-  color: $es-primary-color;
-}
-
-
-.header-nav ul li a:focus-visible {
-  outline: 2px solid $es-primary-color;
-  outline-offset: 2px;
 }
 
 @media (min-width: 768px) {

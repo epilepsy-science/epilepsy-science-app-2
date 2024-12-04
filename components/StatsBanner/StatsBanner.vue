@@ -15,11 +15,11 @@
           <div class="stats-label">Datasets</div>
         </el-col>
         <el-col :span="8" class="stats-box">
-          <div class="stats-value">{{ stats.publicUsers }}</div>
+          <div class="stats-value">{{ stats.publicUsers + '+'}}</div>
           <div class="stats-label">Public Users</div>
         </el-col>
         <el-col :span="8" class="stats-box">
-          <div class="stats-value">{{ stats.universities }}</div>
+          <div class="stats-value">{{ stats.universities + '+'}}</div>
           <div class="stats-label">Universities</div>
         </el-col>
       </el-row>
@@ -28,11 +28,11 @@
 </template>
 
 <script setup>
-const stats = {
-  datasets: 14,
-  publicUsers: "20+",
-  universities: "4+",
-};
+import { useMainStore } from '~/store/index';
+
+const pageStore = useMainStore();
+
+const stats = pageStore.pageStats;
 </script>
 
 <style scoped lang="scss">
@@ -46,6 +46,7 @@ const stats = {
   max-width: 1200px;
   margin: 0 auto;
   min-height: 168px;
+  background-color: white;
 
   .stats-content {
     text-align: center;

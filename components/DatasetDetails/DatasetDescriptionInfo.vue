@@ -93,7 +93,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .dataset-description-info {
   overflow-wrap: anywhere;
   word-wrap: normal;
@@ -127,5 +127,9 @@ export default {
       min-width: 6.75rem;
     }
   }
+
+  .description-container h1, h2, h3 {
+  font-size: 24px;
+}
 }
 </style>

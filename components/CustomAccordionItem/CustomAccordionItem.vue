@@ -12,7 +12,7 @@
       <p class="description" v-html="contentData.description"></p>
       </div>
       <div class="cta-buttons">
-        <el-button type="default" class="cta-button">{{ contentData.redirectLink1Text }}</el-button>
+        <!-- <el-button type="default" class="cta-button">{{ contentData.redirectLink1Text }}</el-button> -->
         <el-link :underline="false" :href="contentData.redirectLink2Url" class="cta-link">
           {{ contentData.redirectLink2Text }} >
         </el-link>
@@ -53,6 +53,7 @@ const props = defineProps({
 .content-section {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 
   .text-content {
     display: flex;
