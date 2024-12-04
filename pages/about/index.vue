@@ -66,11 +66,12 @@
         </el-carousel>
       </div>
   </section>
-  <section class="body-wrapper collaboration-form">
+  <!-- TODO: display this form once the endpoint to accept form submissions is available -->
+  <!-- <section class="body-wrapper collaboration-form">
     <h2 class="collaboration-form-title"> We'd LOVE to collaborate! </h2>
     <p class="collaboration-form-subtitle"> What excites you about partnering? </p>
     <CollaboratorForm />
-  </section>
+  </section> -->
   </div>
 </template>
 
@@ -248,16 +249,17 @@ const displayStats = [
   }
 }
 
-.collaboration-form {
-  text-align: center;
+// TODO: display this form once the endpoint to accept form submissions is available
+// .collaboration-form {
+//   text-align: center;
 
-  .collaboration-form-title {
-    color: #297fca;
-  }
+//   .collaboration-form-title {
+//     color: #297fca;
+//   }
 
-  .collaboration-form-subtitle {
-    font-size: 24px;
-    margin-bottom: 32px;
-  }
-}
+//   .collaboration-form-subtitle {
+//     font-size: 24px;
+//     margin-bottom: 32px;
+//   }
+// }
 </style>
