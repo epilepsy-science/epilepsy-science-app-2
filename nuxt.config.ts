@@ -233,7 +233,7 @@ export default defineNuxtConfig({
     "@/assets/new-design-base.scss",
     "@/assets/viewer.scss",
     "@/assets/element-ui-accordion-overrides.scss"
-  ].filter(Boolean),
+  ],
   sitemap: {
     xslColumns: [{ label: "URL", width: "100%" }],
   },
