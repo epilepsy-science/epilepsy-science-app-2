@@ -5,12 +5,21 @@
       <p class="card-description">{{ description }}</p>
     </div>
     <div class="card-cta">
-      <NuxtLink :to="link.url">{{ link.text }}</NuxtLink>
+      <NuxtLink :to="link.url" :target="isExternal(link.url) ? '_blank' : '_self'">{{ link.text }}</NuxtLink>
     </div>
   </div>
 </template>
 
 <script setup>
+
+function isExternal(url) {
+  if(url) {
+    const linkUrl = new URL(url, window.location.origin);
+    return linkUrl.origin !== window.location.origin;
+  } else {
+    return false;
+  }
+}
 
 defineProps({
   title: {
@@ -60,7 +69,7 @@ defineProps({
   .card-cta a {
     color: #297fca;
     text-decoration: none;
-    
+
     :hover {
       text-decoration: underline;
     }
