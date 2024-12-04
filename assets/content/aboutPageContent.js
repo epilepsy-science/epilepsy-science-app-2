@@ -39,19 +39,19 @@ export const aboutCollaboratorsContent = {
       title: "PennSieve’s scalable data management and sharing capabilities and graph-based data integration model.",
       description:
         "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur in culpa qui officia deserunt mollit anim.",
-      link: { text: "Explore PennSieve >", url: "/" }
+      link: { text: "Explore PennSieve >", url: "https://app.pennsieve.io/" }
     },
     {
       title: "BDSP’s extensive data resources includes over 200,000 EEG recordings and genetics, imaging, and clinical data.",
       description:
         "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      link: { text: "Search the data >", url: "/" }
+      link: { text: "Search the data >", url: "/data?type=dataset" }
     },
     {
       title: "The AWS Open Data Sponsorship Program covers the cost of storage...",
       description:
         "Ut enim ad minim veniam, quis. Nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      link: { text: "Explore PennSieve >", url: "/" }
+      link: { text: "Explore PennSieve >", url: "https://app.pennsieve.io/" }
     },
     {
       title: "PedQuEST is a research and clinical practice work group dedicated to advancing brain-focused care of critically ill children using qEEG.",

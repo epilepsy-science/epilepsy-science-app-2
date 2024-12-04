@@ -11,7 +11,13 @@ export const useMainStore = defineStore('main', {
     datasetInfo: {},
     datasetTypeName: "",
     datasetFacetsData: [],
-    pageStats: {}
+    pageStats: {
+      datasets: 0,
+      publicUsers: 0,
+      universities: 0,
+      files: 0,
+      labs: 0,
+    }
   }),
   getters: {
     username(state) {
