@@ -4,7 +4,7 @@
       <div class="footer-section">
         <h3 class="footer-title">Site Pages.</h3>
         <ul>
-          <li><nuxt-link to="/data">Data & Models</nuxt-link></li>
+          <li><nuxt-link to="/data?type=dataset">Data & Models</nuxt-link></li>
           <li><nuxt-link to="/about">About</nuxt-link></li>
           <li><nuxt-link to="/tools-and-resources">Tools & Resources</nuxt-link></li>
           <li><nuxt-link to="/news-and-events">News & Events</nuxt-link></li>

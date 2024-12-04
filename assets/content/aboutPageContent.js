@@ -45,7 +45,7 @@ export const aboutCollaboratorsContent = {
       title: "BDSP’s extensive data resources includes over 200,000 EEG recordings and genetics, imaging, and clinical data.",
       description:
         "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      link: { text: "Search the data >", url: "/data" }
+      link: { text: "Search the data >", url: "/data?type=dataset" }
     },
     {
       title: "The AWS Open Data Sponsorship Program covers the cost of storage...",

@@ -8,7 +8,7 @@ export const mockAccordionData = [
       redirectLink1Text: 'Access Research Portal',
       redirectLink2Text: 'Learn More',
       redirectLink1Url: '/portal/access',
-      redirectLink2Url: '/data'
+      redirectLink2Url: '/data?type=dataset'
     }
   },
   {
@@ -32,7 +32,7 @@ export const mockAccordionData = [
       redirectLink1Text: 'More on Data Format',
       redirectLink2Text: 'Download Data',
       redirectLink1Url: '/data/format-info',
-      redirectLink2Url: '/data'
+      redirectLink2Url: '/data?type=dataset'
     }
   },
   {
