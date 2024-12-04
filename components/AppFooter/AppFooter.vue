@@ -29,12 +29,6 @@
           <li><a href="https://forms.gle/FEFiDXQG3VB2aVW57" target="_blank">Share Data</a></li>
         </ul>
       </div>
-      <!-- TODO: update the icons after receiving assets from UX designer -->
-      <div class="footer-socials">
-        <a href="https://linkedin.com" aria-label="LinkedIn" target="_blank"><svgo-icon-share-linked /></a>
-        <a href="https://x.com" aria-label="X" target="_blank"><svgo-icon-share-twitter /></a>
-        <a href="https://facebook.com" aria-label="Facebook" target="_blank"><svgo-icon-share-facebook /></a>
-      </div>
     </div>
 
     <div class="footer-bottom">
@@ -103,18 +97,6 @@
   }
 }
 
-.footer-socials {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-
-  a {
-    color: #000;
-    font-size: 1.5rem;
-    display: inline-flex;
-  }
-}
-
 .footer-bottom {
   text-align: center;
   margin-top: 20px;
@@ -133,10 +115,6 @@
     .footer-section {
       margin-bottom: 0;
       text-align: left;
-    }
-
-    .footer-socials {
-      justify-content: center;
     }
   }
 
