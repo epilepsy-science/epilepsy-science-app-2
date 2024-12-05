@@ -55,7 +55,7 @@
       <p class="collaboration-subtitle">{{ collaboratorSectionContent.subtitle }}</p>
 
       <div class="cards-container">
-        <el-carousel type="card" height="300px" :interval="6000">
+        <el-carousel type="card" :interval="6000">
           <el-carousel-item v-for="(card, index) in collaboratorSectionContent.cards" :key="index">
             <CollaboratorCard
               :title="card.title"
