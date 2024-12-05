@@ -55,7 +55,7 @@
       <p class="collaboration-subtitle">{{ collaboratorSectionContent.subtitle }}</p>
 
       <div class="cards-container">
-        <el-carousel type="card" height="300px" :interval="6000">
+        <el-carousel type="card" :interval="6000">
           <el-carousel-item v-for="(card, index) in collaboratorSectionContent.cards" :key="index">
             <CollaboratorCard
               :title="card.title"
@@ -262,4 +262,18 @@ const displayStats = [
 //     margin-bottom: 32px;
 //   }
 // }
+</style>
+
+<style lang="scss">
+.stats-row .stat-box:nth-child(3)::after {
+  content: "coming soon!";
+  background-color: #f9f9f9;
+  color: #666;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  padding: 2px 6px;
+  margin-left: 5px;
+}
 </style>

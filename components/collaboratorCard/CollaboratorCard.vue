@@ -52,7 +52,7 @@ defineProps({
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 250px;
+  min-height: 300px;
 
   .card-title {
     font-size: 16px;

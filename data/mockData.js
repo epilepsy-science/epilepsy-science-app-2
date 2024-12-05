@@ -1,5 +1,5 @@
 export const mockPageStats = {
-  datasets: 14,
+  datasets: 945,
   publicUsers: 20,
   universities: 4,
   files: 200,
