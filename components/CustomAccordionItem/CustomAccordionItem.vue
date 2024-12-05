@@ -2,24 +2,20 @@
   <div class="content-section">
     <div class="text-content">
       <div class="text">
-        <div
-        class="title"
-        role="heading"
-        :aria-level="headingLevel"
-      >
-        {{ contentData.title }}
-      </div>
-      <p class="description" v-html="contentData.description"></p>
+        <div class="title" role="heading" :aria-level="headingLevel">
+          {{ contentData.title }}
+        </div>
+        <p class="description" v-html="contentData.description"></p>
       </div>
       <div class="cta-buttons">
         <!-- TODO: hiding this button as there is no specific function attached to it at the moment, added it to match with the designs -->
         <!-- <el-button type="default" class="cta-button">{{ contentData.redirectLink1Text }}</el-button> -->
         <el-link :underline="false" :href="contentData.redirectLink2Url" class="cta-link">
-          {{ contentData.redirectLink2Text ? contentData.redirectLink2Text+' >': ''}} 
+          {{ contentData.redirectLink2Text ? contentData.redirectLink2Text+' >': ''}}
         </el-link>
       </div>
     </div>
-    <img :src="contentData.imgSrc" :alt="contentData.title" class="image" /> 
+    <img :src="contentData.imgSrc" :alt="contentData.title" class="image" />
   </div>
 </template>
 
@@ -89,14 +85,17 @@ const props = defineProps({
       }
 
       .cta-link {
-        width: 100% ;
+        width: 100%;
+
         &:hover,
         &:focus {
           color: #0066cc;
           text-decoration: underline;
         }
       }
-      .cta-button, .cta-link {
+
+      .cta-button,
+      .cta-link {
         font-size: 0.9rem; // can be standardized by setting --el-link-font-size
         font-weight: bold;
         color: black; // can be standardized by setting --el-button-text-color
@@ -135,7 +134,7 @@ const props = defineProps({
       align-self: flex-start;
     }
 
-    .cta-button + .cta-link {
+    .cta-button+.cta-link {
       margin-left: 24px;
     }
   }
