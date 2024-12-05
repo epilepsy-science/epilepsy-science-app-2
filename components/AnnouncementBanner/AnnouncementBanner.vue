@@ -1,6 +1,6 @@
 <template>
   <div class="announcement-banner">
-    <p>This site is under construction — soon, powerful tools for groundbreaking science will be at your fingertips!</p>
+    <p>Coming in 2025 – powerful tools for groundbreaking science at your fingertips</p>
   </div>
 </template>
 

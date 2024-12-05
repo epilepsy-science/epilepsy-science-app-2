@@ -67,7 +67,8 @@ pageStore.loadMockPageStats();
     margin: 0 auto;
 
     .highlight-text {
-      color: #88b980;
+      color: #3E7877;
+      font-weight: 600;
     }
   }
 }

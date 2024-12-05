@@ -17,7 +17,7 @@
     </div>
     <div class="image-container">
       <img
-        src="https://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png"
+        src="https://images.ctfassets.net/erzgaqq17mnz/3KkeKvhjUQDLoalQIDirul/0a638fd39676cbc7a121f15dfa90c1e9/epilepsy_science_new_imagery_6.png"
         alt="Brain illustration"
         class="subscription-banner-image"
       />

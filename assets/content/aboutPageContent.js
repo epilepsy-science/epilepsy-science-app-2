@@ -38,25 +38,25 @@ export const aboutCollaboratorsContent = {
     {
       title: "PennSieve’s scalable data management and sharing capabilities and graph-based data integration model.",
       description:
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur in culpa qui officia deserunt mollit anim.",
-      link: { text: "Explore PennSieve >", url: "https://app.pennsieve.io/" }
+        "The Pennsieve Data Management Platform provides a scalable cloud-based solution for managing, analyzing, and sharing scientific datasets. The platform enables graph based data and metadata integration, supporting meaningful curation of data in context. Using the platform, scientists can publish high quality datasets, cite, and make them available to the larger scientific community.",
+      link: { text: "Explore PennSieve >", url: "https://discover.pennsieve.io/" }
     },
     {
       title: "BDSP’s extensive data resources includes over 200,000 EEG recordings and genetics, imaging, and clinical data.",
       description:
-        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      link: { text: "Search the data >", url: "/data?type=dataset" }
+        "BDSP is a repository of freely-available brain research data, launched by the Clinical Data Animation Center at BIDMC.",
+      link: { text: "Search the data >", url: "https://bdsp.io/" }
     },
     {
-      title: "The AWS Open Data Sponsorship Program covers the cost of storage...",
+      title: "AWS Open Data Sponsorship Program",
       description:
-        "Ut enim ad minim veniam, quis. Nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      link: { text: "Explore PennSieve >", url: "https://app.pennsieve.io/" }
+        "The Amazon Web Services (AWS) Open Data Sponsorship Program covers the cost of storage for publicly available high-value cloud-optimized datasets.",
+      link: { text: "Explore PennSieve >", url: "https://discover.pennsieve.io/" }
     },
     {
       title: "PedQuEST is a research and clinical practice work group dedicated to advancing brain-focused care of critically ill children using qEEG.",
       description:
-        "Ut enim ad minim veniam, quis. Nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "PedQuEST is a research and clinical practice work group dedicated to advancing brain-focused care of critically ill children using qEEG.",
       link: { text: "Explore PedQuest >", url: "/about/collaborators/pedquest" }
     },
   ],

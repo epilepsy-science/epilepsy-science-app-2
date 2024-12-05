@@ -10,7 +10,7 @@
 
     <div class="stats-boxes">
       <el-row :gutter="20" class="stats-row">
-        <el-col :span="8" class="stats-box">
+        <el-col :span="8" class="stats-box datasets-stats">
           <div class="stats-value">{{ stats.datasets }}</div>
           <div class="stats-label">Datasets</div>
         </el-col>
@@ -133,5 +133,19 @@ const stats = pageStore.pageStats;
       }
     }
   }
+}
+</style>
+
+<style lang="scss">
+.el-col.datasets-stats::after {
+  content: "coming soon!";
+  background-color: #f9f9f9;
+  color: #666;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  padding: 2px 6px;
+  margin-left: 5px;
 }
 </style>
