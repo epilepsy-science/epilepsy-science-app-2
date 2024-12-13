@@ -31,13 +31,13 @@ export default defineNuxtConfig({
           hid: "og:image",
           property: "og:image",
           content:
-            "http://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png",
+            "https://images.ctfassets.net/erzgaqq17mnz/345fVGDnYBlv0uRyzH8lSp/17ccdd88df9e86718e2e38c1c78f1839/epilepsy-science-short-logo.svg",
         },
         {
           hid: "og:image:secure_url",
           property: "og:image:secure_url",
           content:
-            "http://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png",
+            "https://images.ctfassets.net/erzgaqq17mnz/345fVGDnYBlv0uRyzH8lSp/17ccdd88df9e86718e2e38c1c78f1839/epilepsy-science-short-logo.svg",
         },
         {
           hid: "og:url",
@@ -50,7 +50,7 @@ export default defineNuxtConfig({
         {
           name: "twitter:image",
           content:
-            "http://images.ctfassets.net/erzgaqq17mnz/46BUPtc8c1AJXcI8kpHrN4/8b2a49b4f55525c675330c6f4c9a55a9/epilepsy.science.png",
+            "https://images.ctfassets.net/erzgaqq17mnz/345fVGDnYBlv0uRyzH8lSp/17ccdd88df9e86718e2e38c1c78f1839/epilepsy-science-short-logo.svg",
         },
         {
           name: "twitter:description",
@@ -65,8 +65,8 @@ export default defineNuxtConfig({
       link: [
         {
           rel: "icon",
-          type: "image/x-icon",
-          href: "/favicon.ico",
+          type: "image/svg+xml",
+          href: "/favicon.svg",
         },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
