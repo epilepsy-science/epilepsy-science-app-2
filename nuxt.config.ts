@@ -89,6 +89,12 @@ export default defineNuxtConfig({
     "@pinia-plugin-persistedstate/nuxt",
     "@nuxtjs/sitemap",
   ],
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    }
+  ],
   vite: {
     define: {
       "window.global": {},
