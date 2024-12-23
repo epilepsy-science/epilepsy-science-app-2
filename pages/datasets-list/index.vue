@@ -23,6 +23,7 @@
 .datasets-search-results {
   padding: 32px;
 }
+
 .search-wrapper {
   width: 100%;
   padding: 16px;
@@ -45,7 +46,6 @@
 
 
 .filters-wrapper {
-  height: 700px;
   width: 100%;
   padding: 16px;
   border: 1px solid #dcdfe6;
@@ -54,14 +54,12 @@
 
 
 .dataset-results {
-  height: 700px;
   width: 100%;
-  padding: 16px;
-  border: 1px solid #dcdfe6;
-  border-radius: 4px;
 }
 
-.search-wrapper, .filters-wrapper, .dataset-results {
+.search-wrapper,
+.filters-wrapper,
+.dataset-results {
   background-color: white;
 }
 
