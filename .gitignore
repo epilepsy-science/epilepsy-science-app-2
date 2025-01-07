@@ -27,6 +27,3 @@ logs
 
 # Sitemaps
 public/sitemap*
-
-tests/cypress/videos
-tests/cypress/downloads
