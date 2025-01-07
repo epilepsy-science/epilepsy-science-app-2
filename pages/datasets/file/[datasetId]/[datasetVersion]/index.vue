@@ -10,8 +10,6 @@
         <content-tab-card v-if="hasViewer" class="mt-24" :tabs="tabs" :active-tab-id="activeTabId">
           <biolucida-viewer v-if="hasBiolucidaViewer" v-show="activeTabId === 'imageViewer'" :data="biolucidaData"
             :datasetInfo="datasetInfo" :file="file" />
-          <plot-viewer v-show="activeTabId === 'plotViewer'"
-            :datasetInfo="datasetInfo" :file="file" />
           <video-viewer v-if="hasVideoViewer" v-show="activeTabId === 'videoViewer'" :videoData="videoData"
             :videoSource="signedUrl" :datasetInfo="datasetInfo" :file="file" />
         </content-tab-card>
