@@ -9,45 +9,23 @@
         Refine results
       </div>
       <div class="dataset-results">
+        <my-container
+          v-for="dataset in datasetsInfo"
+          class="mb-16"
+          :key="dataset.id"
+          :dataset="dataset"
+        ></my-container>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// import { SearchControlsContentful } from "~/components/SearchControlsContentful/SearchControlsContentful.vue"
+import { MyContainer } from 'pennsieve-test-library';
 import testData from './mock.js';
 
 const datasetsInfo = testData;
 
-const myContainerItems = [
-  {
-    imageSrc: "https://example.com/image1.png",
-    imageAlt: "Brain EEG Image 1",
-    title: "Michigan High Res EEG - UMHS 0028",
-    itemLink: "#",
-    description: "Scalp, intracranial grid, and standard depth EEG for Michigan Patient 28. Class I outcome.",
-    publicationDate: "December 18, 2023",
-    lastUpdated: "December 18, 2023",
-    additionalLinks: [
-      { text: "View Details", url: "#" },
-      { text: "Download Data", url: "#" },
-    ],
-  },
-  {
-    imageSrc: "https://example.com/image2.png",
-    imageAlt: "Brain EEG Image 2",
-    title: "Michigan High Res EEG - UMHS 0023",
-    itemLink: "#",
-    description: "Scalp, intracranial grid, and standard depth EEG for UMHS0023. Neuropace placed.",
-    publicationDate: "December 18, 2023",
-    lastUpdated: "December 18, 2023",
-    additionalLinks: [
-      { text: "View Details", url: "#" },
-      { text: "Download Data", url: "#" },
-    ],
-  },
-];
 </script>
 
 <style scoped lang="scss">
