@@ -81,6 +81,7 @@ export default defineNuxtConfig({
       ]
     },
   },
+
   modules: [
     "@element-plus/nuxt",
     "nuxt-svgo",
@@ -88,12 +89,14 @@ export default defineNuxtConfig({
     "@pinia-plugin-persistedstate/nuxt",
     "@nuxtjs/sitemap",
   ],
+
   components: [
     {
       path: '~/components',
       pathPrefix: false,
     }
   ],
+
   vite: {
     define: {
       "window.global": {},
@@ -106,7 +109,11 @@ export default defineNuxtConfig({
         },
       },
     },
+    resolve: {
+      dedupe: ['vue'],
+    },
   },
+
   routeRules: {
     "/resources": { redirect: "/tools-and-resources/tools" },
     "/tools-and-resources": { redirect: "/tools-and-resources/tools" },
@@ -126,6 +133,7 @@ export default defineNuxtConfig({
       redirect: "/tools-and-resources/tools?resourceType=Software",
     },
   },
+
   hooks: {
     "pages:extend"(pages) {
       pages.push(
@@ -147,6 +155,7 @@ export default defineNuxtConfig({
       );
     },
   },
+
   runtimeConfig: {
     public: {
       discover_api_host:
@@ -228,6 +237,7 @@ export default defineNuxtConfig({
       INTERNAL_TRAFFIC_VALUE: process.env.INTERNAL_TRAFFIC_VALUE || "internal",
     },
   },
+
   /*
    ** Add global CSS styles under this
    */
@@ -238,13 +248,18 @@ export default defineNuxtConfig({
     "@/assets/new-design-base.scss",
     "@/assets/viewer.scss",
     "@/assets/element-ui-accordion-overrides.scss",
-    "@/assets/element-ui-carousel-overrides.scss"
+    "@/assets/element-ui-carousel-overrides.scss",
+
   ],
+
   sitemap: {
     xslColumns: [{ label: "URL", width: "100%" }],
   },
+
   sourcemap: {
     server: false,
     client: false
-  }
+  },
+
+  compatibilityDate: "2025-01-08"
 });
