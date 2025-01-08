@@ -249,7 +249,7 @@ export default defineNuxtConfig({
     "@/assets/viewer.scss",
     "@/assets/element-ui-accordion-overrides.scss",
     "@/assets/element-ui-carousel-overrides.scss",
-
+    "pennsieve-test-library/dist/pennsieve-test-library.css"
   ],
 
   sitemap: {
