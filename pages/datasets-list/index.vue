@@ -9,19 +9,19 @@
         Refine results
       </div>
       <div class="dataset-results">
-        <my-container
+        <dataset-card
           v-for="dataset in datasetsInfo"
           class="mb-16"
           :key="dataset.id"
           :dataset="dataset"
-        ></my-container>
+        ></dataset-card>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { MyContainer } from 'pennsieve-test-library';
+import { DatasetCard } from 'pennsieve-test-library';
 import testData from './mock.js';
 
 const datasetsInfo = testData;
