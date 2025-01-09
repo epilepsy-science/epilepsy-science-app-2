@@ -10,7 +10,7 @@
       </div>
       <div class="dataset-results">
         <dataset-card
-          v-for="dataset in datasetsInfo"
+          v-for="dataset in datasetList"
           class="mb-16"
           :key="dataset.id"
           :dataset="dataset"
@@ -22,10 +22,37 @@
 
 <script setup>
 import { DatasetCard } from 'pennsieve-test-library';
-import testData from './mock.js';
+import { ref, onMounted } from 'vue';
+import { useRoute, useNuxtApp } from '#app';
+const config = useRuntimeConfig()
 
-const datasetsInfo = testData;
+const route = useRoute();
+const { $algoliaClient } = useNuxtApp();
 
+const datasetList = ref([]);
+
+const fetchResults = () => {
+  const query = route.query.search || '';
+  const limit = 10;
+  const page = 0;
+
+  $algoliaClient
+    .initIndex(config.public.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC)
+    .search(query, {
+      hitsPerPage: limit,
+      page,
+    })
+    .then(response => {
+      datasetList.value = response.hits;
+    })
+    .catch(error => {
+      console.error('Failed to fetch results:', error);
+    });
+};
+
+onMounted(() => {
+  fetchResults();
+});
 </script>
 
 <style scoped lang="scss">
