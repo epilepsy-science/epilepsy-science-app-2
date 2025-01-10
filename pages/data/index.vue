@@ -37,11 +37,6 @@
                     
                   </client-only>
                 </p>
-                <span v-if="searchData.items.length" class="label1">
-                  Sort
-                  <sort-menu :options="algoliaSortOptions" :selected-option="selectedAlgoliaSortOption"
-                    @update-selected-option="onAlgoliaSortOptionChange" />
-                </span>
               </div>
               <div v-loading="isLoadingSearch" class="table-wrap">
                 <p v-if="searchFailed" class="search-error">
@@ -86,7 +81,6 @@ import SearchControlsContentful from '@/components/SearchControlsContentful/Sear
 import DatasetFacetMenu from '@/components/FacetMenu/DatasetFacetMenu.vue'
 import { facetPropPathMapping, getAlgoliaFacets } from '../../utils/algolia'
 import { HIGHLIGHT_HTML_TAG } from '../../utils/utils'
-import SortMenu from '@/components/SortMenu/SortMenu.vue'
 
 const searchTypes = [
   {
@@ -109,7 +103,6 @@ export default {
   components: {
     SearchControlsContentful,
     DatasetFacetMenu,
-    SortMenu,
     DatasetCard
   },
 
@@ -125,28 +118,6 @@ export default {
       return navigateTo(newPath)
     }
     const { $algoliaClient } = useNuxtApp()
-    const algoliaSortOptions = [
-      {
-        label: 'Date (desc)',
-        id: 'newest',
-        algoliaIndexName: config.public.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC
-      },
-      {
-        label: 'Date (asc)',
-        id: 'oldest',
-        algoliaIndexName: config.public.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_ASC
-      },
-      {
-        label: 'A-Z',
-        id: 'alphabetical',
-        algoliaIndexName: config.public.ALGOLIA_INDEX_ALPHABETICAL_A_Z
-      },
-      {
-        label: 'Z-A',
-        id: 'reverseAlphabetical',
-        algoliaIndexName: config.public.ALGOLIA_INDEX_ALPHABETICAL_Z_A
-      },
-    ]
     const algoliaIndex = await $algoliaClient.initIndex(config.public.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC)
 
     const searchType = searchTypes.find(searchType => {
@@ -154,8 +125,6 @@ export default {
     })
     const title = propOr('', 'label', searchType)
     return {
-      algoliaSortOptions,
-      selectedAlgoliaSortOption: ref(algoliaSortOptions.find(opt => opt.id === route.query.datasetSort) || algoliaSortOptions[0]),
       algoliaIndex,
       title
     }
@@ -263,20 +232,6 @@ export default {
       handler: function () {
         this.searchQuery = this.$route.query.search
         this.fetchResults()
-      },
-      immediate: true
-    },
-
-    '$route.query.datasetSort': {
-      handler: function () {
-        this.fetchResults()
-      },
-      immediate: true
-    },
-
-    selectedAlgoliaSortOption: {
-      handler: function (option) {
-        this.algoliaIndex = this.$algoliaClient.initIndex(option.algoliaIndexName)
       },
       immediate: true
     }
@@ -413,17 +368,6 @@ export default {
       }
 
       return viewports[viewport] || 24
-    },
-    async onAlgoliaSortOptionChange(option) {
-      this.selectedAlgoliaSortOption = option
-      this.searchData.skip = 0
-      this.$router.replace({
-        query: {
-          ...this.$route.query,
-          skip: 0,
-          datasetSort: option.id
-        }
-      })
     }
   }
 }
