@@ -8,13 +8,12 @@
     <Meta name="twitter:description" :content="`Browse ${title}`" />
   </Head>
   <div class="page-data">
-    <breadcrumb :breadcrumb="breadcrumb" :title="searchType.label" />
     <div class="container">
       <div class="search-bar__container">
         <div class="body1 mb-8">
-          Search within category
+          Search from published datasets
         </div>
-        <search-controls-contentful class="search-bar" placeholder="Enter search criteria" :path="$route.path"
+        <search-controls-contentful class="search-bar" placeholder="Find a dataset..."
           showSearchText />
       </div>
     </div>
@@ -32,9 +31,10 @@
             <el-col :sm="searchColSpan('sm')" :md="searchColSpan('md')" :lg="searchColSpan('lg')">
               <div class="search-heading">
                 <p v-show="!isLoadingSearch && searchData.items.length">
-                  {{ searchData.total }} Results | Showing
+                  Datasets per page
                   <client-only>
                     <pagination-menu :page-size="searchData.limit" @update-page-size="updateDataSearchLimit" />
+                    
                   </client-only>
                 </p>
                 <span v-if="searchData.items.length" class="label1">
@@ -48,7 +48,8 @@
                   Sorry, the search engine has encountered an unexpected
                   error, please try again later.
                 </p>
-                <dataset-search-results :tableData="tableData" />
+                <DatasetCard v-for="dataset in tableData" class="mb-16" :key="dataset.id"
+                  :dataset="dataset"></DatasetCard>
               </div>
               <div class="search-heading">
                 <p v-if="!isLoadingSearch && searchData.items.length">
@@ -71,6 +72,7 @@
 </template>
 
 <script>
+import { DatasetCard } from 'pennsieve-test-library';
 import { ref } from 'vue'
 import {
   compose,
@@ -84,14 +86,7 @@ import SearchControlsContentful from '@/components/SearchControlsContentful/Sear
 import DatasetFacetMenu from '@/components/FacetMenu/DatasetFacetMenu.vue'
 import { facetPropPathMapping, getAlgoliaFacets } from '../../utils/algolia'
 import { HIGHLIGHT_HTML_TAG } from '../../utils/utils'
-import DatasetSearchResults from '@/components/SearchResults/DatasetSearchResults.vue'
 import SortMenu from '@/components/SortMenu/SortMenu.vue'
-
-const searchResultsComponents = {
-  dataset: DatasetSearchResults,
-  simulation: DatasetSearchResults,
-  model: DatasetSearchResults
-}
 
 const searchTypes = [
   {
@@ -114,8 +109,8 @@ export default {
   components: {
     SearchControlsContentful,
     DatasetFacetMenu,
-    DatasetSearchResults,
     SortMenu,
+    DatasetCard
   },
 
   async setup() {
@@ -215,6 +210,7 @@ export default {
     },
 
     tableData: function () {
+      console.log('table data', this.searchData)
       return propOr([], 'items', this.searchData)
     },
 
