@@ -1,4 +1,5 @@
 <template>
+
   <Head>
     <Title>{{ searchType.label }}</Title>
     <Meta name="og:title" hid="og:title" :content="title" />
@@ -13,8 +14,7 @@
         <div class="body1 mb-8">
           Search from published datasets
         </div>
-        <search-controls-contentful class="search-bar" placeholder="Find a dataset..."
-          showSearchText />
+        <search-controls-contentful class="search-bar" placeholder="Find a dataset..." showSearchText />
       </div>
     </div>
     <div class="container">
@@ -33,29 +33,30 @@
                 <p v-show="!isLoadingSearch && searchData.items.length">
                   Datasets per page
                   <client-only>
-                    <pagination-menu :page-size="searchData.limit" @update-page-size="updateDataSearchLimit" />
-                    
+                    <el-select v-model="searchData.limit" size="small" @change="updateDataSearchLimit" >
+                      <el-option v-for="(item, index) in itemsToDisplay" :key="index" :label="item" :value="item" />
+                    </el-select>
                   </client-only>
                 </p>
+                <client-only>
+                  <pagination v-if="searchData.limit < searchData.total" :selected="curSearchPage"
+                    :page-size="searchData.limit" :total-count="searchData.total"
+                    @select-page="onPaginationPageChange" />
+                </client-only>
               </div>
               <div v-loading="isLoadingSearch" class="table-wrap">
                 <p v-if="searchFailed" class="search-error">
                   Sorry, the search engine has encountered an unexpected
                   error, please try again later.
                 </p>
-                <DatasetCard v-for="dataset in tableData" class="mb-16" :key="dataset.id"
-                  :dataset="dataset"></DatasetCard>
+                <DatasetCard v-for="dataset in tableData" class="mb-16" :key="dataset.id" :dataset="dataset">
+                </DatasetCard>
               </div>
               <div class="search-heading">
-                <p v-if="!isLoadingSearch && searchData.items.length">
-                  {{ searchHeading }} | Showing
-                  <client-only>
-                    <pagination-menu :page-size="searchData.limit" @update-page-size="updateDataSearchLimit" />
-                  </client-only>
-                </p>
                 <client-only>
                   <pagination v-if="searchData.limit < searchData.total" :selected="curSearchPage"
-                    :page-size="searchData.limit" :total-count="searchData.total" @select-page="onPaginationPageChange" />
+                    :page-size="searchData.limit" :total-count="searchData.total"
+                    @select-page="onPaginationPageChange" />
                 </client-only>
               </div>
             </el-col>
@@ -68,7 +69,6 @@
 
 <script>
 import { DatasetCard } from 'pennsieve-test-library';
-import { ref } from 'vue'
 import {
   compose,
   defaultTo,
@@ -139,6 +139,7 @@ export default {
         items: [],
         total: 0
       },
+      itemsToDisplay: [10,25,50,100],
       facets: [],
       visibleFacets: {},
       isLoadingSearch: false,
@@ -379,10 +380,6 @@ export default {
 .alternative-links {
   text-decoration: underline;
   color: $es-primary-color;
-}
-
-.page-data {
-  background-color: $background;
 }
 
 .search-bar__container {
