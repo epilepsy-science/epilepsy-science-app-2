@@ -29,22 +29,24 @@
               </client-only>
             </el-col>
             <el-col :sm="searchColSpan('sm')" :md="searchColSpan('md')" :lg="searchColSpan('lg')">
-              <div class="search-heading">
-                <p v-show="!isLoadingSearch && searchData.items.length">
-                  Datasets per page
-                  <client-only>
-                    <el-select v-model="searchData.limit" size="small" @change="updateDataSearchLimit" >
+              <div v-show="!isLoadingSearch && searchData.items.length" class="search-heading">
+                <client-only>
+                  <div class="datasets-count">
+                    <span>Datasets per page</span>
+                    <el-select class="el-select-wrapper" v-model="searchData.limit" size="small" @change="updateDataSearchLimit">
                       <el-option v-for="(item, index) in itemsToDisplay" :key="index" :label="item" :value="item" />
                     </el-select>
-                  </client-only>
-                </p>
+                  </div>
+                </client-only>
                 <client-only>
-                  <pagination v-if="searchData.limit < searchData.total" :selected="curSearchPage"
-                    :page-size="searchData.limit" :total-count="searchData.total"
-                    @select-page="onPaginationPageChange" />
+                  <div class="pagination-wrapper">
+                    <pagination v-if="searchData.limit < searchData.total" :selected="curSearchPage"
+                      :page-size="searchData.limit" :total-count="searchData.total"
+                      @select-page="onPaginationPageChange" />
+                  </div>
                 </client-only>
               </div>
-              <div v-loading="isLoadingSearch" class="table-wrap">
+              <div v-loading="isLoadingSearch" class="table-wrapper">
                 <p v-if="searchFailed" class="search-error">
                   Sorry, the search engine has encountered an unexpected
                   error, please try again later.
@@ -52,7 +54,7 @@
                 <DatasetCard v-for="dataset in tableData" class="mb-16" :key="dataset.id" :dataset="dataset">
                 </DatasetCard>
               </div>
-              <div class="search-heading">
+              <div class="dataset-results-footer">
                 <client-only>
                   <pagination v-if="searchData.limit < searchData.total" :selected="curSearchPage"
                     :page-size="searchData.limit" :total-count="searchData.total"
@@ -180,7 +182,6 @@ export default {
     },
 
     tableData: function () {
-      console.log('table data', this.searchData)
       return propOr([], 'items', this.searchData)
     },
 
@@ -395,10 +396,8 @@ export default {
   }
 }
 
-.table-wrap {
-  background: #fff;
-  border: 1px solid $lineColor2;
-  padding: 16px;
+.table-wrapper {
+  margin-top: 16px;
 
   .search-error {
     margin: 0 0 auto;
@@ -407,21 +406,19 @@ export default {
 }
 
 .search-heading {
-  align-items: flex-end;
   display: flex;
-  margin-bottom: 1em;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1em;
 
-  @media screen and (max-width: 28em) {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 0;
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
   }
 
-  p {
-    font-size: 0.875em;
-    flex-shrink: 0;
-    margin: 2em 0 0 0;
+  .el-select-wrapper {
+    margin-left: 16px;
+    width: 56px;
   }
 }
 
@@ -467,5 +464,9 @@ export default {
   :deep(.el-checkbox__label) {
     color: $es-primary-color;
   }
+}
+
+.dataset-results-footer {
+  margin-bottom: 16px;
 }
 </style>
