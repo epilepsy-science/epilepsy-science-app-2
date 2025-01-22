@@ -6489,10 +6489,10 @@ pathe@^2.0.0:
   resolved "https://registry.yarnpkg.com/pathe/-/pathe-2.0.0.tgz#886588913857d23d64df1c6660e058b69f57f46d"
   integrity sha512-G7n4uhtk9qJt2hlD+UFfsIGY854wpF+zs2bUbQ3CQEUTcn7v25LRsrmurOxTo4bJgjE4qkyshd9ldsEuY9M6xg==
 
-pennsieve-test-library@1.0.20:
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/pennsieve-test-library/-/pennsieve-test-library-1.0.20.tgz#7c69c6ffe085da1c29ebb802600e32138d80bd93"
-  integrity sha512-aO/bZNiCrXvHa50yHN8Kw2ESi7QbtHkDy3p0lPvNGXshc3y31ZG0mcKND5YZzUM8MRddnkl+dadOPi/186/mqQ==
+pennsieve-ui-library@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/pennsieve-ui-library/-/pennsieve-ui-library-1.0.4.tgz#f39a64aacb021ac6e5996cf73257983c1e689c81"
+  integrity sha512-Fb4s/skIzs7bEsdzNW3ZOj1FeIFd5dOrHpt0Z8HCI20vVzniuQP0OpbeojqAIUMY/QR8M2rG4to0zvZW9Fhr8A==
   dependencies:
     moment "^2.30.1"
     ramda "^0.30.1"

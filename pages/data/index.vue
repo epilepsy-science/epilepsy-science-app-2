@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { DatasetCard } from 'pennsieve-test-library';
+import { DatasetCard } from 'pennsieve-ui-library';
 import {
   compose,
   defaultTo,

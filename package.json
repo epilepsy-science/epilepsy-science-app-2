@@ -38,7 +38,7 @@
     "lodash": "^4.17.21",
     "marked": "^8.0.1",
     "mitt": "^3.0.1",
-    "pennsieve-test-library": "1.0.20",
+    "pennsieve-ui-library": "^1.0.4",
     "plyr": "^3.7.8",
     "postscribe": "^2.0.8",
     "ramda": "^0.29.0",

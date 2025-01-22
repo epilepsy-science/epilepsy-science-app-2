@@ -250,7 +250,7 @@ export default defineNuxtConfig({
     "@/assets/element-ui-accordion-overrides.scss",
     "@/assets/element-ui-carousel-overrides.scss",
     "@/assets/element-ui-pagination-overrides.scss",
-    "pennsieve-test-library/dist/pennsieve-test-library.css"
+    "pennsieve-ui-library/dist/pennsieve-ui-library.css"
   ],
 
   sitemap: {
