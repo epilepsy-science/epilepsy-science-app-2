@@ -33,7 +33,7 @@ jobs:
         if: success()
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_APP_NAME: epilepsy-science-app-2
+          HEROKU_APP_NAME: dev-epilepsy-science-vue-3
         run: |
           git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
           git push heroku dev:main --force
