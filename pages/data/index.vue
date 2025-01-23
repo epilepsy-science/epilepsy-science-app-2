@@ -1,4 +1,5 @@
 <template>
+
   <Head>
     <Title>{{ searchType.label }}</Title>
     <Meta name="og:title" hid="og:title" :content="title" />
@@ -8,14 +9,12 @@
     <Meta name="twitter:description" :content="`Browse ${title}`" />
   </Head>
   <div class="page-data">
-    <breadcrumb :breadcrumb="breadcrumb" :title="searchType.label" />
     <div class="container">
       <div class="search-bar__container">
         <div class="body1 mb-8">
-          Search within category
+          Search from published datasets
         </div>
-        <search-controls-contentful class="search-bar" placeholder="Enter search criteria" :path="$route.path"
-          showSearchText />
+        <search-controls-contentful class="search-bar" placeholder="Find a dataset..." showSearchText />
       </div>
     </div>
     <div class="container">
@@ -30,36 +29,36 @@
               </client-only>
             </el-col>
             <el-col :sm="searchColSpan('sm')" :md="searchColSpan('md')" :lg="searchColSpan('lg')">
-              <div class="search-heading">
-                <p v-show="!isLoadingSearch && searchData.items.length">
-                  {{ searchData.total }} Results | Showing
-                  <client-only>
-                    <pagination-menu :page-size="searchData.limit" @update-page-size="updateDataSearchLimit" />
-                  </client-only>
-                </p>
-                <span v-if="searchData.items.length" class="label1">
-                  Sort
-                  <sort-menu :options="algoliaSortOptions" :selected-option="selectedAlgoliaSortOption"
-                    @update-selected-option="onAlgoliaSortOptionChange" />
-                </span>
+              <div v-show="!isLoadingSearch && searchData.items.length" class="search-heading">
+                <client-only>
+                  <div class="datasets-count">
+                    <span>Datasets per page</span>
+                    <el-select class="el-select-wrapper" v-model="searchData.limit" size="small" @change="updateDataSearchLimit">
+                      <el-option v-for="(item, index) in itemsToDisplay" :key="index" :label="item" :value="item" />
+                    </el-select>
+                  </div>
+                </client-only>
+                <client-only>
+                  <div class="pagination-wrapper">
+                    <pagination v-if="searchData.limit < searchData.total" :selected="curSearchPage"
+                      :page-size="searchData.limit" :total-count="searchData.total"
+                      @select-page="onPaginationPageChange" />
+                  </div>
+                </client-only>
               </div>
-              <div v-loading="isLoadingSearch" class="table-wrap">
+              <div v-loading="isLoadingSearch" class="table-wrapper">
                 <p v-if="searchFailed" class="search-error">
                   Sorry, the search engine has encountered an unexpected
                   error, please try again later.
                 </p>
-                <dataset-search-results :tableData="tableData" />
+                <DatasetCard v-for="dataset in tableData" class="mb-16" :key="dataset.id" :dataset="dataset">
+                </DatasetCard>
               </div>
-              <div class="search-heading">
-                <p v-if="!isLoadingSearch && searchData.items.length">
-                  {{ searchHeading }} | Showing
-                  <client-only>
-                    <pagination-menu :page-size="searchData.limit" @update-page-size="updateDataSearchLimit" />
-                  </client-only>
-                </p>
+              <div class="dataset-results-footer">
                 <client-only>
                   <pagination v-if="searchData.limit < searchData.total" :selected="curSearchPage"
-                    :page-size="searchData.limit" :total-count="searchData.total" @select-page="onPaginationPageChange" />
+                    :page-size="searchData.limit" :total-count="searchData.total"
+                    @select-page="onPaginationPageChange" />
                 </client-only>
               </div>
             </el-col>
@@ -71,7 +70,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { DatasetCard } from 'pennsieve-ui-library';
 import {
   compose,
   defaultTo,
@@ -84,14 +83,6 @@ import SearchControlsContentful from '@/components/SearchControlsContentful/Sear
 import DatasetFacetMenu from '@/components/FacetMenu/DatasetFacetMenu.vue'
 import { facetPropPathMapping, getAlgoliaFacets } from '../../utils/algolia'
 import { HIGHLIGHT_HTML_TAG } from '../../utils/utils'
-import DatasetSearchResults from '@/components/SearchResults/DatasetSearchResults.vue'
-import SortMenu from '@/components/SortMenu/SortMenu.vue'
-
-const searchResultsComponents = {
-  dataset: DatasetSearchResults,
-  simulation: DatasetSearchResults,
-  model: DatasetSearchResults
-}
 
 const searchTypes = [
   {
@@ -114,8 +105,7 @@ export default {
   components: {
     SearchControlsContentful,
     DatasetFacetMenu,
-    DatasetSearchResults,
-    SortMenu,
+    DatasetCard
   },
 
   async setup() {
@@ -130,28 +120,6 @@ export default {
       return navigateTo(newPath)
     }
     const { $algoliaClient } = useNuxtApp()
-    const algoliaSortOptions = [
-      {
-        label: 'Date (desc)',
-        id: 'newest',
-        algoliaIndexName: config.public.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC
-      },
-      {
-        label: 'Date (asc)',
-        id: 'oldest',
-        algoliaIndexName: config.public.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_ASC
-      },
-      {
-        label: 'A-Z',
-        id: 'alphabetical',
-        algoliaIndexName: config.public.ALGOLIA_INDEX_ALPHABETICAL_A_Z
-      },
-      {
-        label: 'Z-A',
-        id: 'reverseAlphabetical',
-        algoliaIndexName: config.public.ALGOLIA_INDEX_ALPHABETICAL_Z_A
-      },
-    ]
     const algoliaIndex = await $algoliaClient.initIndex(config.public.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC)
 
     const searchType = searchTypes.find(searchType => {
@@ -159,8 +127,6 @@ export default {
     })
     const title = propOr('', 'label', searchType)
     return {
-      algoliaSortOptions,
-      selectedAlgoliaSortOption: ref(algoliaSortOptions.find(opt => opt.id === route.query.datasetSort) || algoliaSortOptions[0]),
       algoliaIndex,
       title
     }
@@ -175,6 +141,7 @@ export default {
         items: [],
         total: 0
       },
+      itemsToDisplay: [10,25,50,100],
       facets: [],
       visibleFacets: {},
       isLoadingSearch: false,
@@ -267,20 +234,6 @@ export default {
       handler: function () {
         this.searchQuery = this.$route.query.search
         this.fetchResults()
-      },
-      immediate: true
-    },
-
-    '$route.query.datasetSort': {
-      handler: function () {
-        this.fetchResults()
-      },
-      immediate: true
-    },
-
-    selectedAlgoliaSortOption: {
-      handler: function (option) {
-        this.algoliaIndex = this.$algoliaClient.initIndex(option.algoliaIndexName)
       },
       immediate: true
     }
@@ -417,17 +370,6 @@ export default {
       }
 
       return viewports[viewport] || 24
-    },
-    async onAlgoliaSortOptionChange(option) {
-      this.selectedAlgoliaSortOption = option
-      this.searchData.skip = 0
-      this.$router.replace({
-        query: {
-          ...this.$route.query,
-          skip: 0,
-          datasetSort: option.id
-        }
-      })
     }
   }
 }
@@ -439,10 +381,6 @@ export default {
 .alternative-links {
   text-decoration: underline;
   color: $es-primary-color;
-}
-
-.page-data {
-  background-color: $background;
 }
 
 .search-bar__container {
@@ -458,10 +396,8 @@ export default {
   }
 }
 
-.table-wrap {
-  background: #fff;
-  border: 1px solid $lineColor2;
-  padding: 16px;
+.table-wrapper {
+  margin-top: 16px;
 
   .search-error {
     margin: 0 0 auto;
@@ -470,21 +406,19 @@ export default {
 }
 
 .search-heading {
-  align-items: flex-end;
   display: flex;
-  margin-bottom: 1em;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1em;
 
-  @media screen and (max-width: 28em) {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 0;
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
   }
 
-  p {
-    font-size: 0.875em;
-    flex-shrink: 0;
-    margin: 2em 0 0 0;
+  .el-select-wrapper {
+    margin-left: 16px;
+    width: 56px;
   }
 }
 
@@ -530,5 +464,9 @@ export default {
   :deep(.el-checkbox__label) {
     color: $es-primary-color;
   }
+}
+
+.dataset-results-footer {
+  margin-bottom: 16px;
 }
 </style>
