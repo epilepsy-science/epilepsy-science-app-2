@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import auth from '@/services/auth.js'
 import { pathOr, propOr } from 'ramda'
 import { mockPageStats } from '~/data/mockData';
 
@@ -95,12 +94,6 @@ export const useMainStore = defineStore('main', {
     },
     setUserProfile(value) {
       this.userProfile = value
-    },
-    async login(providerName) {
-      await auth.login(providerName)
-    },
-    async logout(){
-      await auth.logout()
     },
     setPageStats(value) {
       this.pageStats = {

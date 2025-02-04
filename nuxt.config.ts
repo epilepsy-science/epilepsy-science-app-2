@@ -199,22 +199,6 @@ export default defineNuxtConfig({
         process.env.ALGOLIA_INDEX_ALPHABETICAL_A_Z || "epilepsy_science_index",
       ALGOLIA_INDEX_ALPHABETICAL_Z_A:
         process.env.ALGOLIA_INDEX_ALPHABETICAL_Z_A || "epilepsy_science_index",
-      AWS_REGION: process.env.AWS_REGION || "us-east-1",
-      AWS_USER_POOL_ID: process.env.AWS_USER_POOL_ID || "us-east-1_FVLhJ7CQA",
-      AWS_USER_POOL_WEB_CLIENT_ID:
-        process.env.AWS_USER_POOL_WEB_CLIENT_ID || "",
-      AWS_USER_AUTHENTICATION_FLOW_TYPE:
-        process.env.AWS_USER_AUTHENTICATION_FLOW_TYPE || "USER_PASSWORD_AUTH",
-      AWS_OAUTH_DOMAIN:
-        process.env.AWS_OAUTH_DOMAIN ||
-        "pennsieve-dev-users2.auth.us-east-1.amazoncognito.com",
-      AWS_OAUTH_SCOPE: process.env.AWS_OAUTH_SCOPE || "openid",
-      AWS_OAUTH_RESPONSE_TYPE: process.env.AWS_OAUTH_RESPONSE_TYPE || "token",
-      AWS_OAUTH_REDIRECT_SIGN_IN_URL:
-        process.env.AWS_OAUTH_REDIRECT_SIGN_IN_URL || "http://localhost:3000",
-      AWS_OAUTH_REDIRECT_SIGN_OUT_URL:
-        process.env.AWS_OAUTH_REDIRECT_SIGN_OUT_URL || "http://localhost:3000",
-      LOGIN_API_URL: process.env.LOGIN_API_URL || "https://api.pennsieve.net",
       PENNSIEVE_API_VERSION_2:
         process.env.PENNSIEVE_API_VERSION_2 || "https://api2.pennsieve.net",
       SHOW_TIMESERIES_VIEWER: process.env.SHOW_TIMESERIES_VIEWER || "false",
