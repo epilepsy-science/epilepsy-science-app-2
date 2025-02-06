@@ -33,7 +33,8 @@
                 <client-only>
                   <div class="datasets-count">
                     <span>Datasets per page</span>
-                    <el-select class="el-select-wrapper" v-model="searchData.limit" size="small" @change="updateDataSearchLimit">
+                    <el-select class="el-select-wrapper" v-model="searchData.limit" size="small"
+                      @change="updateDataSearchLimit">
                       <el-option v-for="(item, index) in itemsToDisplay" :key="index" :label="item" :value="item" />
                     </el-select>
                   </div>
@@ -51,8 +52,8 @@
                   Sorry, the search engine has encountered an unexpected
                   error, please try again later.
                 </p>
-                <DatasetCard v-for="dataset in tableData" class="mb-16" :key="dataset.id" :dataset="dataset">
-                </DatasetCard>
+                <component :is="DatasetCard" v-for="dataset in tableData" class="mb-16" :key="dataset.id"
+                  :dataset="dataset"></component>
               </div>
               <div class="dataset-results-footer">
                 <client-only>
@@ -105,7 +106,6 @@ export default {
   components: {
     SearchControlsContentful,
     DatasetFacetMenu,
-    DatasetCard
   },
 
   async setup() {
@@ -167,7 +167,8 @@ export default {
         },
       ],
       titleColumnWidth: 300,
-      windowWidth: ''
+      windowWidth: '',
+      DatasetCard: null
     }
   },
 
@@ -242,7 +243,9 @@ export default {
   beforeMount: function () {
     this.windowWidth = window.innerWidth
   },
-  mounted: function () {
+  mounted: async function () {
+    const module = await import('pennsieve-ui-library');
+    this.DatasetCard = module.DatasetCard;
     if (!this.$route.query.type) {
       const firstTabType = compose(propOr('', 'type'), head)(searchTypes)
       this.$router.replace({ query: { type: firstTabType } })
