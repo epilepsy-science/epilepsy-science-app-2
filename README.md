@@ -26,7 +26,6 @@ Ensure that the following configuration variables are set in your environment pr
 * CTF_API_HOST
 * DEPLOY_ENV
 * PORTAL_API_HOST
-* AWS_USER_POOL_WEB_CLIENT_ID
 
 Add your env vars to `env_var_set.sh` and then run `source env_var_set.sh`
 ## Development Server
