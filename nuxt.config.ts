@@ -204,7 +204,7 @@ export default defineNuxtConfig({
       SHOW_TIMESERIES_VIEWER: process.env.SHOW_TIMESERIES_VIEWER || "false",
       ORCID_API_URL: process.env.ORCID_API_URL || "https://pub.orcid.org/v2.1",
       crosscite_api_host:
-        process.env.CROSSCITE_API_HOST || "https://citation.crosscite.org",
+        process.env.CROSSCITE_API_HOST || "https://citation.doi.org",
       max_download_size: parseInt(
         process.env.MAX_DOWNLOAD_SIZE || "5000000000"
       ),
