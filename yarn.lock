@@ -2969,6 +2969,11 @@ flatted@^3.3.2:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.3.2.tgz#adba1448a9841bec72b42c532ea23dbbedef1a27"
   integrity sha512-AiwGJM8YcNOaobumgtng+6NHuOqC3A7MixFeDafM3X9cIUM+xUXoS5Vfgf+OihAYe20fxqNM9yPBXJzRtZ/4eA==
 
+flexboxgrid@^6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/flexboxgrid/-/flexboxgrid-6.3.1.tgz#e99898afc07b7047722bb81a958a5fba4d4e20fd"
+  integrity sha512-OS//6OHK9i3Hy5mLwD49uRYvnZ9fdfSkq7omO5uJPA2CD7JeBuDY7xleqN1h3MGJZNvKUskyNTv0ot0JKvOAsg==
+
 follow-redirects@^1.15.6:
   version "1.15.9"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.9.tgz#a604fa10e443bf98ca94228d9eebcc2e8a2c8ee1"
@@ -4939,6 +4944,11 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
+recaptcha-v3@^1.8.0:
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/recaptcha-v3/-/recaptcha-v3-1.11.3.tgz#ea0ba6da462196236c243bc1fbba4a4072646d26"
+  integrity sha512-sEE6J0RzUkS+sKEBpgCD/AqCU0ffrAVOADGjvAx9vcttN+VLK42SWMkj/J/I6vHu3Kew+xcfbBqDVb65N0QGDw==
+
 redis-errors@^1.0.0, redis-errors@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/redis-errors/-/redis-errors-1.2.0.tgz#eb62d2adb15e4eaf4610c04afe1529384250abad"
@@ -5995,6 +6005,13 @@ vue-devtools-stub@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/vue-devtools-stub/-/vue-devtools-stub-0.1.0.tgz#a65b9485edecd4273cedcb8102c739b83add2c81"
   integrity sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==
+
+vue-recaptcha-v3@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/vue-recaptcha-v3/-/vue-recaptcha-v3-2.0.1.tgz#10b07bbe07881734b9997111cfe3c9a9ca786bdb"
+  integrity sha512-isEDtOfHU4wWRrZZuxciAELtQmPOeEEdicPNa0f1AOyLPy3sCcBEcpFt+FOcO3RQv5unJ3Yn5NlsWtXv9rXqjg==
+  dependencies:
+    recaptcha-v3 "^1.8.0"
 
 "vue-router@>= 4.1.0 < 5.0.0", vue-router@^4.2.5, vue-router@^4.5.0:
   version "4.5.0"

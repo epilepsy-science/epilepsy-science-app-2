@@ -73,9 +73,9 @@ export default {
     const route = useRoute()
     const router = useRouter()
     try {
-      const page = await getEventPage(route.params.id)
+      const page = await getEventPage(route.params.datasetId)
       const slug = pathOr(null, ['fields', 'slug'], page)
-      if (slug !== null && route.params.id !== slug) {
+      if (slug !== null && route.params.datasetId !== slug) {
         router.push(`/news-and-events/events/${slug}`)
       }
       return { page }

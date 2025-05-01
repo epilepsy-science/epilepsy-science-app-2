@@ -2,14 +2,12 @@
   <img
     ref="img"
     :src="bannerSrc"
-    class="dataset-image mb-8"
+    class="dataset-image"
     alt="Dataset Banner Image"
   />
 </template>
 
 <script>
-import brokenImage from '@/static/images/icon-broken-image.svg'
-
 export default {
   name: 'DatasetBannerImage',
   props: {
@@ -21,21 +19,20 @@ export default {
 
   data() {
     return {
-      bannerSrc: '',
-      brokenImage
+      bannerSrc: ''
     }
   },
 
   watch: {
     src: {
-      handler: function(val) {
+      handler(val) {
         this.bannerSrc = val
       },
       immediate: true
     }
   },
 
-  mounted: function() {
+  mounted() {
     // Add listener for onerror
     this.$refs.img.onerror = this.onError
   },
@@ -44,16 +41,9 @@ export default {
     /**
      * Set the source as the brokenImage URL
      */
-    onError: function() {
-      this.bannerSrc = this.brokenImage
+    onError() {
+      this.bannerSrc = '~/assets/images/illustrations/icon-broken-image.svg'
     }
   }
 }
 </script>
-
-<style scoped lang="scss">
-.dataset-image {
-  width: 100%;
-  height: auto;
-}
-</style>
