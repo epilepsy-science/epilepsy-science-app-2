@@ -908,6 +908,10 @@ h4 {
   }
   // components within inline-templates do not correctly get the parent components css scope, need to use ::v-deep
   button {
+    background: none;
+    border: 0;
+    outline: none;
+    padding: 0;
     cursor: pointer;
   }
 }
@@ -960,6 +964,13 @@ h4 {
   line-height: 16px;
   padding-left: 16px;
   color: #cddaff;
+
+  button {
+    background: none;
+    border: 0;
+    outline: none;
+    padding: 0;
+  }
 
   button,
   a {
