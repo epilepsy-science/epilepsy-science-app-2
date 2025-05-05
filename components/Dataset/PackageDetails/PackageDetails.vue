@@ -5,7 +5,7 @@ import {pathOr, propOr} from "ramda";
 const runtimeConfig = useRuntimeConfig()
 
 
-import {useMainStore} from '~/store/index.ts'
+import {useMainStore} from '~/store/index.js'
 import BfButton from "~/components/Shared/BfButton/BfButton.vue";
 
 const store = useMainStore()
@@ -132,8 +132,8 @@ function downloadFile(event) {
     <div class="container-fluid">
       <div class="row between-mb">
         <div class="col-xs-8 header-link">
-          <nuxt-link :to="{ name: 'datasets-id', params: { id: store.selectedPackage.datasetId } }">
-            <IconsIconArrowLeft class="header-link-icon" />
+          <nuxt-link :to="{ name: 'datasets-datasetId', params: { datasetId: store.selectedPackage.datasetId } }">
+            <IconArrowLeft class="header-link-icon" />
             Back to dataset
           </nuxt-link>
         </div>

@@ -1,5 +1,5 @@
 <script setup>
-import {useMainStore} from '~/store/index.ts'
+import {useMainStore} from '~/store/index.js'
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()

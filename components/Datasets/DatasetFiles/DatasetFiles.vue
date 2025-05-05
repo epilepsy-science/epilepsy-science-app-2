@@ -7,7 +7,7 @@ import IconRemove from "~/components/Icons/IconRemove.vue";
 
 
 
-import {useMainStore} from '~/store/index.ts'
+import {useMainStore} from '~/store/index.js'
 
 const store = useMainStore()
 

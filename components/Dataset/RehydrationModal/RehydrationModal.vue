@@ -1,7 +1,7 @@
 <script setup>
 import {reactive, ref} from "vue";
 import {pathOr} from "ramda";
-import {useMainStore} from '~/store/index.ts'
+import {useMainStore} from '~/store/index.js'
 import {storeToRefs} from 'pinia'
 import {useReCaptcha} from "vue-recaptcha-v3";
 // import EventBus from '@/utils/event-bus'
