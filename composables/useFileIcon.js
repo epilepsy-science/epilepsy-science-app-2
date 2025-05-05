@@ -1,4 +1,3 @@
-import {compose, concat, propEq, propOr, useWith, find} from "ramda";
 import * as files from '~/utils/supported-files/files.json'
 
 /**
@@ -23,11 +22,11 @@ export default function (icon, packageType) {
 /**
  * Lookup the svg per icon key
  * @param {String} icon
- * @param {Array} files
+ * @param {Array} filesList
  * @returns {String}
  */
-const getSvgIcon = compose(
-    concat('/file-icons/'),
-    propOr('icon-generic.svg', 'SVG'),
-    useWith(find, [propEq('Icon')])
-)
+function getSvgIcon(icon, filesList) {
+  const found = filesList.find(file => file.Icon === icon);
+  const svgName = found ? found.SVG : 'icon-generic.svg';
+  return '/file-icons/' + svgName;
+}
