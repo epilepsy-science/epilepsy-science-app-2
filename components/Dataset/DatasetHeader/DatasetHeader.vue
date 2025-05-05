@@ -696,8 +696,7 @@ const isRehydrationModalVisible = ref(false)
     color: variables.$purple_2;
     height: 10px;
     width: 10px;
-    margin-bottom: 3px;
-    margin-right: 8px;
+    margin-right: 4px;
   }
 }
 
