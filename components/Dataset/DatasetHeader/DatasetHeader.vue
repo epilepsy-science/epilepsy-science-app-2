@@ -378,7 +378,7 @@ const isRehydrationModalVisible = ref(false)
   <div class="dataset-header">
     <div class="row mb-8">
       <div class="col-xs-12">
-        <NuxtLink :to="{ name: 'index' }" class="header-link">
+        <NuxtLink :to="{ name: 'data' }" class="header-link">
           <IconArrowLeft class="header-link-icon"/>
           View all Datasets
         </NuxtLink>
@@ -495,7 +495,7 @@ const isRehydrationModalVisible = ref(false)
         </div>
         <div class="col-xs-6 col-sm-3">
           <div class="header-stats-block">
-            <IconsIconDocument class="mr-8" :height="20" :width="20"/>
+            <IconDocument class="mr-8" :height="20" :width="20"/>
 
             <div>
               <template v-if="datasetRecords > 0">
