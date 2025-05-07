@@ -100,27 +100,15 @@ function downloadFile(event) {
     .then(response => {
       const presignedUrl = pathOr('',['data',[0],'url'], response)
       if (presignedUrl) {
-        useGenerateUrlWithToken(presignedUrl)
-          .then(url => {
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download',true); // Set the desired filename
-            link.setAttribute('target','_blank')
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-
-          })
-          .catch(console.log)
+        const link = document.createElement('a');
+        link.href = presignedUrl;
+        link.setAttribute('download',true);
+        link.setAttribute('target','_blank')
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       }
-
-
     })
-
-
-
-
 }
 
 
