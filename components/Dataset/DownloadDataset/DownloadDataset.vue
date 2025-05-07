@@ -3,7 +3,6 @@
 import {compose, head, propOr} from "ramda";
 
 import BfButton from '~/components/Shared/BfButton/BfButton.vue'
-import IconRemove from "~/components/Icons/IconRemove.vue";
 
 
 const runtimeConfig = useRuntimeConfig()
@@ -157,7 +156,7 @@ function openRehydrationModal() {
             {{ useFormatMetric(props.datasetDetails.size) }}
           </div>
           <img
-            src="../../../../assets/images/illustrations/illo-data-management.svg"
+            src="../../../assets/images/illustrations/illo-data-management.svg"
             alt="illustration of data management"
           />
         </div>
@@ -165,7 +164,7 @@ function openRehydrationModal() {
           v-if="!isLatestVersion"
           :class="[isDatasetSizeLarge ? 'aws-container' : 'aws-block']"
         >
-          <button class="close-dialog" @click="closeDialog">
+          <button class="close-dialog-button" @click="closeDialog">
             <IconRemove
               :width="16"
               :height="16"
@@ -200,7 +199,7 @@ function openRehydrationModal() {
           v-if="isLatestVersion"
           :class="[isDatasetSizeLarge ? 'aws-container' : 'aws-block']"
         >
-          <button class="close-dialog" @click="closeDialog">
+          <button class="close-dialog-button" @click="closeDialog">
             <IconRemove
               :width="16"
               :height="16"
@@ -238,23 +237,6 @@ function openRehydrationModal() {
 
 <style lang="scss" scoped>
 @use '@/assets/scss/variables';
-
-
-
-
-:deep(.el-dialog) {
-  border-radius: 0;
-  padding:0;
-
-  .el-dialog__body {
-    padding: 0;
-  }
-
-  .el-dialog__header {
-    padding: 0;
-    border-bottom: none;
-  }
-}
 
 .download-dataset-dialog {
   .download-dataset-container {
@@ -335,9 +317,14 @@ function openRehydrationModal() {
     margin: 47px 48px 21px;
   }
 
-  .close-dialog {
+  .close-dialog-button {
     float: right;
     margin-top: -21px;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
   }
 
   .close-icon {
@@ -400,5 +387,21 @@ function openRehydrationModal() {
   margin: 10px;
   display: flex;
   justify-content: center;
+}
+</style>
+
+<style lang="scss">
+.download-dataset-dialog.el-dialog {
+  border-radius: 0;
+  padding:0;
+  
+  .el-dialog__header {
+    padding: 0 !important; // Remove important after removing the sparc stylesheets dependency
+  }
+
+  .el-dialog__body {
+    padding: 0;
+  }
+
 }
 </style>

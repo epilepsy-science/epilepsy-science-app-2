@@ -92,37 +92,6 @@ function closeDialog() {
 
 <style lang="scss" scoped>
 
-:deep(.el-dialog) {
-  padding: 0;
-  height: 350px;
-  .el-dialog__header {
-    background-color: #f1f1f3;
-    padding-top: 16px;
-    border-radius: 4px 4px 0px 0px;
-    padding-bottom: 8px;
-
-    .bf-dialog-header {
-      .bf-dialog-header-title {
-        font-size: 14px;
-        font-weight: bold;
-        line-height: 16px;
-      }
-
-      .icon-close {
-        margin-bottom: 5px;
-        .svg-icon {
-          width: 16px !important;
-          height: 16px !important;
-        }
-      }
-    }
-  }
-  .el-dialog__body {
-    padding: 0px 0px;
-    overflow: scroll;
-  }
-}
-
 .version-history-dialog {
 
 
@@ -166,5 +135,27 @@ function closeDialog() {
   }
 
 
+}
+</style>
+
+<style lang="scss">
+.version-history-dialog.el-dialog {
+  padding: 0px;
+
+  .el-dialog__header {
+    background-color: #f1f1f3;
+    padding-block: 16px 8px !important; // TODO revert imporntant on this line after getting rid of sparc stylesheets dependency 
+    margin-right: 0px;
+
+    .bf-dialog-header-title {
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 16px;
+    }
+  }
+  .el-dialog__body {
+    padding: 0px 0px;
+    overflow: auto;
+  }
 }
 </style>

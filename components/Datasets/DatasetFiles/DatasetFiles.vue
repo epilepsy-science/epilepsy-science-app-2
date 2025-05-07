@@ -463,7 +463,7 @@ function getRouteParams(data) {
       <template #header>
         <div class="bf-dialog-header">
           <span class="bf-dialog-header-title">Confirm Download</span>
-          <button class="icon-close" @click="closeConfirmDownload">
+          <button class="icon-close-button" @click="closeConfirmDownload">
             <IconRemove :height="12" :width="12" />
           </button>
         </div>
@@ -700,9 +700,8 @@ function getRouteParams(data) {
     align-items: center;
     display: flex;
     position: relative;
-    .icon-close {
+    .icon-close-button {
       color: variables.$glial;
-      cursor: pointer;
     }
   }
 

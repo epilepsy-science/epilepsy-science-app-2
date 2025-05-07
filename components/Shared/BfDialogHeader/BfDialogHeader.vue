@@ -1,7 +1,7 @@
 <template>
   <div class="bf-dialog-header">
     <span class="bf-dialog-header-title">{{ title }}</span>
-    <button v-if="!this.$slots.tabs" class="icon-close" @click="onClose">
+    <button v-if="!this.$slots.tabs" class="icon-close-button" @click="onClose">
       <IconRemove :height="12" :width="12" />
     </button>
     <slot name="tabs" />
@@ -40,8 +40,12 @@ export default {
   align-items: center;
   display: flex;
   position: relative;
-  .icon-close {
-    color: $gray_2;
+  .icon-close-button {
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
     cursor: pointer;
   }
 }
