@@ -84,22 +84,18 @@ const isLatestVersion = computed(() => {
  */
 
 function downloadDataset(event) {
+  try {
   event.preventDefault();
-  const url = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId.value}/versions/${version.value}/download?downloadOrigin=Discover`
-
-  useGenerateUrlWithToken(url)
-    .then(url => {
-      const link = document.createElement('a');
-      link.href = url;
-      // link.setAttribute('download', 'filename.ext'); // Set the desired filename
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-
-      })
-    .catch(console.log)
-
+  const url = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId.value}/versions/${version.value}/download?downloadOrigin=Discover`;
+  const downloadLink = document.createElement('a');
+  downloadLink.href = url;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+    
+  } catch (err) {
+    console.error("Download failed:", err);
+  }
 }
 
 
@@ -148,14 +144,13 @@ function openRehydrationModal() {
             You can download the raw files and metadata directly to your
             computer as a zip archive.
           </p>
-          <a >
-              <bf-button @click="downloadDataset" class="download-button">Download Dataset</bf-button>
-            </a>
+          <bf-button @click="downloadDataset" class="download-button">Download Dataset</bf-button>
 
           <div class="size">
             {{ useFormatMetric(props.datasetDetails.size) }}
           </div>
           <img
+            class="download-illo"
             src="../../../assets/images/illustrations/illo-data-management.svg"
             alt="illustration of data management"
           />
@@ -286,6 +281,7 @@ function openRehydrationModal() {
     }
 
     .download-button {
+      cursor: pointer;
       height: 60px;
       width: 236px;
       border-radius: 3px;
@@ -368,6 +364,10 @@ function openRehydrationModal() {
   .aws-block {
     box-sizing: border-box;
     padding: 40px 40px 0;
+  }
+
+  .download-illo {
+    pointer-events: none;
   }
 
 
