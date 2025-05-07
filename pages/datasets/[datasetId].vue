@@ -1,431 +1,168 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { getLicenseLink } from "~/utils/license-util";
+
+const route = useRoute()
+const runtimeConfig = useRuntimeConfig()
+
+//  ==== VERSIONS ====
+const versionsUrl = computed(() => {
+  return `${runtimeConfig.public.discover_api_host}/datasets/${route.params.datasetId}/versions`
+})
+const { data: versions } = await useFetch(versionsUrl, {})
+
+// ==== GET DATASET DETAILS =====
+const isTombStone = ref(false)
+const datasetUrl = `${runtimeConfig.public.discover_api_host}/datasets/${route.params.datasetId}`
+const datasetFullUrl = computed(() => { return route.params.version ? `${datasetUrl}/versions/${route.params.version}` : datasetUrl })
+const { data: dsDetails } = await useFetch(datasetFullUrl, {
+  onResponseError({ request, response, options }) {
+    if (response.status === 410) {
+      const dataset = response.data
+
+      isTombStone.value = true
+      dsDetails.value = dataset
+    }
+  }
+})
+
+// ==== Dataset Use Agreement ====
+const hasAgreement = ref(false)
+const agreementUrl = `${runtimeConfig.public.discover_api_host}/datasets/${route.params.datasetId}/data-use-agreement`
+const { data: dataUseAgreement } = await useFetch(agreementUrl, {
+  onResponse({ response }) {
+    hasAgreement.value = response.status === 200
+  },
+})
+
+// ---- README ----
+const { data: markDown } = await useFetch(dsDetails?.value?.readme, { headers: { 'Content-type': 'text' } })
+
+// ---- Tags ----
+const tagsUrl = computed(() => { return `${runtimeConfig.public.discover_api_host}/tags` })
+const { data: tags } = await useFetch(tagsUrl, {})
+
+// ==== SEO HEAD ====
+const seoTitle = computed(() => {
+  return `${dsDetails.value?.name} - Pennsieve Discover`
+})
+
+function getSEOLicense(licenseString) {
+  try {
+    console.log(licenseString)
+
+    return getLicenseLink(licenseString)
+  } catch {
+    return ""
+  }
+}
+
+function getCreatorsAndOrgMap() {
+  if (Object.keys(dsDetails.value).length > 0) {
+    let creators = dsDetails.value.contributors.map(contributor => {
+      const sameAs = contributor.orcid ? `http://orcid.org/${contributor.orcid}` : null
+      return {
+        '@type': 'Person',
+        sameAs,
+        givenName: contributor.firstName,
+        familyName: contributor.lastName,
+        name: `${contributor.firstName} ${contributor.lastName}`
+      }
+    })
+
+    return creators.concat(
+      {
+        '@type': 'Organization',
+        name: dsDetails.value.organizationName
+      })
+  }
+  return []
+}
+
+function getSEOUrl() {
+  if (window) {
+    return new URL(route.href, window.location.origin + window.location.pathname).href
+  } else {
+    return ''
+  }
+}
+
+useHead({
+  title: () => `Pennsieve: ${dsDetails.value.name}`,
+  meta: () => [
+    { name: 'description', content: dsDetails.value.datasetDescription },
+    { name: "DC.creator", content: JSON.stringify(getCreatorsAndOrgMap()) },
+    { name: 'DC.publisher', content: dsDetails.value.organizationName },
+    { name: 'DC.date', content: useFormatDate(dsDetails.value.firstPublishedAt), scheme: 'DCTERMS.W3CDTF' },
+    { name: 'DC.version', content: dsDetails.value.version },
+    { name: 'DC.identifier', content: `https://doi.org/${dsDetails.value.doi}`, scheme: 'DCTERMS.URI' },
+    { property: 'og:url', content: getSEOUrl() },
+    { name: 'DC.type', content: 'Dataset' },
+    { name: 'DC.description', content: dsDetails.value.datasetDescription },
+    { name: 'DCTERMS.license', content: getSEOLicense(dsDetails.value.license) },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:title', content: seoTitle },
+    { property: 'og:description', content: dsDetails.value.datasetDescription },
+    { property: 'og:image', content: dsDetails.value.banner },
+    { property: 'og:image:alt', content: `${dsDetails.value.name} Banner Image` },
+    { property: 'og:site_name', content: 'Pennsieve Discover' },
+    { name: 'twitter:card', content: 'summary' },
+    { name: 'twitter:site', content: '@pennsieve1' },
+    { name: 'twitter:creator', content: dsDetails.value.organizationName },
+    { name: 'twitter:description', content: dsDetails.value.datasetDescription },
+    { name: 'twitter:image', content: dsDetails.value.banner }
+  ],
+  script: () => [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "@id": `https://doi.org/${dsDetails.value.doi}`,
+        name: dsDetails.value.name,
+        description: dsDetails.value.description,
+        url: getSEOUrl(),
+        identifier: `https://doi.org/${dsDetails.value.doi}`,
+        license: getSEOLicense(dsDetails.value.license),
+        isAccessibleForFree: true,
+        creator: getCreatorsAndOrgMap(),
+        datePublished: dsDetails.value.versionPublishedAt,
+        dateModified: dsDetails.value.lastUpdatedDate,
+        version: dsDetails.value.version,
+        // citation: this.citationText,  // Is populated in datasetDetails
+      })
+    },
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        url: `${runtimeConfig.public.siteUrl}`,
+        name: 'Pennsieve Discover'
+      })
+    }]
+})
+
+// ---- Dataset Details ----
+
+
+</script>
+
 <template>
+  <div class="dataset-details">
 
-  <Head>
-    <Title>{{ datasetTitle }}</Title>
-    <Meta name="og:title" hid="og:title" :content="datasetTitle" />
-    <Meta name="twitter:title" :content="datasetTitle" />
-    <Meta name="description" hid="description" :content="datasetDescription" />
-    <Meta name="og:description" hid="og:description" :content="datasetDescription" />
-    <Meta name="twitter:description" :content="datasetDescription" />
-    <Meta name="DC.type" content="Dataset" />
-    <Meta name="DC.description" :content="datasetDescription" />
-    <Meta name="DCTERMS.license" :content="licenseLink" />
-    <Meta name="og:type" content="website" />
-    <Meta name="og:title" :content="datasetTitle" />
-    <Meta name="og:image" :content="datasetInfo?.banner" />
-    <Meta name="og:image:alt" :content="`${datasetTitle} Banner Image`" />
-    <Meta name="og:site_name" content="Epilepsy.science" />
-    <Meta name="twitter:card" content="summary" />
-    <Meta name="twitter:site" content="" />
-    <Meta name="twitter:image" :content="datasetInfo?.banner" />
-    <Meta name="DC.creator" :content="JSON.stringify(creators)" />
-    <Meta name="DC.identifier" :content="doiLink" scheme="DCTERMS.URI" />
-    <Meta name="DC.publisher" content="Pennsieve Discover" />
-    <Meta name="DC.date" :content="originallyPublishedDate" scheme="DCTERMS.W3CDTF" />
-    <Meta name="DC.version" :content="datasetInfo?.version.toString()" />
-  </Head>
-  <div class="dataset-details pb-16">
+    <dataset-details v-if="isTombStone === false" :dataset-details="dsDetails" :versions="versions" :markdown="markDown"
+      :has-agreement="hasAgreement" :data-use-agreement="dataUseAgreement" />
 
-      <breadcrumb :breadcrumb="breadcrumb" :title="datasetTitle" />
-      <template v-if="hasError">
-        <template v-if="errorType == '404'">
-          <error404 />
-        </template>
-        <template v-else>
-          <error400 />
-        </template>
-      </template>
-      <div v-else-if="showTombstone">
-        <tombstone :dataset-details="datasetInfo" />
-      </div>
-      <div class="details-container" v-else>
-        <el-row :gutter="16">
-          <el-col :xs="24" :sm="8" :md="6" :lg="5" class="left-column">
-            <dataset-action-box />
-          </el-col>
-          <el-col :xs="24" :sm="16" :md="18" :lg="19" class="right-column">
-            <client-only>
-              <content-tab-card class="mt-32" id="datasetDetailsTabsContainer" :tabs="tabs" :active-tab-id="activeTabId"
-                @tab-changed="tabChanged" routeName="datasetDetailsTab">
-                <dataset-description-info class="body1" v-show="activeTabId === 'abstract'" :markdown="markdown"
-                  :loading-markdown="loadingMarkdown"/>
-                <citation-details class="body1" v-show="activeTabId === 'cite'" :doi-value="datasetInfo.doi" />
-                <dataset-files-info class="body1" v-if="hasFiles" v-show="activeTabId === 'files'" />
-              </content-tab-card>
-            </client-only>
-          </el-col>
-        </el-row>
-      </div>
-      <dataset-version-message v-if="!isLatestVersion" :current-version="datasetInfo.version"
-        :dataset-details="datasetInfo" />
-    
+    <dataset-tombstone v-else :tags="tags" :dataset-details="dsDetails" :versions="versions" />
+
   </div>
 </template>
 
-<script>
-// TODO - Not urgent: clean up organizationName, doiLink and other organization name references that are not applicable to ES
-import Tombstone from '@/components/Tombstone/Tombstone.vue'
-import { clone, propOr, pathOr, head, compose } from 'ramda'
-import { getAlgoliaFacets, facetPropPathMapping } from '../../utils/algolia'
-import { useMainStore } from '../store/index.js'
-import { mapState, mapActions } from 'pinia'
-import DatasetVersionMessage from '@/components/DatasetVersionMessage/DatasetVersionMessage.vue'
-import DatasetActionBox from '@/components/DatasetDetails/DatasetActionBox.vue'
-import Scaffolds from '@/static/js/scaffolds.js'
-import DateUtils from '@/mixins/format-date'
-import FormatStorage from '@/mixins/bf-storage-metrics'
-import DatasetDescriptionInfo from '@/components/DatasetDetails/DatasetDescriptionInfo.vue'
-import CitationDetails from '@/components/CitationDetails/CitationDetails.vue'
-import DatasetFilesInfo from '@/components/DatasetDetails/DatasetFilesInfo.vue'
-import error404 from '~/components/Error/Error404.vue'
-import error400 from '~/components/Error/Error400.vue'
-import { getLicenseLink, getLicenseAbbr } from '@/static/js/license-util'
-import { ref } from 'vue'
-
-const getDatasetDetails = async (config, datasetId, version, $pennsieveApiClient) => {
-
-  const pennsieveUrl = `${config.public.discover_api_host}/datasets/${datasetId}`
-  var pennsieveDatasetUrl = version ? `${pennsieveUrl}/versions/${version}` : pennsieveUrl
-  const datasetDetails = await $pennsieveApiClient.value.get(pennsieveDatasetUrl).catch((error) => {
-        const status = pathOr('', ['data', 'status'], error.response)
-        if (status === 'UNPUBLISHED') {
-          const details = error.response.data
-          return {
-            isUnpublished: true,
-            ...details
-          }
-        }
-      })
-  return datasetDetails
-}
-
-const getDatasetVersions = async (config, datasetId, axios) => {
-  try {
-    const url = `${config.public.discover_api_host}/datasets/${datasetId}/versions`
-    return axios.get(url).then(({ data }) => {
-      return data.sort((a, b) => a.verson - b.version)
-    })
-  } catch (error) {
-    return []
-  }
-}
-
-const getOrganizationNames = async (algoliaIndex) => {
-  try {
-    await algoliaIndex.search('', {
-      sortFacetValuesBy: 'alpha',
-      facets: 'pennsieve.organization.name',
-    }).then(({ facets }) => {
-      return facets['pennsieve.organization.name'].keys()
-    })
-  } catch (error) {
-    return [
-      'SPARC',
-      'SPARC Consortium',
-      'RE-JOIN',
-      'HEAL PRECISION',
-      "IT'IS Foundation"
-    ]
-  }
-}
-
-const tabs = [
-  {
-    label: 'Abstract',
-    id: 'abstract'
-  },
-  {
-    label: 'Cite',
-    id: 'cite'
-  },
-]
-
-export default {
-  name: 'DatasetDetails',
-
-  components: {
-    Tombstone,
-    DatasetVersionMessage,
-    DatasetActionBox,
-    DatasetDescriptionInfo,
-    CitationDetails,
-    DatasetFilesInfo,
-    error400,
-    error404
-  },
-
-  mixins: [DateUtils, FormatStorage],
-
-  async setup() {
-    const route = useRoute()
-    const config = useRuntimeConfig()
-    const { $algoliaClient, $axios, $pennsieveApiClient } = useNuxtApp()
-    const algoliaIndex = await $algoliaClient.initIndex(config.public.ALGOLIA_INDEX_PUBLISHED_TIME_DESC)
-    let hasError = ref(false);
-    let errorType = ref("");
-
-    let tabsData = clone(tabs)
-    const datasetId = route.params.datasetId
-    const filter = `objectID:${datasetId}`
-    const datasetFacetsData = await getAlgoliaFacets(algoliaIndex, facetPropPathMapping, filter).then(data => {
-      return data
-    })
-
-    const store = useMainStore()
-    try {
-      let [datasetDetails, versions, sparcOrganizationNames] = await Promise.all([
-        getDatasetDetails(
-          config,
-          datasetId,
-          route.params.version,
-          $pennsieveApiClient
-        ),
-        getDatasetVersions(config, datasetId, $axios),
-        getOrganizationNames(algoliaIndex)
-      ])
-      
-      datasetDetails = propOr(datasetDetails, 'data', datasetDetails)
-      const latestVersion = compose(propOr(1, 'version'), head)(versions)
-      store.setDatasetInfo({ ...datasetDetails, 'latestVersion': latestVersion })
-      store.setDatasetFacetsData(datasetFacetsData)
-      // Creator data
-      const org = [
-        {
-          '@type': 'Organization',
-          name: propOr('', 'organizationName', datasetDetails)
-        }
-      ]
-      const contributors = datasetDetails?.contributors?.map(contributor => {
-        const sameAs = contributor.orcid
-          ? `http://orcid.org/${contributor.orcid}`
-          : null
-
-        return {
-          '@type': 'Person',
-          sameAs,
-          givenName: contributor.firstName,
-          familyName: contributor.lastName,
-          name: `${contributor.firstName} ${contributor.lastName}`
-        }
-      })
-
-      const creators = contributors?.concat(org)
-      const doi = propOr('', 'doi', datasetDetails)
-      const doiLink = doi ? `https://doi.org/${doi}` : ''
-      let originallyPublishedDate = propOr('', 'firstPublishedAt', datasetDetails)
-      const showTombstone = propOr(false, 'isUnpublished', datasetDetails)
-
-      return {
-        tabs: tabsData,
-        versions,
-        showTombstone,
-        algoliaIndex,
-        originallyPublishedDate,
-        creators,
-        hasError,
-        errorType
-      }
-    } catch (error) {
-      // TODO: status code is not available from the error object, must retrieve error code alternatively
-      const status = pathOr('', ['response', 'status'], error)
-      store.setDatasetInfo({})
-      hasError = true
-      return {
-        hasError, errorType
-      }
-    }
-  },
-
-  data() {
-    return {
-      breadcrumb: [
-        {
-          to: {
-            name: 'index'
-          },
-          label: 'Home'
-        },
-        {
-          to: {
-            name: 'data',
-            query: {
-              type: this.$route.query.type
-            }
-          },
-          label: 'Data & Models'
-        }
-      ],
-      activeTabId: this.$route.query.datasetDetailsTab ? this.$route.query.datasetDetailsTab : 'abstract',
-      markdown: {},
-      loadingMarkdown: false,
-      isLoadingDataset: false,
-      errorLoading: false,
-      sparcAwardNumbers: [],
-      showCopySuccess: false,
-      subtitles: [],
-    }
-  },
-
-  async created() {
-    if (this.datasetInfo) {
-      this.setDatasetInfo({ ...this.datasetInfo })
-    }
-  },
-  
-  computed: {
-    ...mapState(useMainStore, ['datasetInfo', 'datasetFacetsData']),
-    defaultTab() {
-      return this.tabs[0].id
-    },
-    embargoAccess() {
-      return propOr(null, 'embargoAccess', this.datasetInfo)
-    },
-    isLatestVersion() {
-      if (this.versions !== undefined && this.versions.length) {
-        const latestVersion = compose(propOr(1, 'version'), head)(this.versions)
-        return this.datasetInfo.version === latestVersion
-      }
-
-      return true
-    },
-    licenseLink: function () {
-      return getLicenseLink(this.datasetLicense)
-    },
-    datasetLicense: function () {
-      const licenseKey = propOr('', 'license', this.datasetInfo)
-      return getLicenseAbbr(licenseKey)
-    },
-    getDatasetImage: function () {
-      return propOr('', 'banner', this.datasetInfo)
-    },
-    datasetContributors: function () {
-      return propOr([], 'contributors', this.datasetInfo)
-    },
-    datasetTitle: function () {
-      return propOr('', 'name', this.datasetInfo)
-    },
-    datasetId: function () {
-      return pathOr('', ['params', 'datasetId'], this.$route)
-    },
-    hasFiles: function () {
-      return this.fileCount >= 1
-    },
-    fileCount: function () {
-      return propOr('0', 'fileCount', this.datasetInfo)
-    },
-    externalPublications: function () {
-      return propOr([], 'externalPublications', this.datasetInfo)
-    },
-    doiLink: function () {
-      const doi = propOr('', 'doi', this.datasetInfo)
-      return doi ? `https://doi.org/${doi}` : ''
-    },
-    datasetDescription: function () {
-      return propOr('', 'description', this.datasetInfo)
-    },
-    datasetName: function () {
-      return propOr('', 'name', this.datasetInfo)
-    },
-    organizationName: function () {
-      return propOr('', 'organizationName', this.datasetInfo)
-    },
-    // This assumes that the subtitles are the organ types
-    organType: function () {
-      return this.subtitles[0] || ''
-    },
-    scaffold: function () {
-      return Scaffolds[this.organType.toLowerCase()]
-    }
-  },
-
-  watch: {
-    '$route.query': 'queryChanged',
-    datasetInfo: {
-      handler: function () {
-        this.getMarkdown()
-      },
-    },
-    hasFiles: {
-      handler: function (newValue) {
-        if (newValue && !this.hasError) {
-          const hasFilesTab = this.tabs.find(tab => tab.id === 'files') !== undefined
-          if (!hasFilesTab) {
-            this.tabs.splice(3, 0, { label: 'Files', id: 'files' })
-          }
-        }
-      },
-      immediate: true
-    },
-  },
-  methods: {
-    tabChanged(newTab) {
-      this.activeTabId = newTab.id
-      this.$router.replace({ path: this.$route.path, query: { ...this.$route.query, datasetDetailsTab: newTab.id } })
-    },
-    ...mapActions(useMainStore, ['setDatasetInfo', 'setDatasetFacetData']),
-    queryChanged: function () {
-      this.activeTabId = this.$route.query.datasetDetailsTab
-        ? this.$route.query.datasetDetailsTab
-        : this.defaultTab
-    },
-    getMarkdown: function () {
-      this.loadingMarkdown = true
-      const readme = propOr('', 'readme', this.datasetInfo)
-      if (readme !== '') {
-        fetch(readme)
-          .then(response => response.text())
-          .then(response => {
-            this.loadingMarkdown = false
-            const splitDelim = '\\n---'
-            let splitResponse = response.split(splitDelim)
-            splitResponse = splitResponse.map(i => {
-              if (i < splitResponse.length - 1) {
-                return `${i}${splitDelim}`
-              } else {
-                return `${i}`
-              }
-            })
-            this.markdown = {
-              markdownTop: splitResponse[0].toString(),
-              markdownBottom: splitResponse[1]
-                ? splitResponse.slice(1).toString()
-                : ''
-            }
-          })
-          .catch(error => {
-            throw error
-          })
-      }
-    }
-  }
-}
-</script>
-
-<style lang="scss" scoped>
-@import 'sparc-design-system-components-2/src/assets/_variables.scss';
-.left-column {
-  @media (max-width: 48rem) {
-    order: 1;
-    margin-top: 0;
-  }
-}
-.details-container {
-  padding: 0 3rem;
-  @media (max-width: 62rem) {
-    padding: 0 1rem;
-  }
-}
-
-:deep(.card-container) {
-  .content {
-      a {
-        color: $es-primary-color;
-      }
-  }
-}
+<style scoped lang="scss">
 .dataset-details {
-  background-color: $background;
-  width: 100%;
-  overflow-x: hidden;
+  border-top: 1px solid $gray_1;
 }
+
+
 </style>

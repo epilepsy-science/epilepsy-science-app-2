@@ -97,3 +97,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+@use '~/node_modules/flexboxgrid/css/flexboxgrid.min.css';
+
+.discover-content {
+  box-sizing: border-box;
+  max-width: calc(936px + 4rem);
+}
+</style>

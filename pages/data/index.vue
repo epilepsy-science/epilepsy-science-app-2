@@ -71,7 +71,6 @@
 </template>
 
 <script>
-import { DatasetCard } from 'pennsieve-ui-library';
 import {
   compose,
   defaultTo,
@@ -84,6 +83,7 @@ import SearchControlsContentful from '@/components/SearchControlsContentful/Sear
 import DatasetFacetMenu from '@/components/FacetMenu/DatasetFacetMenu.vue'
 import { facetPropPathMapping, getAlgoliaFacets } from '../../utils/algolia'
 import { HIGHLIGHT_HTML_TAG } from '../../utils/utils'
+import { markRaw } from 'vue'
 
 const searchTypes = [
   {
@@ -245,7 +245,7 @@ export default {
   },
   mounted: async function () {
     const module = await import('pennsieve-ui-library');
-    this.DatasetCard = module.DatasetCard;
+    this.DatasetCard = markRaw(module.DatasetCard);
     if (!this.$route.query.type) {
       const firstTabType = compose(propOr('', 'type'), head)(searchTypes)
       this.$router.replace({ query: { type: firstTabType } })

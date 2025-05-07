@@ -11,7 +11,7 @@ export default {
   async setup() {
     const router = useRouter()
     const route = useRoute()
-    const image_identifier = route.params.id
+    const image_identifier = route.params.datasetId
     const datasetId = route.query.dataset_id
     const versionId = route.query.dataset_version
     const [

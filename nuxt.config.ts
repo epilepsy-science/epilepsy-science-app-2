@@ -234,6 +234,7 @@ export default defineNuxtConfig({
     "@/assets/element-ui-accordion-overrides.scss",
     "@/assets/element-ui-carousel-overrides.scss",
     "@/assets/element-ui-pagination-overrides.scss",
+    "@/assets/element-ui-popover-overrides.scss",
     "pennsieve-ui-library/dist/pennsieve-ui-library.css"
   ],
 
@@ -246,5 +247,5 @@ export default defineNuxtConfig({
     client: false
   },
 
-  compatibilityDate: "2025-01-08"
+  compatibilityDate: "2025-04-30"
 });

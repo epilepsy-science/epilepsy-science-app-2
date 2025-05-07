@@ -16,7 +16,12 @@ export const useMainStore = defineStore('main', {
       universities: 0,
       files: 0,
       labs: 0,
-    }
+    },
+    profile: {},
+    workspaces: [],
+    tags: [],
+    isLoadingTags: true,
+    selectedPackage: {},
   }),
   getters: {
     username(state) {
@@ -54,7 +59,18 @@ export const useMainStore = defineStore('main', {
     },
     profileComplete (state) {
       return helperMethods.isProfileComplete(state.userProfile)
-    }
+    },
+    isSignedIn: (state) => {
+      return Object.keys(state.profile).length > 0
+    },
+    userDisplayName: (state) => {
+        if (Object.keys(state.profile).length > 0) {
+            const firstName = pathOr('', ['firstName'], state.profile)
+            const lastName = pathOr('', ['lastName'], state.profile)
+            const firstInitial = firstName ? firstName[0] : ''
+            return `${firstInitial}. ${lastName}`
+        } else return ''
+    },
   },
   actions: {
     async init() {
@@ -106,6 +122,23 @@ export const useMainStore = defineStore('main', {
     },
     loadMockPageStats() {
       this.setPageStats(mockPageStats);
+    },
+    clearState() {
+      this.profile = {}
+      this.workspaces = []
+      this.tags = []
+      this.isLoadingTags = true
+      this.selectedPackage = {}
+    },
+
+    updateProfile(profile) {
+        this.profile = profile
+    },
+    setSelectedPackage(pkg) {
+        this.selectedPackage = pkg
+    },
+    updateWorkspaces(workspaces) {
+        this.workspaces = workspaces.organizations
     }
   },
   persist: {
