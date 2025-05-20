@@ -50,7 +50,7 @@ export default {
     const { $contentfulClient } = useNuxtApp()
     const route = useRoute()
     try {
-      const page = await $contentfulClient.getEntry(route.params.id)
+      const page = await $contentfulClient.getEntry(route.params.datasetId)
       return { page }
     } catch (error) {
       return {
