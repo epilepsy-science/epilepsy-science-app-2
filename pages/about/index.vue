@@ -50,6 +50,10 @@
       </div>
     </section>
 
+    <section class="body-wrapper team-section">
+      <Team />
+    </section>
+
     <section class="body-wrapper collaboration-section">
       <h2 class="collaboration-title">{{ collaboratorSectionContent.title }}</h2>
       <p class="collaboration-subtitle">{{ collaboratorSectionContent.subtitle }}</p>
@@ -79,6 +83,7 @@
 import { useMainStore } from '~/store/index';
 import { aboutPageContent, aboutCollaboratorsContent } from '../../assets/content/aboutPageContent';
 import { ref } from 'vue';
+import Team from './team/team.vue';
 
 const stats = useMainStore().pageStats
 const content = ref(aboutPageContent)
