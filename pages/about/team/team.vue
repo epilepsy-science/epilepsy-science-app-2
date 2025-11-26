@@ -12,7 +12,7 @@ const getObjects = (items: any[], memberType: string) =>
 
 const labMembers = computed(() => {
   return teamMembers.value?.items
-    ? getObjects(teamMembers.value.items, "LabMember")
+    ? getObjects(teamMembers.value.items, "PennsieveTeam")
     : [];
 });
 
@@ -24,19 +24,28 @@ const Collaborators = computed(() => {
 
 const Alumni = computed(() => {
   return teamMembers.value?.items
-    ? getObjects(teamMembers.value.items, "Alumni")
+    ? getObjects(teamMembers.value.items, "BDSPTeam")
     : [];
 });
 </script>
 <template>
   <div>
     <div class="section">
-      <h1>Lab</h1>
+      <h1>Pennsieve Team</h1>
       <div class="member-wrapper">
         <div
           v-for="(member, index) in labMembers"
           :key="member.sys?.id || index"
         >
+          <TeamMember :member="member" />
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h1>BDSP Team</h1>
+      <div class="member-wrapper">
+        <div v-for="(member, index) in Alumni" :key="member.sys?.id || index">
           <TeamMember :member="member" />
         </div>
       </div>
@@ -49,15 +58,6 @@ const Alumni = computed(() => {
           v-for="(member, index) in Collaborators"
           :key="member.sys?.id || index"
         >
-          <TeamMember :member="member" />
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h1>Alumni</h1>
-      <div class="member-wrapper">
-        <div v-for="(member, index) in Alumni" :key="member.sys?.id || index">
           <TeamMember :member="member" />
         </div>
       </div>

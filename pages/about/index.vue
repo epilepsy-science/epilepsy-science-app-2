@@ -7,12 +7,19 @@
     <section class="body-wrapper stats-section">
       <div class="stats-container">
         <el-row class="stats-row">
-          <el-col v-for="(stat, index) in displayStats" :key="index" :span="6" :xs="12" :md="6" class="stat-box">
+          <el-col
+            v-for="(stat, index) in displayStats"
+            :key="index"
+            :span="6"
+            :xs="12"
+            :md="6"
+            class="stat-box"
+          >
             <div class="stat-value">{{ stat.value }}</div>
             <div class="stat-label">{{ stat.label }}</div>
           </el-col>
         </el-row>
-        <hr>
+        <hr />
         <p class="stats-description">{{ content.statsDescription }}</p>
       </div>
     </section>
@@ -21,7 +28,12 @@
       <h2 class="section-title">{{ content.whatWeDo.title }}</h2>
       <div class="what-we-do-container">
         <el-row :gutter="20" class="stats-row">
-          <el-col v-for="(text, index) in content.whatWeDo.textItems" :key="index" :span="12" :xs="24">
+          <el-col
+            v-for="(text, index) in content.whatWeDo.textItems"
+            :key="index"
+            :span="12"
+            :xs="24"
+          >
             <p class="text-section">{{ text }}</p>
           </el-col>
         </el-row>
@@ -33,11 +45,18 @@
       <p class="section-subtitle">{{ content.missionDetails.subtitle }}</p>
       <div class="content-container">
         <div class="text-column">
-          <p class="bold-text mb-8">{{ content.missionDetails.additionalInfo }}</p>
+          <p class="bold-text mb-8">
+            {{ content.missionDetails.additionalInfo }}
+          </p>
           <p class="mb-8">{{ content.missionDetails.introduction }}</p>
-          <p class="bold-text mb-8">{{ content.missionDetails.highlightsTitle }}</p>
+          <p class="bold-text mb-8">
+            {{ content.missionDetails.highlightsTitle }}
+          </p>
           <ul class="highlights">
-            <li v-for="(highlight, index) in content.missionDetails.highlights" :key="index">
+            <li
+              v-for="(highlight, index) in content.missionDetails.highlights"
+              :key="index"
+            >
               {{ highlight }}
             </li>
           </ul>
@@ -45,22 +64,28 @@
         </div>
 
         <div class="image-column">
-          <img :src="content.missionDetails.imageSrc" alt="Epilepsy data platform" />
+          <img
+            :src="content.missionDetails.imageSrc"
+            alt="Epilepsy data platform"
+          />
         </div>
       </div>
     </section>
 
-    <section class="body-wrapper team-section">
-      <Team />
-    </section>
-
     <section class="body-wrapper collaboration-section">
-      <h2 class="collaboration-title">{{ collaboratorSectionContent.title }}</h2>
-      <p class="collaboration-subtitle">{{ collaboratorSectionContent.subtitle }}</p>
+      <h2 class="collaboration-title">
+        {{ collaboratorSectionContent.title }}
+      </h2>
+      <p class="collaboration-subtitle">
+        {{ collaboratorSectionContent.subtitle }}
+      </p>
 
       <div class="cards-container">
         <el-carousel type="card" :interval="6000">
-          <el-carousel-item v-for="(card, index) in collaboratorSectionContent.cards" :key="index">
+          <el-carousel-item
+            v-for="(card, index) in collaboratorSectionContent.cards"
+            :key="index"
+          >
             <CollaboratorCard
               :title="card.title"
               :description="card.description"
@@ -69,9 +94,12 @@
           </el-carousel-item>
         </el-carousel>
       </div>
-  </section>
-  <!-- TODO: display this form once the endpoint to accept form submissions is available -->
-  <!-- <section class="body-wrapper collaboration-form">
+    </section>
+    <section class="body-wrapper team-section">
+      <Team />
+    </section>
+    <!-- TODO: display this form once the endpoint to accept form submissions is available -->
+    <!-- <section class="body-wrapper collaboration-form">
     <h2 class="collaboration-form-title"> We'd LOVE to collaborate! </h2>
     <p class="collaboration-form-subtitle"> What excites you about partnering? </p>
     <CollaboratorForm />
@@ -80,22 +108,24 @@
 </template>
 
 <script setup>
-import { useMainStore } from '~/store/index';
-import { aboutPageContent, aboutCollaboratorsContent } from '../../assets/content/aboutPageContent';
-import { ref } from 'vue';
-import Team from './team/team.vue';
+import { useMainStore } from "~/store/index";
+import {
+  aboutPageContent,
+  aboutCollaboratorsContent,
+} from "../../assets/content/aboutPageContent";
+import { ref } from "vue";
+import Team from "./team/team.vue";
 
-const stats = useMainStore().pageStats
-const content = ref(aboutPageContent)
-const collaboratorSectionContent = ref(aboutCollaboratorsContent)
+const stats = useMainStore().pageStats;
+const content = ref(aboutPageContent);
+const collaboratorSectionContent = ref(aboutCollaboratorsContent);
 
 const displayStats = [
-    { value: `${stats.files}`, label: "Files" },
-    { value: `${stats.labs}+`, label: "Labs" },
-    { value: `${stats.datasets}`, label: "Datasets" },
-    { value: `${stats.publicUsers}+`, label: "Public Users" },
-  ]
-
+  { value: `${stats.files}`, label: "Files" },
+  { value: `${stats.labs}+`, label: "Labs" },
+  { value: `${stats.datasets}`, label: "Datasets" },
+  { value: `${stats.publicUsers}+`, label: "Public Users" },
+];
 </script>
 
 <style scoped lang="scss">
@@ -191,7 +221,7 @@ const displayStats = [
     }
 
     .mb-8 {
-      margin-bottom: 8px
+      margin-bottom: 8px;
     }
 
     .highlights {
