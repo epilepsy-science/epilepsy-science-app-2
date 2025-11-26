@@ -49,8 +49,5 @@
     "vue-recaptcha-v3": "^2.0.1",
     "vue-social-sharing": "^4.0.0-alpha4"
   },
-  "engines": {
-    "node": "18.20.5"
-  },
   "type": "module"
 }
