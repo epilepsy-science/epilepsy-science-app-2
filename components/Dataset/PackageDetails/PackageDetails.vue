@@ -75,8 +75,6 @@ async function executeDownload() {
   }
   zipData.value = JSON.stringify(payload, undefined)
 
-  console.log(zipData.value)
-
   zipFormRef.value.submit() // eslint-disable-line no-undef
 }
 

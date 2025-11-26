@@ -37,7 +37,7 @@
         The dataset citation generator (<a
           href="https://citation.crosscite.org/"
           target="_blank"
-        >https://citation.crosscite.org/</a>) encountered an internal error and was unable to complete your
+        >https://citation.doi.org/</a>) encountered an internal error and was unable to complete your
         request.<br />
         Please come back later.
       </div>
@@ -45,7 +45,7 @@
     <p style="text-align: end">
       More citations available at:
       <a
-        :href="`https://citation.crosscite.org/?doi=${doiValue}`"
+        :href="`https://citation.doi.org/?doi=${doiValue}`"
         target="_blank"
       >
         Crosscite.org

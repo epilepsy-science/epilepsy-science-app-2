@@ -228,7 +228,7 @@ const licenseLink = computed(() => {
 
 const doi = propOr('', 'doi', props.datasetDetails)
 const citationType = ref("apa")
-const citationUrl = computed(() => {return `https://citation.crosscite.org/format?doi=${doi}&style=${citationType.value}&lang=en-US`})
+const citationUrl = computed(() => {return `https://citation.doi.org/format?doi=${doi}&style=${citationType.value}&lang=en-US`})
 const { data:citationText, error:doiError } = await useLazyFetch(citationUrl,
   {onResponseError({ response }) {
       console.log(response)
@@ -253,7 +253,7 @@ const activeCitation = ref('')
 //
 //   // find all citation types at https://github.com/citation-style-language/styles
 //   const doi = propOr('', 'doi', props.datasetDetails)
-//   const url = `https://citation.crosscite.org/format?doi=${doi}&style=${citationType}&lang=en-US`
+//   const url = `https://citation.doi.org/format?doi=${doi}&style=${citationType}&lang=en-US`
 //   return fetch(url)
 //     .then((response) => {
 //       if (response.status !== 200) {
