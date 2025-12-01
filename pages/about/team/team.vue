@@ -12,7 +12,7 @@ const getObjects = (items: any[], memberType: string) =>
 
 const labMembers = computed(() => {
   return teamMembers.value?.items
-    ? getObjects(teamMembers.value.items, "PennsieveTeam")
+    ? getObjects(teamMembers.value.items, "Staff")
     : [];
 });
 
@@ -22,16 +22,24 @@ const Collaborators = computed(() => {
     : [];
 });
 
-const Alumni = computed(() => {
+const PI = computed(() => {
   return teamMembers.value?.items
-    ? getObjects(teamMembers.value.items, "BDSPTeam")
+    ? getObjects(teamMembers.value.items, "PI")
     : [];
 });
 </script>
 <template>
   <div>
     <div class="section">
-      <h1>Pennsieve Team</h1>
+      <h1>Principal Investigator</h1>
+      <div class="member-wrapper">
+        <div v-for="(member, index) in PI" :key="member.sys?.id || index">
+          <TeamMember :member="member" />
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <h1>Key Staff</h1>
       <div class="member-wrapper">
         <div
           v-for="(member, index) in labMembers"
@@ -42,16 +50,7 @@ const Alumni = computed(() => {
       </div>
     </div>
 
-    <div class="section">
-      <h1>BDSP Team</h1>
-      <div class="member-wrapper">
-        <div v-for="(member, index) in Alumni" :key="member.sys?.id || index">
-          <TeamMember :member="member" />
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
+    <!-- <div class="section">
       <h1>Core Collaborators</h1>
       <div class="member-wrapper">
         <div
@@ -60,8 +59,8 @@ const Alumni = computed(() => {
         >
           <TeamMember :member="member" />
         </div>
-      </div>
-    </div>
+      </div> 
+    </div>-->
   </div>
 </template>
 <style lang="scss" scoped>
