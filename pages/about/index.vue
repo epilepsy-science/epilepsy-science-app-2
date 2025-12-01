@@ -4,7 +4,7 @@
       <h1 class="mission-title">{{ content.mission.title }}</h1>
     </section>
 
-    <section class="body-wrapper stats-section">
+    <!-- <section class="body-wrapper stats-section">
       <div class="stats-container">
         <el-row class="stats-row">
           <el-col
@@ -22,7 +22,7 @@
         <hr />
         <p class="stats-description">{{ content.statsDescription }}</p>
       </div>
-    </section>
+    </section> -->
 
     <section class="body-wrapper what-we-do-section">
       <h2 class="section-title">{{ content.whatWeDo.title }}</h2>
