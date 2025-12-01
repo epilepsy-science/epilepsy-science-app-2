@@ -16,11 +16,11 @@ const labMembers = computed(() => {
     : [];
 });
 
-const Collaborators = computed(() => {
-  return teamMembers.value?.items
-    ? getObjects(teamMembers.value.items, "Collaborator")
-    : [];
-});
+// const Collaborators = computed(() => {
+//   return teamMembers.value?.items
+//     ? getObjects(teamMembers.value.items, "Collaborator")
+//     : [];
+// });
 
 const PI = computed(() => {
   return teamMembers.value?.items
