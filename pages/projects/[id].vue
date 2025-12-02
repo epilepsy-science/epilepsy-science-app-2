@@ -74,11 +74,6 @@
               <span class="detail-label">Version:</span>
               <span class="detail-value">{{ project.version }}</span>
             </div>
-
-            <div v-if="project.status" class="detail-item">
-              <span class="detail-label">Status:</span>
-              <span class="detail-value">{{ project.status }}</span>
-            </div>
           </div>
         </div>
 
@@ -118,25 +113,6 @@
           </div>
         </div>
 
-        <el-divider v-if="project.externalPublications && project.externalPublications.length > 0" />
-
-        <div v-if="project.externalPublications && project.externalPublications.length > 0" class="project-publications">
-          <h3>External Publications</h3>
-          <div class="publications-list">
-            <div
-              v-for="(publication, index) in project.externalPublications"
-              :key="index"
-              class="publication-item"
-            >
-              <a :href="`https://doi.org/${publication.doi}`" target="_blank" rel="noopener noreferrer">
-                {{ publication.doi }}
-              </a>
-              <span v-if="publication.relationshipType" class="relationship-type">
-                ({{ publication.relationshipType }})
-              </span>
-            </div>
-          </div>
-        </div>
       </el-card>
         </div>
 
@@ -453,8 +429,7 @@ onMounted(() => {
 }
 
 .project-tags,
-.project-contributors,
-.project-publications {
+.project-contributors {
   margin-top: 1.5rem;
 
   h3 {
@@ -498,34 +473,6 @@ onMounted(() => {
         text-decoration: underline;
       }
     }
-  }
-}
-
-.publications-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.publication-item {
-  font-size: 1rem;
-  color: #555;
-  padding: 0.5rem 0;
-
-  a {
-    color: #297fca;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  .relationship-type {
-    margin-left: 0.5rem;
-    color: #888;
-    font-style: italic;
-    font-size: 0.875rem;
   }
 }
 
