@@ -14,7 +14,24 @@
         <h1 class="project-title">{{ project.name }}</h1>
       </div>
 
-      <el-card class="project-info-card" shadow="never">
+      <div class="tabs-navigation">
+        <button
+          :class="['tab-button', { active: activeTab === 'overview' }]"
+          @click="activeTab = 'overview'"
+        >
+          Overview
+        </button>
+        <button
+          :class="['tab-button', { active: activeTab === 'datasets' }]"
+          @click="activeTab = 'datasets'"
+        >
+          Datasets
+        </button>
+      </div>
+
+      <div class="tab-content">
+        <div v-if="activeTab === 'overview'" class="overview-section">
+          <el-card class="project-info-card" shadow="never">
         <div class="project-description">
           <h2>Description</h2>
           <p class="description-text">{{ formattedDescription }}</p>
@@ -121,6 +138,12 @@
           </div>
         </div>
       </el-card>
+        </div>
+
+        <div v-if="activeTab === 'datasets'" class="datasets-section">
+          <!-- Datasets content will be added here -->
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -136,6 +159,7 @@ const runtimeConfig = useRuntimeConfig()
 const project = ref(null)
 const isLoading = ref(true)
 const error = ref(null)
+const activeTab = ref('overview')
 
 // Build project URL
 const projectUrl = `${runtimeConfig.public.discover_api_host}/datasets/${route.params.id}`
@@ -236,6 +260,53 @@ onMounted(() => {
     color: #297fca;
     margin: 0 0 0.5rem 0;
   }
+}
+
+.tabs-navigation {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 0;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: 0.75rem 0;
+  font-size: 1rem;
+  color: #999;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+  font-family: inherit;
+
+  &:hover {
+    color: #297fca;
+  }
+
+  &.active {
+    color: #297fca;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #297fca;
+    }
+  }
+}
+
+.tab-content {
+  margin-top: 2rem;
+}
+
+.overview-section,
+.datasets-section {
+  width: 100%;
 }
 
 .project-info-card {
