@@ -114,7 +114,7 @@ function formatNumber(number) {
       </div>
       <div class="dataset-content-wrap">
         <h3>
-          <NuxtLink :to="{ name: 'datasets-id', params: { id: dataset.id }}">
+          <NuxtLink :to="{ name: 'datasets-datasetId', params: { datasetId: dataset.id }}">
             {{ dataset.name }}
           </NuxtLink>
         </h3>

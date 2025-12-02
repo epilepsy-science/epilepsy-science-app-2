@@ -141,7 +141,27 @@
         </div>
 
         <div v-if="activeTab === 'datasets'" class="datasets-section">
-          <!-- Datasets content will be added here -->
+          <div v-if="datasetsLoading" class="loading-state">
+            Loading datasets...
+          </div>
+
+          <div v-else-if="datasetsError" class="error-state">
+            <h2>Error loading datasets</h2>
+            <p>{{ datasetsError }}</p>
+          </div>
+
+          <div v-else-if="datasets && datasets.length > 0" class="datasets-list">
+            <DatasetCard
+              v-for="dataset in datasets"
+              :key="dataset.id"
+              class="mb-16"
+              :dataset="dataset"
+            />
+          </div>
+
+          <div v-else class="no-datasets">
+            <p>No datasets found in this project.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -149,8 +169,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { propOr } from 'ramda'
+import DatasetCard from '~/components/Datasets/DatasetCard/DatasetCard.vue'
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
@@ -160,6 +181,11 @@ const project = ref(null)
 const isLoading = ref(true)
 const error = ref(null)
 const activeTab = ref('overview')
+
+// Datasets state
+const datasets = ref([])
+const datasetsLoading = ref(false)
+const datasetsError = ref(null)
 
 // Build project URL
 const projectUrl = `${runtimeConfig.public.discover_api_host}/datasets/${route.params.id}`
@@ -221,6 +247,47 @@ useHead({
       content: project.value?.description || 'Project details'
     }
   ]
+})
+
+// Build datasets URL
+const datasetsUrl = computed(() => {
+  if (!route.params.id) return null
+  return `${runtimeConfig.public.discover_api_host}/datasets/${route.params.id}/versions/1/dois?limit=25&offset=0`
+})
+
+// Fetch datasets function
+function fetchDatasets() {
+  if (!datasetsUrl.value) return
+  
+  datasetsLoading.value = true
+  datasetsError.value = null
+
+  useSendXhr(datasetsUrl.value, {
+    header: {},
+    method: 'GET',
+  })
+    .then((response) => {
+      // Extract data from the dois array
+      if (response.dois && Array.isArray(response.dois)) {
+        datasets.value = response.dois.map(item => item.data || item)
+      } else {
+        datasets.value = []
+      }
+      datasetsLoading.value = false
+    })
+    .catch((err) => {
+      console.error('Failed to fetch datasets:', err)
+      datasetsError.value = err.message || 'Failed to load datasets'
+      datasetsLoading.value = false
+      datasets.value = []
+    })
+}
+
+// Watch for tab changes to fetch datasets when datasets tab is opened
+watch(activeTab, (newTab) => {
+  if (newTab === 'datasets' && datasets.value.length === 0 && !datasetsLoading.value) {
+    fetchDatasets()
+  }
 })
 
 // Fetch on mount
@@ -307,6 +374,16 @@ onMounted(() => {
 .overview-section,
 .datasets-section {
   width: 100%;
+}
+
+.datasets-list {
+  width: 100%;
+}
+
+.no-datasets {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
 }
 
 .project-info-card {
