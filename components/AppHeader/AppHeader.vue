@@ -13,6 +13,7 @@
       <nav class="header-nav" :class="{ 'is-mobile-menu': menuOpen }">
         <ul>
           <li><nuxt-link to="/data?type=dataset">Data</nuxt-link></li>
+          <li><nuxt-link to="/projects">Projects</nuxt-link></li>
           <li><nuxt-link to="/about">About</nuxt-link></li>
         </ul>
       </nav>
