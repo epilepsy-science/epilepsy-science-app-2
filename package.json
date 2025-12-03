@@ -47,7 +47,10 @@
     "uint8array-extras": "^1.0.0",
     "vue-chartjs": "^5.3.0",
     "vue-recaptcha-v3": "^2.0.1",
-    "vue-social-sharing": "^4.0.0-alpha4"
+    "vue-social-sharing": "^4.0.0-alpha4",
+    "tsviewer": "^1.0.34",
+    "aws-amplify": "^6.6.7",
+    "pennsieve-visualization": "0.6.5"
   },
   "type": "module"
 }
