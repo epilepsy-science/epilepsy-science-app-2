@@ -92,10 +92,15 @@
 <script setup>
 import { computed, watch } from 'vue'
 import DatasetCard from '~/components/Datasets/DatasetCard/DatasetCard.vue'
+import markedMixin from '@/mixins/marked/index'
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const { $contentfulClient } = useNuxtApp()
+
+// Reuse parseMarkdown from mixin
+// The mixin sets up marked globally, so we can just use its parseMarkdown method
+const parseMarkdown = markedMixin.methods.parseMarkdown
 
 // Reactive state
 const activeTab = ref('overview')
@@ -140,12 +145,10 @@ const projectFunding = computed(() => {
   return project.value?.fields?.funding || []
 })
 
-// Return description as-is without extraction
+// Parse markdown description
 const formattedDescription = computed(() => {
   if (!projectDescription.value) return 'No description available.'
-  
-  // Return the description value as-is (string or rich text document)
-  return projectDescription.value
+  return parseMarkdown(projectDescription.value)
 })
 
 const formattedInvestigators = computed(() => {
