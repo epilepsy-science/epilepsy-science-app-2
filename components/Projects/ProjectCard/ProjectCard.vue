@@ -17,15 +17,12 @@
     <div class="project-info">
       <h3 class="project-title">
         <NuxtLink :to="projectLink">
-          {{ project.name }}
+          {{ projectName }}
         </NuxtLink>
       </h3>
-    </div>
-
-    <div class="project-footer">
-      <div v-if="updatedDate" class="footer-content">
-        Last updated on {{ updatedDate }}
-      </div>
+      <p v-if="projectSummary" class="project-summary">
+        {{ projectSummary }}
+      </p>
     </div>
   </div>
 </template>
@@ -37,13 +34,7 @@ const props = defineProps({
   project: {
     type: Object,
     required: true,
-    default: () => ({
-      id: null,
-      name: '',
-      updatedAt: '',
-      firstPublishedAt: '',
-      createdAt: ''
-    })
+    default: () => ({})
   },
   imageUrl: {
     type: String,
@@ -51,16 +42,30 @@ const props = defineProps({
   }
 })
 
-const updatedDate = computed(() => {
-  const date = props.project.updatedAt || props.project.firstPublishedAt || props.project.createdAt
-  return date ? useFormatDate(date) : null
+// Get project ID from Contentful sys.id
+const projectId = computed(() => {
+  return props.project.sys?.id || null
 })
 
 const projectLink = computed(() => {
   return {
     name: 'projects-id',
-    params: { id: props.project.id }
+    params: { id: projectId.value }
   }
+})
+
+const projectName = computed(() => {
+  return props.project.fields?.name || ''
+})
+
+// Get summary from Contentful fields.summary
+const projectSummary = computed(() => {
+  const summary = props.project.fields?.summary || ''
+  // Truncate to a reasonable length for card display (e.g., 150 characters)
+  if (summary && summary.length > 150) {
+    return summary.substring(0, 150).trim() + '...'
+  }
+  return summary
 })
 </script>
 
@@ -114,11 +119,10 @@ const projectLink = computed(() => {
 
 .project-info {
   padding: 1.5rem;
-  padding-bottom: 1rem;
 }
 
 .project-title {
-  margin: 0;
+  margin: 0 0 0.75rem 0;
   font-size: 1.5rem;
   font-weight: 600;
   line-height: 1.3;
@@ -135,16 +139,16 @@ const projectLink = computed(() => {
   }
 }
 
-.project-footer {
-  padding: 0.75rem 1.5rem;
-  background-color: #f5f5f5;
-  border-top: 1px solid #e0e0e0;
-  font-size: 0.75rem;
-  color: #666;
-}
-
-.footer-content {
-  text-align: center;
+.project-summary {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #555;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {

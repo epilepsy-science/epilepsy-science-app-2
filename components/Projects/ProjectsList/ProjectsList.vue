@@ -8,7 +8,7 @@
       <div class="projects-grid">
         <ProjectCard
           v-for="project in projects"
-          :key="project.id"
+          :key="project.sys?.id"
           :project="project"
           :image-url="getProjectImage(project)"
         />
@@ -39,15 +39,9 @@ const props = defineProps({
   }
 })
 
-// Get project image from doiCollection.banners or banner field
 function getProjectImage(project) {
-  // Check for banner images in doiCollection
-  if (project.doiCollection && project.doiCollection.banners && project.doiCollection.banners.length > 0) {
-    return project.doiCollection.banners[0]
-  }
-  // Fallback to banner field if available
-  if (project.banner) {
-    return project.banner
+  if (project.fields?.bannerImage?.fields?.file?.url) {
+    return `https://${project.fields.bannerImage.fields.file.url}`
   }
   return null
 }
