@@ -11,7 +11,7 @@
 
     <div v-else-if="project" class="project-detail">
       <div class="project-header">
-        <h1 class="project-title">{{ project.name }}</h1>
+        <h1 class="project-title">{{ projectName }}</h1>
       </div>
 
       <div class="tabs-navigation">
@@ -32,88 +32,33 @@
       <div class="tab-content">
         <div v-if="activeTab === 'overview'" class="overview-section">
           <el-card class="project-info-card" shadow="never">
-        <div class="project-description">
-          <h2>Description</h2>
-          <p class="description-text">{{ formattedDescription }}</p>
-        </div>
+            <div class="project-header-content">
+              <div v-if="projectDescription" class="project-description">
+                <h2>Description</h2>
+                <div class="description-text" v-html="formattedDescription"></div>
+              </div>
 
-        <el-divider />
-
-        <div class="project-details">
-          <div class="details-grid">
-            <div v-if="ownerName" class="detail-item">
-              <span class="detail-label">Owner:</span>
-              <span class="detail-value">{{ ownerName }}</span>
+              <div v-if="projectBannerImage" class="project-banner">
+                <img :src="projectBannerImage" alt="Project banner" class="banner-image" />
+              </div>
             </div>
 
-            <div v-if="project.size" class="detail-item">
-              <span class="detail-label">Size:</span>
-              <span class="detail-value">{{ useFormatMetric(project.size) }}</span>
+            <el-divider v-if="projectDescription && (projectInvestigators.length > 0 || projectFunding.length > 0)" />
+
+            <div class="project-details">
+              <div class="details-grid">
+                <div v-if="projectInvestigators.length > 0" class="detail-item">
+                  <span class="detail-label">Investigators:</span>
+                  <span class="detail-value">{{ formattedInvestigators }}</span>
+                </div>
+
+                <div v-if="projectFunding.length > 0" class="detail-item">
+                  <span class="detail-label">Funding:</span>
+                  <span class="detail-value">{{ formattedFunding }}</span>
+                </div>
+              </div>
             </div>
-
-            <div v-if="publishedDate" class="detail-item">
-              <span class="detail-label">Published:</span>
-              <span class="detail-value">{{ publishedDate }}</span>
-            </div>
-
-            <div v-if="project.doi" class="detail-item">
-              <span class="detail-label">DOI:</span>
-              <span class="detail-value">
-                <a :href="`https://doi.org/${project.doi}`" target="_blank" rel="noopener noreferrer">
-                  {{ project.doi }}
-                </a>
-              </span>
-            </div>
-
-            <div v-if="project.license" class="detail-item">
-              <span class="detail-label">License:</span>
-              <span class="detail-value">{{ project.license }}</span>
-            </div>
-
-            <div v-if="project.version" class="detail-item">
-              <span class="detail-label">Version:</span>
-              <span class="detail-value">{{ project.version }}</span>
-            </div>
-          </div>
-        </div>
-
-        <el-divider v-if="project.tags && project.tags.length > 0" />
-
-        <div v-if="project.tags && project.tags.length > 0" class="project-tags">
-          <h3>Tags</h3>
-          <div class="tags-container">
-            <el-tag
-              v-for="tag in project.tags"
-              :key="tag"
-              class="tag-item"
-            >
-              {{ tag }}
-            </el-tag>
-          </div>
-        </div>
-
-        <el-divider v-if="project.contributors && project.contributors.length > 0" />
-
-        <div v-if="project.contributors && project.contributors.length > 0" class="project-contributors">
-          <h3>Contributors</h3>
-          <div class="contributors-list">
-            <div
-              v-for="(contributor, index) in project.contributors"
-              :key="index"
-              class="contributor-item"
-            >
-              {{ contributor.firstName }} {{ contributor.lastName }}
-              <span v-if="contributor.degree">, {{ contributor.degree }}</span>
-              <span v-if="contributor.orcid" class="orcid-link">
-                <a :href="`https://orcid.org/${contributor.orcid}`" target="_blank" rel="noopener noreferrer">
-                  (ORCID)
-                </a>
-              </span>
-            </div>
-          </div>
-        </div>
-
-      </el-card>
+          </el-card>
         </div>
 
         <div v-if="activeTab === 'datasets'" class="datasets-section">
@@ -146,16 +91,13 @@
 
 <script setup>
 import { computed, watch } from 'vue'
-import { propOr } from 'ramda'
 import DatasetCard from '~/components/Datasets/DatasetCard/DatasetCard.vue'
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
+const { $contentfulClient } = useNuxtApp()
 
 // Reactive state
-const project = ref(null)
-const isLoading = ref(true)
-const error = ref(null)
 const activeTab = ref('overview')
 
 // Datasets state
@@ -163,56 +105,62 @@ const datasets = ref([])
 const datasetsLoading = ref(false)
 const datasetsError = ref(null)
 
-// Build project URL
-const projectUrl = `${runtimeConfig.public.discover_api_host}/datasets/${route.params.id}`
+// Fetch project from Contentful
+const { data: project, error, status } = useLazyAsyncData(`project-${route.params.id}`, () => {
+  return $contentfulClient.getEntry(route.params.id)
+})
 
-// Fetch project function
-function fetchProject() {
-  isLoading.value = true
-  error.value = null
+const isLoading = computed(() => status.value === 'pending')
 
-  useSendXhr(projectUrl, {
-    header: {},
-    method: 'GET',
-  })
-    .then((response) => {
-      project.value = response
-      isLoading.value = false
-    })
-    .catch((err) => {
-      console.error('Failed to fetch project:', err)
-      error.value = err.message || 'Failed to load project'
-      isLoading.value = false
-      project.value = null
-    })
-}
+// Computed properties for Contentful fields
+const projectName = computed(() => {
+  return project.value?.fields?.name || ''
+})
 
-// Computed properties
-const ownerName = computed(() => {
-  if (!project.value) return null
-  const firstName = propOr('', 'ownerFirstName', project.value)
-  const lastName = propOr('', 'ownerLastName', project.value)
-  if (firstName || lastName) {
-    return `${firstName} ${lastName}`.trim()
+const projectSummary = computed(() => {
+  return project.value?.fields?.summary || ''
+})
+
+const projectDescription = computed(() => {
+  return project.value?.fields?.description || null
+})
+
+const projectBannerImage = computed(() => {
+  if (project.value?.fields?.bannerImage?.fields?.file?.url) {
+    return `https://${project.value.fields.bannerImage.fields.file.url}`
   }
   return null
 })
 
-const publishedDate = computed(() => {
-  if (!project.value) return null
-  const date = project.value.firstPublishedAt || project.value.createdAt
-  return date ? useFormatDate(date) : null
+const projectInvestigators = computed(() => {
+  return project.value?.fields?.investigators || []
 })
 
+const projectFunding = computed(() => {
+  return project.value?.fields?.funding || []
+})
+
+// Return description as-is without extraction
 const formattedDescription = computed(() => {
-  if (!project.value || !project.value.description) return 'No description available.'
-  // Handle newlines in description
-  return project.value.description.replace(/\n/g, '\n')
+  if (!projectDescription.value) return 'No description available.'
+  
+  // Return the description value as-is (string or rich text document)
+  return projectDescription.value
+})
+
+const formattedInvestigators = computed(() => {
+  if (projectInvestigators.value.length === 0) return ''
+  return projectInvestigators.value.join(', ')
+})
+
+const formattedFunding = computed(() => {
+  if (projectFunding.value.length === 0) return ''
+  return projectFunding.value.join(', ')
 })
 
 // SEO
 const seoTitle = computed(() => {
-  return project.value ? `${project.value.name} - Projects` : 'Project'
+  return project.value ? `${projectName.value} - Projects` : 'Project'
 })
 
 useHead({
@@ -220,15 +168,17 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: project.value?.description || 'Project details'
+      content: projectSummary.value || 'Project details'
     }
   ]
 })
 
-// Build datasets URL
+// Build datasets URL - use first collection ID from Contentful
 const datasetsUrl = computed(() => {
-  if (!route.params.id) return null
-  return `${runtimeConfig.public.discover_api_host}/datasets/${route.params.id}/versions/1/dois?limit=25&offset=0`
+  if (!project.value?.fields?.collectionIds?.[0]) return null
+  
+  const collectionId = project.value.fields.collectionIds[0]
+  return `${runtimeConfig.public.discover_api_host}/datasets/${collectionId}/versions/1/dois?limit=25&offset=0`
 })
 
 // Fetch datasets function
@@ -260,16 +210,11 @@ function fetchDatasets() {
 }
 
 // Watch for tab changes to fetch datasets when datasets tab is opened
-watch(activeTab, (newTab) => {
-  if (newTab === 'datasets' && datasets.value.length === 0 && !datasetsLoading.value) {
+watch([activeTab, project], ([newTab, projectData]) => {
+  if (newTab === 'datasets' && projectData && datasets.value.length === 0 && !datasetsLoading.value) {
     fetchDatasets()
   }
-})
-
-// Fetch on mount
-onMounted(() => {
-  fetchProject()
-})
+}, { immediate: false })
 </script>
 
 <style scoped lang="scss">
@@ -301,7 +246,7 @@ onMounted(() => {
     font-size: 2rem;
     font-weight: 600;
     color: #297fca;
-    margin: 0 0 0.5rem 0;
+    margin: 0;
   }
 }
 
@@ -368,9 +313,31 @@ onMounted(() => {
   }
 }
 
-.project-description {
-  margin-bottom: 1.5rem;
+.project-header-content {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
 
+  .project-description {
+    flex: 1;
+  }
+}
+
+.project-banner {
+  flex-shrink: 0;
+  width: 400px;
+  height: 400px;
+
+  .banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+}
+
+.project-description {
   h2 {
     font-size: 1.5rem;
     font-weight: 600;
@@ -378,15 +345,11 @@ onMounted(() => {
     color: #333;
   }
 
-  p {
+  .description-text {
     font-size: 1rem;
     line-height: 1.6;
     color: #555;
     margin: 0;
-  }
-
-  .description-text {
-    white-space: pre-line;
   }
 }
 
@@ -428,54 +391,6 @@ onMounted(() => {
   }
 }
 
-.project-tags,
-.project-contributors {
-  margin-top: 1.5rem;
-
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin: 0 0 1rem 0;
-    color: #333;
-  }
-}
-
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tag-item {
-  margin: 0;
-}
-
-.contributors-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.contributor-item {
-  font-size: 1rem;
-  color: #555;
-  padding: 0.5rem 0;
-
-  .orcid-link {
-    margin-left: 0.5rem;
-
-    a {
-      color: #297fca;
-      text-decoration: none;
-      font-size: 0.875rem;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-}
-
 :deep(.el-divider) {
   margin: 1.5rem 0;
 }
@@ -487,6 +402,16 @@ onMounted(() => {
 
   .project-header .project-title {
     font-size: 1.5rem;
+  }
+
+  .project-header-content {
+    flex-direction: column;
+  }
+
+  .project-banner {
+    width: 100%;
+    height: 300px;
+    order: -1;
   }
 
   .details-grid {
