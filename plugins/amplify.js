@@ -15,7 +15,7 @@ async function doLogin() {
   const runtimeConfig = useRuntimeConfig();
   const DEFAULT_USER = {
     username: runtimeConfig.public.masterUserName,
-    password: runtimeConfig.public.masterPW,
+    password: runtimeConfig.public.masterUserPW,
   };
   try {
     await signIn({
