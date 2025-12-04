@@ -68,17 +68,21 @@ export default defineNuxtConfig({
           type: "image/svg+xml",
           href: "/favicon.svg",
         },
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossorigin: "anonymous",
+        },
         {
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css?family=Asap:400,400i,500,600,700&display=swap",
         },
-        { 
-          rel: 'stylesheet', 
-          href: 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap' 
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap",
         },
-      ]
+      ],
     },
   },
 
@@ -92,9 +96,9 @@ export default defineNuxtConfig({
 
   components: [
     {
-      path: '~/components',
+      path: "~/components",
       pathPrefix: false,
-    }
+    },
   ],
 
   vite: {
@@ -103,14 +107,21 @@ export default defineNuxtConfig({
     },
     css: {
       preprocessorOptions: {
-        scss: { // Add partials under this
+        scss: {
+          // Add partials under this
           api: "modern-compiler",
           additionalData: '@use "@/assets/scss/_variables.scss" as *;',
         },
       },
     },
     resolve: {
-      dedupe: ['vue'],
+      dedupe: ["vue"],
+    },
+    optimizeDeps: {
+      exclude: ["tsviewer"],
+    },
+    ssr: {
+      noExternal: ["tsviewer"],
     },
   },
 
@@ -219,6 +230,11 @@ export default defineNuxtConfig({
       INTERNAL_TRAFFIC_KEY:
         process.env.INTERNAL_TRAFFIC_KEY || "internal_traffic",
       INTERNAL_TRAFFIC_VALUE: process.env.INTERNAL_TRAFFIC_VALUE || "internal",
+      userPoolId: process.env.USER_POOL_ID || "us-east-1_FVLhJ7CQA",
+      userPoolWebClientId:
+        process.env.USER_POOL_WEB_CLIENT_ID || "703lm5d8odccu21pagcfjkeaea",
+      masterUserName: process.env.MASTERUSER_USERNAME,
+      masterUserPW: process.env.MASTERUSER_PASSWORD,
     },
   },
 
@@ -235,7 +251,7 @@ export default defineNuxtConfig({
     "@/assets/element-ui-carousel-overrides.scss",
     "@/assets/element-ui-pagination-overrides.scss",
     "@/assets/element-ui-popover-overrides.scss",
-    "pennsieve-ui-library/dist/pennsieve-ui-library.css"
+    "pennsieve-ui-library/dist/pennsieve-ui-library.css",
   ],
 
   sitemap: {
@@ -244,8 +260,8 @@ export default defineNuxtConfig({
 
   sourcemap: {
     server: false,
-    client: false
+    client: false,
   },
 
-  compatibilityDate: "2025-04-30"
+  compatibilityDate: "2025-04-30",
 });
