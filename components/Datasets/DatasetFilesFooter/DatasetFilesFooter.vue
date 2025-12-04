@@ -1,13 +1,9 @@
 <template>
   <div class="files-footer">
     <div class="files-button">
-      <p>
-        <strong>{{ loadedCount }}</strong> of
-        <strong>{{ fileCount }}</strong> files
-      </p>
-
+      <p><strong>{{ fileCountMessage }}</strong></p>
       <bf-button
-        v-if="fileCount > limit && files.length !== fileCount"
+        v-if="showLoadMore"
         @click="loadMoreFiles"
       >
         Load More
@@ -26,22 +22,27 @@ export default {
   },
 
   props: {
-    files: {
-      type: Array,
-      default: () => []
+    totalFileCount: {
+      type: Number,
+      default: 0
     },
     limit: {
       type: Number,
       default: 100
     },
-    fileCount: {
+    loadedFileCount: {
       type: Number,
       default: 0
-    },
-    loadedCount: {
-      type: String,
-      default: ''
     }
+  },
+
+  computed: {
+    fileCountMessage() {
+      return `1 - ${this.loadedFileCount} of ${this.totalFileCount} files`
+    },
+    showLoadMore() {
+      return this.totalFileCount > this.limit && this.loadedFileCount !== this.totalFileCount
+    },
   },
 
   methods: {

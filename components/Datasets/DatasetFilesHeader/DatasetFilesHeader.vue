@@ -2,48 +2,33 @@
   <div class="files-header">
     <div class="row end-xs">
       <div class="col-xs file-path">
-        <div v-if="filePath.length >= filePathLimit">
-          <breadcrumb-navigation
-            :directory-list="filePath"
-            @navigate-breadcrumb="handleNavigateBreadcrumb"
-          />
-        </div>
         <div
-          v-for="(path, index) in filePath"
-          v-else
-          :key="`${path}-${index}`"
+          v-for="{name, id} in segmentedPath"
+          :key="`${name}-${id}`"
           class="path"
         >
-          <div
-            v-if="index === filePath.length - 1"
-            :class="[
-              path === 'Root Directory' ? 'path-regular' : 'path-strong'
-            ]"
-          >
-            {{ path }}
-          </div>
-          <div v-else>
-            <a href="#" @click.prevent="getDatasetFilesForPath(path, index)">{{
-              path
-            }}</a
-            >/
-          </div>
+         <template v-if="id !== segmentedPath.length - 1">
+          <a href="#" @click.prevent="handleNavigateBreadcrumb(id)"> {{ name }}</a>
+          <span> /</span>
+         </template>
+         <template v-else>
+          <strong>{{ name }}</strong>
+         </template>
         </div>
       </div>
       <div
         :class="[
-          fileCount > limit && files.length !== fileCount
+          totalFileCount > limit && loadedFileCount !== totalFileCount
             ? 'col-xs-3 file-count'
             : 'col-xs-2 file-count'
         ]"
       >
         <p>
-          <strong>{{ loadedCount }}</strong> of
-          <strong>{{ fileCount }}</strong> files
+          <strong>{{ fileCountMessage }}</strong>
         </p>
 
         <bf-button
-          v-if="fileCount > limit && files.length !== fileCount"
+          v-if="showLoadMore"
           @click="loadMoreFiles"
         >
           Load More
@@ -55,95 +40,72 @@
 
 <script>
 import BfButton from '~/components/Shared/BfButton/BfButton.vue'
-import BreadcrumbNavigation from '../../Dataset/BreadcrumbNavigation/BreadcrumbNavigation.vue'
+
+const ROOT_PATH_NAME = 'Root Directory'
+
 export default {
   name: 'DatasetFilesHeader',
 
   components: {
-    BreadcrumbNavigation,
     BfButton
   },
 
   props: {
-    filePath: {
-      type: Array,
-      default: () => ['Root Directory']
+    directoryPath: {
+      type: String,
+      default: ''
     },
-    fileCount: {
+    totalFileCount: {
       type: Number,
       default: 0
-    },
-    files: {
-      type: Array,
-      default: () => []
     },
     limit: {
       type: Number,
       default: 100
     },
-    loadedCount: {
-      type: String,
-      default: ''
+    loadedFileCount: {
+      type: Number,
+      default: 0
     }
   },
 
-  data() {
-    return {
-      filePathLimit: 4,
-      breadcrumbPath: false
+  computed: {
+    fileCountMessage() {
+      return `1 - ${this.loadedFileCount} of ${this.totalFileCount} files`
+    },
+    showLoadMore() {
+      return this.totalFileCount > this.limit && this.loadedFileCount !== this.totalFileCount
+    },
+    segmentedPath() {
+      let path = []
+      if (this.directoryPath === '') {
+        path = [{name: ROOT_PATH_NAME, id: 0}]
+      } else {
+        path = [{name: ROOT_PATH_NAME, id: 0}]
+        let segmentIndex = 1
+        this.directoryPath.split('/').forEach((segment) => {
+          path.push({name: segment, id: segmentIndex})
+          segmentIndex++
+        })
+      }
+      return path
     }
   },
 
   methods: {
-    /**
-     *  Loads dataset files for a directory path from the
-     *  the breadcrumb dropdown
-     * @param {Object} obj
-     * @param {Object} filePathRemainder
-     */
-    handleNavigateBreadcrumb(obj, filePathRemainder) {
-      if (obj.pathName !== '' && obj.index !== '') {
-        if (
-          obj.pathName.includes('Root Directory') &&
-          obj.directoryName !== 'Root Directory'
-        ) {
-          // need to get rid of this and reformat
-          obj.pathName.shift('Root Directory')
-          const finalPathList = Array.from(obj.pathName)
-          const path = obj.pathName.join('/')
+    handleNavigateBreadcrumb(segmentId) {
+      // rebuild the directoryPath and remove 'Root Directory/' from the start
+      let rebuiltPath = this.segmentedPath
+        .slice(0, segmentId+1)
+        .map(segment => segment.name)
+        .join('/')
 
-          this.$emit(
-            'get-path-dataset-files',
-            path,
-            obj.directoryName,
-            obj.index,
-            false,
-            finalPathList
-          )
-        } else {
-          this.$emit(
-            'get-path-dataset-files',
-            obj.pathName,
-            obj.directoryName,
-            obj.index,
-            false,
-            filePathRemainder
-          )
-        }
-      } else {
-        this.$emit('get-path-dataset-files', 'Root Directory')
+      if (rebuiltPath.startsWith('Root Directory/')) {
+        rebuiltPath = rebuiltPath.replace(/^Root Directory\/?/, '')
+      } else if (rebuiltPath === 'Root Directory') {
+        rebuiltPath = ''
       }
-    },
-
-    /**
-     * Loads dataset files for a directory path from the
-     * file route string
-     * @param {String} pathName
-     * @param {Number} index
-     */
-    getDatasetFilesForPath(pathName, index) {
-      // this is for regular path
-      this.$emit('get-path-dataset-files', pathName, pathName, index)
+      this.$emit('navigate-breadcrumb', rebuiltPath)
     },
 
     /**
