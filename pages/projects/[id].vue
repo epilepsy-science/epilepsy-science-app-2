@@ -11,6 +11,10 @@
 
     <div v-else-if="project" class="project-detail">
       <div class="project-header">
+        <NuxtLink :to="{ name: 'projects' }" class="header-link">
+          <IconArrowLeft class="header-link-icon"/>
+          View all Projects
+        </NuxtLink>
         <h1 class="project-title">{{ projectName }}</h1>
       </div>
 
@@ -214,7 +218,7 @@ watch([activeTab, project], ([newTab, projectData]) => {
 .project-detail-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem 2rem 2rem 2rem;
 }
 
 .loading-state,
@@ -233,13 +237,31 @@ watch([activeTab, project], ([newTab, projectData]) => {
 }
 
 .project-header {
-  margin-bottom: 2rem;
+
+  .header-link {
+  color: #4d628c;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+
+  &:focus {
+    color: #4d628c;
+  }
+
+  .header-link-icon {
+    color: #4d628c;
+    height: 10px;
+    width: 10px;
+    margin-right: 4px;
+  }
+}
 
   .project-title {
     font-size: 2rem;
     font-weight: 600;
     color: #297fca;
     margin: 0;
+    margin-top: 1rem;
   }
 }
 
@@ -381,7 +403,7 @@ watch([activeTab, project], ([newTab, projectData]) => {
 
 @media (max-width: 768px) {
   .project-detail-page {
-    padding: 1rem;
+    padding: 1rem 1rem 2rem 1rem;
   }
 
   .project-header .project-title {
