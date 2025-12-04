@@ -98,26 +98,20 @@ const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const { $contentfulClient } = useNuxtApp()
 
-// Reuse parseMarkdown from mixin
 // The mixin sets up marked globally, so we can just use its parseMarkdown method
 const parseMarkdown = markedMixin.methods.parseMarkdown
 
-// Reactive state
 const activeTab = ref('overview')
-
-// Datasets state
 const datasets = ref([])
 const datasetsLoading = ref(false)
 const datasetsError = ref(null)
 
-// Fetch project from Contentful
 const { data: project, error, status } = useLazyAsyncData(`project-${route.params.id}`, () => {
   return $contentfulClient.getEntry(route.params.id)
 })
 
 const isLoading = computed(() => status.value === 'pending')
 
-// Computed properties for Contentful fields
 const projectName = computed(() => {
   return project.value?.fields?.name || ''
 })
@@ -145,7 +139,6 @@ const projectFunding = computed(() => {
   return project.value?.fields?.funding || []
 })
 
-// Parse markdown description
 const formattedDescription = computed(() => {
   if (!projectDescription.value) return 'No description available.'
   return parseMarkdown(projectDescription.value)
@@ -161,7 +154,6 @@ const formattedFunding = computed(() => {
   return projectFunding.value.join(', ')
 })
 
-// SEO
 const seoTitle = computed(() => {
   return project.value ? `${projectName.value} - Projects` : 'Project'
 })
@@ -176,7 +168,6 @@ useHead({
   ]
 })
 
-// Build datasets URL - use first collection ID from Contentful
 const datasetsUrl = computed(() => {
   if (!project.value?.fields?.collectionIds?.[0]) return null
   
@@ -184,7 +175,6 @@ const datasetsUrl = computed(() => {
   return `${runtimeConfig.public.discover_api_host}/datasets/${collectionId}/versions/1/dois?limit=25&offset=0`
 })
 
-// Fetch datasets function
 function fetchDatasets() {
   if (!datasetsUrl.value) return
   
@@ -383,15 +373,6 @@ watch([activeTab, project], ([newTab, projectData]) => {
 .detail-value {
   color: #333;
   font-size: 1rem;
-
-  a {
-    color: #297fca;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
 }
 
 :deep(.el-divider) {
