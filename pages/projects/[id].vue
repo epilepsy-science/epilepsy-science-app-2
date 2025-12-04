@@ -11,6 +11,10 @@
 
     <div v-else-if="project" class="project-detail">
       <div class="project-header">
+        <NuxtLink :to="{ name: 'projects' }" class="header-link">
+          <IconArrowLeft class="header-link-icon"/>
+          View all Projects
+        </NuxtLink>
         <h1 class="project-title">{{ projectName }}</h1>
       </div>
 
@@ -98,26 +102,20 @@ const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const { $contentfulClient } = useNuxtApp()
 
-// Reuse parseMarkdown from mixin
 // The mixin sets up marked globally, so we can just use its parseMarkdown method
 const parseMarkdown = markedMixin.methods.parseMarkdown
 
-// Reactive state
 const activeTab = ref('overview')
-
-// Datasets state
 const datasets = ref([])
 const datasetsLoading = ref(false)
 const datasetsError = ref(null)
 
-// Fetch project from Contentful
 const { data: project, error, status } = useLazyAsyncData(`project-${route.params.id}`, () => {
   return $contentfulClient.getEntry(route.params.id)
 })
 
 const isLoading = computed(() => status.value === 'pending')
 
-// Computed properties for Contentful fields
 const projectName = computed(() => {
   return project.value?.fields?.name || ''
 })
@@ -145,7 +143,6 @@ const projectFunding = computed(() => {
   return project.value?.fields?.funding || []
 })
 
-// Parse markdown description
 const formattedDescription = computed(() => {
   if (!projectDescription.value) return 'No description available.'
   return parseMarkdown(projectDescription.value)
@@ -161,7 +158,6 @@ const formattedFunding = computed(() => {
   return projectFunding.value.join(', ')
 })
 
-// SEO
 const seoTitle = computed(() => {
   return project.value ? `${projectName.value} - Projects` : 'Project'
 })
@@ -176,7 +172,6 @@ useHead({
   ]
 })
 
-// Build datasets URL - use first collection ID from Contentful
 const datasetsUrl = computed(() => {
   if (!project.value?.fields?.collectionIds?.[0]) return null
   
@@ -184,7 +179,6 @@ const datasetsUrl = computed(() => {
   return `${runtimeConfig.public.discover_api_host}/datasets/${collectionId}/versions/1/dois?limit=25&offset=0`
 })
 
-// Fetch datasets function
 function fetchDatasets() {
   if (!datasetsUrl.value) return
   
@@ -224,7 +218,7 @@ watch([activeTab, project], ([newTab, projectData]) => {
 .project-detail-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem 2rem 2rem 2rem;
 }
 
 .loading-state,
@@ -243,13 +237,31 @@ watch([activeTab, project], ([newTab, projectData]) => {
 }
 
 .project-header {
-  margin-bottom: 2rem;
+
+  .header-link {
+  color: #4d628c;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+
+  &:focus {
+    color: #4d628c;
+  }
+
+  .header-link-icon {
+    color: #4d628c;
+    height: 10px;
+    width: 10px;
+    margin-right: 4px;
+  }
+}
 
   .project-title {
     font-size: 2rem;
     font-weight: 600;
     color: #297fca;
     margin: 0;
+    margin-top: 1rem;
   }
 }
 
@@ -383,15 +395,6 @@ watch([activeTab, project], ([newTab, projectData]) => {
 .detail-value {
   color: #333;
   font-size: 1rem;
-
-  a {
-    color: #297fca;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
 }
 
 :deep(.el-divider) {
@@ -400,7 +403,7 @@ watch([activeTab, project], ([newTab, projectData]) => {
 
 @media (max-width: 768px) {
   .project-detail-page {
-    padding: 1rem;
+    padding: 1rem 1rem 2rem 1rem;
   }
 
   .project-header .project-title {
