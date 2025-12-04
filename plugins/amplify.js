@@ -3,11 +3,6 @@ import { signIn, getCurrentUser, fetchAuthSession } from "aws-amplify/auth";
 import { cognitoUserPoolsTokenProvider } from "aws-amplify/auth/cognito";
 import { CookieStorage, Hub } from "aws-amplify/utils";
 
-const DEFAULT_USER = {
-  username: "vijay+tsviewer@sparc.science",
-  password: "Poweruser.2025",
-};
-
 async function ensureLoggedIn() {
   try {
     await getCurrentUser();
@@ -17,6 +12,11 @@ async function ensureLoggedIn() {
 }
 
 async function doLogin() {
+  const runtimeConfig = useRuntimeConfig();
+  const DEFAULT_USER = {
+    username: runtimeConfig.public.masterUserName,
+    password: runtimeConfig.public.masterPW,
+  };
   try {
     await signIn({
       username: DEFAULT_USER.username,

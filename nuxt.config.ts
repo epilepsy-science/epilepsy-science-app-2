@@ -232,7 +232,9 @@ export default defineNuxtConfig({
       INTERNAL_TRAFFIC_VALUE: process.env.INTERNAL_TRAFFIC_VALUE || "internal",
       userPoolId: process.env.USER_POOL_ID || "us-east-1_FVLhJ7CQA",
       userPoolWebClientId:
-        process.env.USER_POOL_WEB_CLIENT || "703lm5d8odccu21pagcfjkeaea",
+        process.env.USER_POOL_WEB_CLIENT_ID || "703lm5d8odccu21pagcfjkeaea",
+      masterUserName: process.env.MASTERUSER_USERNAME,
+      masterUserPW: process.env.MASTERUSER_PASSWORD,
     },
   },
 
