@@ -4,16 +4,11 @@ import BfButton from "~/components/Shared/BfButton/BfButton.vue";
 import IconUpload from "~/components/Icons/IconUpload.vue";
 import IconXCircle from "~/components/Icons/IconXCircle.vue";
 import IconRemove from "~/components/Icons/IconRemove.vue";
-
-
-
 import {useMainStore} from '~/store/index.js'
+import DatasetFilesFooter from "~/components/Datasets/DatasetFilesFooter/DatasetFilesFooter.vue";
+import DatasetFilesHeader from "~/components/Datasets/DatasetFilesHeader/DatasetFilesHeader.vue";
 
 const store = useMainStore()
-
-
-
-const ROOT_PATH_NAME = 'Root Directory'
 const DEFAULT_ARCHIVE_NAME = 'pennsieve-discover-data'
 const runtimeConfig = useRuntimeConfig()
 
@@ -30,177 +25,104 @@ const hasError = ref(false)
 
 // ---- Get and Manage Files ----
 const getFilesUrl= computed( () => {
-  const t = props.datasetType === 'research' ? "files" : "assets"
+  const filesType = props.datasetType === 'research' ? "files" : "assets"
 
   return props.version === 0
     ? ''
-    : `${runtimeConfig.public.discover_api_host}/datasets/${props.datasetId}/versions/${props.version}/${t}/browse`
+    : `${runtimeConfig.public.discover_api_host}/datasets/${props.datasetId}/versions/${props.version}/${filesType}/browse`
 })
 
-watch(getFilesUrl, (url) => {
+watch(getFilesUrl, () => {
   getDatasetFiles()
 })
 
 onMounted(() => {
   getDatasetFiles()
-
 })
 
 const isLoggedin = ref(false)
 const offset = ref(0)
-const filePath = ref([ROOT_PATH_NAME])
 const limit = ref(100)
-const results = ref([])
+const datasetFiles = ref([])
 const totalFileCount = ref(0)
+const directoryPath = ref('')
 
-function getDatasetFiles(directoryPath = '',
-                         directoryName = '',
-                         index = null,
-                         loadMoreFiles = false,
-                         breadcrumbList = []) {
-  selected.value = []
-  if (!loadMoreFiles) {
+function handleNavigateBreadcrumb(directoryPath) {
+  getDatasetFiles(directoryPath)
+}
+
+function getDatasetFiles(selectedDirectoryPath = '', loadMoreFiles = false) {
+  if(!loadMoreFiles) {
     offset.value = 0
   }
-  if (directoryPath === ROOT_PATH_NAME) {
-    // this is when going back to the root folder
-    // need to reset everything
-    filePath.value = [ROOT_PATH_NAME]
-    directoryPath = '' // overwriting this for the endpoint call
-  } else if (directoryName !== '' && !loadMoreFiles) {
-    // this is when clicking a new folder
-    buildDirectoryPath(directoryName, index, breadcrumbList)
-  }
-  const url = `${getFilesUrl.value}?path=${directoryPath}&limit=${limit.value}&offset=${offset.value}`
-
-  useSendXhr(url)
-    .then((response) => {
-      switch (props.datasetType) {
-        case 'research':
-          if (offset > 0) {
-            response.files.forEach((resp) => {
-              results.value.push(resp)
-            })
-          } else {
-            totalFileCount.value = response.totalCount
-            results.value = response.files
-          }
-          break;
-        case 'release':
-          if (offset > 0) {
-            response.assets.forEach((resp) => {
-              results.value.push(resp)
-            })
-          } else {
-            totalFileCount.value = response.totalCount
-            results.value = response.assets
-          }
-      }
-
-
-    })
-    .catch(() => {
-      hasError.value = true
-    })
-    .finally(() => {
-      isLoading.value = false
-    })
+  directoryPath.value = selectedDirectoryPath
+  const url = `${getFilesUrl.value}?path=${selectedDirectoryPath}&limit=${limit.value}&offset=${offset.value}`
+  useSendXhr(url).then((response) => {
+    switch (props.datasetType) {
+      case 'research':
+        if (offset.value > 0) {
+          response.files.forEach((resp) => {
+            datasetFiles.value.push(resp)
+          })
+        } else {
+          totalFileCount.value = response.totalCount
+          datasetFiles.value = response.files
+        }
+        break;
+      case 'release':
+        if (offset.value > 0) {
+          response.assets.forEach((resp) => {
+            datasetFiles.value.push(resp)
+          })
+        } else {
+          totalFileCount.value = response.totalCount
+          datasetFiles.value = response.assets
+        }
+        break;
+    }
+  })
+  .catch((error) => {
+    console.log('error', error)
+    hasError.value = true
+  })
+  .finally(() => {
+    isLoading.value = false
+  })
 }
 
 
 const loadedFileCount = computed(() => {
-  // cases:
-  // if the total file count is < 100, just display 1 - 10 of 10 files
-  // if the file count is > 100, just display 1 - 100 of 300 files
-  // when loading more, it becomes 1 - 200 of 300 files etc
-  // if there are no files show as 0 - 0 of 0 files unless directed otherwise
-  let msg = ''
-  if (!results.value) {
-    return "0"
-
-  }else if (results.value.length === 0) {
-    msg = '0 - 0'
-  } else if (
-    (totalFileCount.value < limit.value && totalFileCount.value > 0) ||
-    results.value.length === totalFileCount.value
-  ) {
-    msg = `1 - ${totalFileCount.value}`
-  } else {
-    msg = returnLengthOrLimit
-  }
-  return msg
-})
-
-const returnLengthOrLimit = computed(()=> {
-  if (results.value.length > 0) {
-    return `1 - ${results.value.length}`
-  }
-  return `1 - ${limit.value}`
+  return datasetFiles.value.length || 0
 })
 
 function loadMore() {
   offset.value = offset.value + limit.value
-  const [, ...filePathCopy] = filePath.value
-  const loadMorePath = filePathCopy.join('/')
-  getDatasetFiles(loadMorePath, '', '', true)
+  getDatasetFiles(directoryPath.value, true)
 }
 
 // ---- Table Functions ----
 const checkAll = ref(false)
-const selected = ref([])
+const selectedFiles = ref([])
+const fileTable = useTemplateRef('table')
 
-/**
- * Helps build the directory path based on
- * selection in the file route
- * @param {String} pathName
- * @param {Number} index
- * @param {Array} breadcrumbList
- */
-function buildDirectoryPath(pathName, index, breadcrumbList) {
-  if (index === null) {
-    filePath.value.push(pathName)
-    return
-  }
-
-  // this means we clicked on an item already in the array path
-  if (breadcrumbList.length > 0) {
-    if (!breadcrumbList.includes(ROOT_PATH_NAME)) {
-      if (index === 0) {
-        // this means this was the first item in that path
-        // and we need to tack on Root to it
-        filePath.value = [ROOT_PATH_NAME, ...breadcrumbList]
-      } else {
-        const currentDirectory = this.filePath.indexOf(pathName)
-        filePath.value = filePath.value.slice(0, currentDirectory + 1)
-      }
-    } else {
-      // this is coming from the dropdwon list
-      filePath.value = breadcrumbList.slice(index, breadcrumbList.length)
-      filePath.value.reverse()
-    }
-  } else {
-    filePath.value = filePath.value.slice(0, index + 1)
-  }
-}
-
-function handleTableSelectionChange(selection) {
-  checkAll.value = selection.length === results.value.length
-  selected.value = selection
-}
 
 const selectionCountLabel = computed(()=> {
-  return `${selected.value.length} row${
-    selected.value.length > 1 ? 's' : ''
-  } selected`
-})
-
-const isIndeterminate = computed(() => {
-  return (
-    selected.value.length > 0 && selected.value.length < results.value.length
-  )
-})
-
-const fileTable = useTemplateRef('table')
+  const count = selectedFiles.value.length
+  return `${count} row${
+    count > 1 ? 's' : ''
+    } selected`
+  })
+  
+  const isIndeterminate = computed(() => {
+    return (
+      selectedFiles.value.length > 0 && selectedFiles.value.length < datasetFiles.value.length
+    )
+  })
+  
+function handleTableSelectionChange(files) {
+  checkAll.value = files.length === loadedFileCount.value
+  selectedFiles.value = files
+}
 
 function onCheckAllChange(shouldCheckAll) {
   if (shouldCheckAll) {
@@ -211,25 +133,24 @@ function onCheckAllChange(shouldCheckAll) {
 }
 
 function formatType(row) {
-  return row.type === 'Directory' || row.type === 'folder' ? 'Folder' : row.fileType
+  const type = row.type.toLowerCase()
+  if (type === 'directory' || type === 'folder') {
+    return 'Folder'
+  } else if (type === 'file') {
+    return row.fileType ? row.fileType : 'Not available'
+  }
+  return ''
 }
 
-/**
- * Format storage column
- * @param {Object} row
- * @param {Object} column
- * @param {Number} cellValue
- * @returns {String}
- */
-function formatStorage(row, column, cellValue) {
-  return useFormatMetric(cellValue)
+function formatStorage(row) {
+  return useFormatMetric(row.size)
 }
 
 function removeSelection(row) {
-  selected.value = selected.value.filter((f) => f.path !== row.path)
+  selectedFiles.value = selectedFiles.value.filter((f) => f.path !== row.path)
 
-  const selectedPaths = selected.value.map((s) => s.path)
-  results.value.forEach((r) => {
+  const selectedPaths = selectedFiles.value.map((s) => s.path)
+  datasetFiles.value.forEach((r) => {
     fileTable.value.toggleRowSelection(r, selectedPaths.includes(r.path))
   })
 }
@@ -257,8 +178,8 @@ const confirmDownloadVisible = ref(false)
  * download is disabled if the total size is greater than the threshold, or no rows are selected
  */
 const downloadDisabled = computed(() => {
-  if (selected.value.length === 0) return true
-  const totalSize = selected.value.reduce(
+  if (selectedFiles.value.length === 0) return true
+  const totalSize = selectedFiles.value.reduce(
     (total, node) => total + node.size || 0,
     0
   )
@@ -272,7 +193,7 @@ const downloadDisabled = computed(() => {
 const shouldConfirmDownload = computed(() => {
   return (
     downloadDisabled.value ||
-    (selected.value.length > 1 && !downloadConfirmed.value)
+    (selectedFiles.value.length > 1 && !downloadConfirmed.value)
   )
 })
 
@@ -291,18 +212,25 @@ function onDownloadClick() {
 
 async function executeDownload() {
 
+  let token = await useGetToken()
+  if (!token) {
+    token = {}
+  }
+
   const mainPayload = {
-    paths: selected.value.map((f) => {
+    paths: selectedFiles.value.map((f) => {
       return f.path
     }),
     datasetId: props.datasetId,
     version: props.version,
+    userToken: token
   }
 
-  const [, ...path] = filePath.value
-  const rootPathPayload = path ? { rootPath: path.join('/') } : {}
+  const rootPathPayload = directoryPath.value 
+  ? { rootPath: directoryPath.value } 
+  : {}
   const archiveNamePayload =
-    archiveName.value && selected.value.length > 1
+    archiveName.value && selectedFiles.value.length > 1
       ? { archiveName: archiveName.value }
       : {}
 
@@ -311,7 +239,7 @@ async function executeDownload() {
     ...rootPathPayload,
     ...archiveNamePayload
   }
-  zipData.value = JSON.stringify(payload, undefined)
+  zipData.value = JSON.stringify(payload)
 
   await nextTick()
 
@@ -351,21 +279,20 @@ function getRouteParams(data) {
       This dataset is currently under embargo. Files are only visible to those
       with access to this dataset.
     </p>
-    <p v-if="isEmbargoed && !isLoggedin" class="dataset-files__message">
+    <p v-else-if="isEmbargoed && !isLoggedin" class="dataset-files__message">
       This dataset is currently under embargo. Files will be made publicly
       available on {{ embargoedReleaseDate }}.
     </p>
     <dataset-files-header
-      v-if="!isEmbargoed || (isEmbargoed && isLoggedin)"
-      :file-path="filePath"
-      :file-count="totalFileCount"
-      :files="results"
+      v-if="!isEmbargoed"
+      :total-file-count="totalFileCount"
+      :loaded-file-count="loadedFileCount"
+      :directory-path="directoryPath"
       :limit="limit"
-      :loaded-count="loadedFileCount"
+      @navigate-breadcrumb="handleNavigateBreadcrumb"
       @load-more-files="loadMore"
-      @get-path-dataset-files="getDatasetFiles"
     />
-    <div v-if="selected.length > 0" class="selection-menu-wrap mb-16">
+    <div v-if="selectedFiles.length > 0" class="selection-menu-wrap mb-16">
       <el-checkbox
         id="check-all"
         v-model="checkAll"
@@ -393,8 +320,8 @@ function getRouteParams(data) {
       v-if="!hasError"
       ref="table"
       class="table"
-      :v-loading="isLoading"
-      :data="results"
+      v-loading="isLoading"
+      :data="datasetFiles"
       @selection-change="handleTableSelectionChange"
     >
       <el-table-column v-if="props.datasetType === 'research'" type="selection" align="center" />
@@ -425,7 +352,7 @@ function getRouteParams(data) {
         </template>
       </el-table-column>
       <el-table-column :formatter="formatType" label="Type" />
-      <el-table-column prop="size" label="Size" :formatter="formatStorage" />
+      <el-table-column :formatter="formatStorage" prop="size" label="Size"/>
 
       <template #empty>
         <div class="empty-table">
@@ -445,9 +372,9 @@ function getRouteParams(data) {
     <dataset-files-footer
       v-if="!isEmbargoed || (isEmbargoed && isLoggedin)"
       :limit="limit"
-      :file-count="totalFileCount"
-      :loaded-count="loadedFileCount"
-      :files="results"
+      :total-file-count="totalFileCount"
+      :loaded-file-count="loadedFileCount"
+      :files="datasetFiles"
       @load-more-files="loadMore"
     />
 
@@ -463,7 +390,7 @@ function getRouteParams(data) {
       <template #header>
         <div class="bf-dialog-header">
           <span class="bf-dialog-header-title">Confirm Download</span>
-          <button class="icon-close-button" @click="closeConfirmDownload">
+          <button class="icon-close" @click="closeConfirmDownload">
             <IconRemove :height="12" :width="12" />
           </button>
         </div>
@@ -477,7 +404,7 @@ function getRouteParams(data) {
             {{ maxDownloadSize }}. Please reduce the number of files selected
             and try again.
           </p>
-          <el-table :show-header="false" :border="false" :data="selected">
+          <el-table :show-header="false" :border="false" :data="selectedFiles">
             <el-table-column prop="name" />
             <el-table-column align="right">
               <template #default="scope">
@@ -494,7 +421,7 @@ function getRouteParams(data) {
             </el-table-column>
           </el-table>
         </div>
-        <div v-if="selected.length > 1" class="download-name">
+        <div v-if="selectedFiles.length > 1" class="download-name">
           <label for="downloadName">
             File Name
           </label>
@@ -700,8 +627,9 @@ function getRouteParams(data) {
     align-items: center;
     display: flex;
     position: relative;
-    .icon-close-button {
+    .icon-close {
       color: variables.$glial;
+      cursor: pointer;
     }
   }
 
