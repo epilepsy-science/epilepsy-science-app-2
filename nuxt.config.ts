@@ -235,6 +235,13 @@ export default defineNuxtConfig({
         process.env.USER_POOL_WEB_CLIENT_ID || "703lm5d8odccu21pagcfjkeaea",
       masterUserName: process.env.MASTERUSER_USERNAME,
       masterUserPW: process.env.MASTERUSER_PASSWORD,
+      ts_streaming_host_websocket:
+        process.env.PENNSIEVE_STREAMING ||
+        "wss://api.pennsieve.net/streaming/discover/ts/query",
+      ts_streaming_host_http:
+        process.env.PENNSIEVE_STREAMING_HTTP ||
+        "https://api.pennsieve.net/streaming",
+      api_host: process.env.PENNSIEVE_API_HOST || "https://api.pennsieve.net",
     },
   },
 
