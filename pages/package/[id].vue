@@ -161,7 +161,7 @@ onMounted(async (to, from) => {
       isReady.value = true;
     }
   } catch (e) {
-    console.error("Error during initialization:", error.message);
+    console.error("Error during initialization:", e.message);
     isReady.value = false;
     isLoading.value = false;
   }
