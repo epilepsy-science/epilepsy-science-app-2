@@ -26,7 +26,6 @@ export const isInternalLink = str => {
     : str.includes(config.public.ROOT_URL) || str.includes("epilepsy.science") || str.startsWith('/')
 }
 
-// docs.sparc.science is considered an internal link, but should always open in new tab
 export const opensInNewTab = link => {
   return !isInternalLink(link)
 }

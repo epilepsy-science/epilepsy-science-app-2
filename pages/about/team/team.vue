@@ -31,7 +31,7 @@ const PI = computed(() => {
 <template>
   <div>
     <div class="section">
-      <h1>Principal Investigator</h1>
+      <h1>Principal Investigators</h1>
       <div class="member-wrapper">
         <div v-for="(member, index) in PI" :key="member.sys?.id || index">
           <TeamMember :member="member" />
