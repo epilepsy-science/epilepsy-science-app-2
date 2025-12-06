@@ -22,6 +22,8 @@ const packageFiles = ref([]);
 const packageType = ref("");
 const fileUri = ref("");
 const isLoading = ref(true);
+const isReady = ref(false);
+const packageId = ref("");
 
 const PackageFilesUrl = computed(() => {
   return `${runtimeConfig.public.discover_api_host}/packages/${route.params.id}/files`;
@@ -67,7 +69,19 @@ const viewerState = computed(() => {
   };
 });
 
-function getPackageFiles(url) {
+async function setTSViewer() {
+  const viewerConfig = {
+    timeseriesDiscoverApi: runtimeConfig.public.ts_streaming_host_websocket,
+    apiUrl: runtimeConfig.public.api_host,
+    timeSeriesApi: runtimeConfig.public.ts_streaming_host_http,
+  };
+  viewerStore.value.setViewerConfig(viewerConfig);
+  console.log(packageId.value);
+  return await viewerStore.value.fetchAndSetActiveViewer({
+    packageId: packageId.value,
+  });
+}
+function getPackageFiles() {
   return useSendXhr(PackageFilesUrl.value, {
     header: {},
     method: "GET",
@@ -84,7 +98,6 @@ function getPackageFiles(url) {
         const expr = /s3:\/\/[a-z-0-9]+\/([0-9]+)\/(.*)/;
         const match = firstFile.uri.match(expr);
         const datasetId = match[1];
-
         store.setSelectedPackage({
           datasetId: datasetId,
           version: 1,
@@ -97,8 +110,8 @@ function getPackageFiles(url) {
         } else {
           packageType.value = firstFile.packageType;
         }
-
         packageId.value = firstFile.sourcePackageId;
+        isLoading.value = false;
       }
     })
     .catch(() => {
@@ -138,9 +151,19 @@ function getFileType(uri) {
   return "text";
 }
 
-onMounted((to, from) => {
-  if (route.params.id !== "details") {
-    getPackageFiles(PackageFilesUrl);
+onMounted(async (to, from) => {
+  try {
+    if (route.params.id !== "details") {
+      await getPackageFiles();
+    }
+    if (packageId.value) {
+      await setTSViewer();
+      isReady.value = true;
+    }
+  } catch (e) {
+    console.error("Error during initialization:", e.message);
+    isReady.value = false;
+    isLoading.value = false;
   }
 });
 </script>
