@@ -1,6 +1,7 @@
 <template>
   <div id="epilepsy-science-app" >
-    <AnnouncementBanner />
+    <!-- Use this to show any custom announcements on the homepage -->
+    <!-- <AnnouncementBanner /> -->
     <AppHeader />
     <slot />
     <AppFooter/>
