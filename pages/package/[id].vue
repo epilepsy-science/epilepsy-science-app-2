@@ -110,7 +110,7 @@ function getPackageFiles() {
         } else {
           packageType.value = firstFile.packageType;
         }
-        packageId.value = "N:collection:dd18bb32-c17d-4f89-a9c3-fdeca4c25c1e"; //firstFile.sourcePackageId;
+        packageId.value = firstFile.sourcePackageId;
         isLoading.value = false;
       }
     })
