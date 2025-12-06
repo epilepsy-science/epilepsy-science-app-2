@@ -95,13 +95,13 @@ const projectSummary = computed(() => {
   border: 1px solid #e0e0e0;
   border-radius: 4px 4px 0 0;
   overflow: hidden;
-  background-color: #f5f5f5;
+  // background-color: #f5f5f5;
 }
 
 .project-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .placeholder-image {
@@ -119,6 +119,8 @@ const projectSummary = computed(() => {
 
 .project-info {
   padding: 1.5rem;
+  height: 100%;
+  background-color: #f5f5f5;
 }
 
 .project-title {
