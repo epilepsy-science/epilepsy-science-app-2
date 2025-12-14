@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { pathOr, propOr } from 'ramda'
+import { propOr } from 'ramda'
 import { mockPageStats } from '~/data/mockData';
 
 export const useMainStore = defineStore('main', {
@@ -24,52 +24,11 @@ export const useMainStore = defineStore('main', {
     selectedPackage: {},
   }),
   getters: {
-    username(state) {
-      const firstName = pathOr('', ['firstName'], state.userProfile)
-      const lastName = pathOr('', ['lastName'], state.userProfile)
-      const abbrvLastName = lastName.length === 1 ? lastName[0] : `${lastName[0]}.`
-      return `${firstName} ${abbrvLastName}`
-    },
     userToken(state) {
       return propOr('', 'token', state.userProfile)
     },
-    tokenExp(state) {
-      return propOr('', 'tokenExp', state.userProfile)
-    },
-    firstName (state) {
-      return pathOr('', ['firstName'], state.userProfile)
-    },
-    lastName (state) {
-      return pathOr('', ['lastName'], state.userProfile)
-    },
-    userProfileIntId (state) {
-      return pathOr('', ['intId'], state.userProfile)
-    },
-    profileColor (state) {
-      return pathOr('', ['color'], state.userProfile)
-    },
-    profileUrl (state) {
-      return pathOr('', ['url'], state.userProfile)
-    },
-    profilePreferredOrganization (state) {
-      return pathOr('', ['preferredOrganization'], state.userProfile)
-    },
-    profileEmail (state) {
-      return pathOr('', ['email'], state.userProfile)
-    },
-    profileComplete (state) {
-      return helperMethods.isProfileComplete(state.userProfile)
-    },
     isSignedIn: (state) => {
       return Object.keys(state.profile).length > 0
-    },
-    userDisplayName: (state) => {
-        if (Object.keys(state.profile).length > 0) {
-            const firstName = pathOr('', ['firstName'], state.profile)
-            const lastName = pathOr('', ['lastName'], state.profile)
-            const firstInitial = firstName ? firstName[0] : ''
-            return `${firstInitial}. ${lastName}`
-        } else return ''
     },
   },
   actions: {
@@ -145,14 +104,3 @@ export const useMainStore = defineStore('main', {
     storage: persistedState.localStorage,
   }
 })
-
-const helperMethods = {
-  isProfileComplete(profile) {
-    if (profile) {
-      return profile.email.split("@")[1] !== "pennsieve-nonexistent.email" && 
-      profile.firstName.toLowerCase() !== "orcid" &&
-      profile.lastName.toLowerCase() !== "login"
-    }
-    return false
-  }
-}
