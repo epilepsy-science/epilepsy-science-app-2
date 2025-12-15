@@ -11,8 +11,6 @@ export const useFileContent = () => {
    */
   async function fetchFileContent(file, datasetId, version) {
     try {
-      // Get authentication token
-      const token = await useGetToken();
 
       // Extract path from URI if path property doesn't exist
       let filePath = file.path;
@@ -29,7 +27,6 @@ export const useFileContent = () => {
           paths: [filePath],
           datasetId: datasetId,
           version: version,
-          userToken: token,
         },
       };
 
