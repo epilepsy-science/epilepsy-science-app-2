@@ -125,25 +125,7 @@ export default defineNuxtConfig({
     },
   },
 
-  routeRules: {
-    "/resources": { redirect: "/tools-and-resources/tools" },
-    "/tools-and-resources": { redirect: "/tools-and-resources/tools" },
-    "/resources/biological": {
-      redirect: "/tools-and-resources/tools?resourceType=Biological",
-    },
-    "/resources/databases": {
-      redirect: "/tools-and-resources/tools?resourceType=Data+and+Models",
-    },
-    "/resources/devices": {
-      redirect: "/tools-and-resources/tools?resourceType=Devices",
-    },
-    "/resources/information-services": {
-      redirect: "/tools-and-resources/tools?resourceType=Information+Services",
-    },
-    "/resources/software": {
-      redirect: "/tools-and-resources/tools?resourceType=Software",
-    },
-  },
+  routeRules: {},
 
   hooks: {
     "pages:extend"(pages) {
@@ -152,16 +134,6 @@ export default defineNuxtConfig({
           name: "version",
           path: "/datasets/:datasetId/version/:version",
           file: resolve("./pages/datasets/[datasetId].vue"),
-        },
-        {
-          name: "tools",
-          path: "/tools-and-resources/tools",
-          file: resolve("./components/Resources/ResourcePage.vue"),
-        },
-        {
-          name: "resources",
-          path: "/tools-and-resources/resources",
-          file: resolve("./components/Resources/ResourcePage.vue"),
         }
       );
     },

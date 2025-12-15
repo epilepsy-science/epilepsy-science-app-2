@@ -26,4 +26,6 @@ logs
 !.env.example
 
 # Sitemaps
-public/sitemap*
+publi/sitemap*
+
+CLAUDE.md
