@@ -191,9 +191,6 @@ export default defineNuxtConfig({
       max_download_size: parseInt(
         process.env.MAX_DOWNLOAD_SIZE || "5000000000"
       ),
-      MBF_SPARC_API: process.env.MBF_SPARC_API || "https://mbfsparcapi.com",
-      BL_SERVER_URL: "https://sparc.biolucida.net",
-      BL_SHARE_LINK_PREFIX: "https://sparc.biolucida.net/image?c=",
       ROOT_URL: process.env.ROOT_URL || "https://epilepsy.science",
       METRICS_URL:
         process.env.METRICS_URL || "https://metrics.epilepsy.science",
