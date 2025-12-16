@@ -319,7 +319,7 @@ function onRequestAccessClick() {
  */
 // async function requestAccess(dataUseAgreementId) {
 
-//   const url = `${runtimeConfig.public.discover_api_host}/datasets/${props.datasetDetails.id}/preview?api_key=${await useGetToken()}`
+//   const url = `${runtimeConfig.public.discover_api_host}/datasets/${props.datasetDetails.id}/preview`
 
 //   useSendXhr(url,{
 //     header: {},

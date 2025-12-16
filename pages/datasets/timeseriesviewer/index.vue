@@ -9,15 +9,10 @@
         :tabs="tabs"
         :active-tab-id="activeTabId">
         <ts-viewer
-          v-if="userToken"
           v-show="activeTabId === 'timeseriesViewer'"
-          :user-token="userToken"
           :package-id="sourcePackageId"
           :package-type="packageType"
         />
-        <div v-else>
-          <b>Sign in</b> to the SPARC Portal to view timeseries data
-        </div>
         </content-tab-card>
       </client-only>
       <div class="subpage pt-0 pb-16">
@@ -73,8 +68,6 @@
 </template>
 
 <script>
-import { useMainStore } from '../../../store'
-import { mapState } from 'pinia'
 import { propOr } from 'ramda'
 
 import DatasetInfo from '@/mixins/dataset-info'
@@ -134,7 +127,6 @@ export default {
   },
 
   computed: {
-    ...mapState(useMainStore, ['userToken']),
     title: function() {
       return propOr(undefined, 'name', this.datasetInfo)
     },

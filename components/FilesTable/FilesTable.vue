@@ -390,7 +390,7 @@ export default {
      * Get dataset info from the store
      * @returns {Object}
      */
-    ...mapState(useMainStore, ['datasetInfo', 'userToken']),
+    ...mapState(useMainStore, ['datasetInfo']),
     /**
      * Compute the current path for the dataset's files.
      * @returns {String}
@@ -413,9 +413,7 @@ export default {
       const id = pathOr('', ['params', 'datasetId'], this.$route)
       const version = this.datasetVersion
       const url = `${this.$config.public.discover_api_host}/datasets/${id}/versions/${version}/files/browse`
-      let filesUrl = `${url}?path=${this.path}&limit=${this.limit}`
-      if (this.userToken) { filesUrl += `&api_key=${this.userToken}`}
-      return filesUrl
+      return `${url}?path=${this.path}&limit=${this.limit}`
     },
 
     /**
@@ -453,12 +451,10 @@ export default {
 
   watch: {
     '$route.query.path': 'pathQueryChanged',
-    userToken: {
-      handler: function() {
-        this.getFiles()
-      },
-      immediate: true
-    }
+  },
+
+  mounted() {
+    this.getFiles()
   },
 
   methods: {

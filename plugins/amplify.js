@@ -1,5 +1,5 @@
 import { Amplify } from "aws-amplify";
-import { signIn, getCurrentUser, fetchAuthSession } from "aws-amplify/auth";
+import { signIn, getCurrentUser } from "aws-amplify/auth";
 import { cognitoUserPoolsTokenProvider } from "aws-amplify/auth/cognito";
 import { CookieStorage, Hub } from "aws-amplify/utils";
 

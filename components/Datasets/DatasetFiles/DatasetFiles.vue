@@ -212,18 +212,12 @@ function onDownloadClick() {
 
 async function executeDownload() {
 
-  let token = await useGetToken()
-  if (!token) {
-    token = {}
-  }
-
   const mainPayload = {
     paths: selectedFiles.value.map((f) => {
       return f.path
     }),
     datasetId: props.datasetId,
     version: props.version,
-    userToken: token
   }
 
   const rootPathPayload = directoryPath.value 
