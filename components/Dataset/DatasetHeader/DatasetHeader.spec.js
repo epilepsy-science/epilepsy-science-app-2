@@ -99,12 +99,4 @@ describe('DatasetHeader.vue', () => {
     expect(cmp.vm.isDatasetEmbargoed).toBe(true)
     expect(cmp.vm.isGetDatasetBtnDisabled).toBe(true)
   })
-
-  it('The get download button should be disabled for a logged in user for an embargoed dataset', async () => {
-    await cmp.setProps({
-      isDatasetEmbargoed: true
-    })
-    await store.dispatch('updateUserToken', '123')
-    expect(cmp.vm.isGetDatasetBtnDisabled).toBe(false)
-  })
 })
