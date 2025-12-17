@@ -51,32 +51,6 @@
         border-color: $es-primary-color !important;
     }
 
-    .sparc-design-system-pagination {
-
-        padding-top: 0px;
-        
-        .is-background {
-
-            li.number {
-                background: $es-primary-color-light;
-                border: 1.5px solid $es-primary-color;
-                color: $es-primary-color;
-            }
-
-            .btn-next, .btn-prev {
-                background: $es-primary-color;
-            }
-            li.number:hover {
-                background: $es-primary-color !important;
-            }
-        }
-
-
-        li.number.is-active {
-            border-bottom-color:$es-primary-color;
-        }
-    }
-
     .el-tree-node.is-checked {
         .custom-tree-node {
           color: $es-primary-color;

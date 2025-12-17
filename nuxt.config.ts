@@ -211,7 +211,6 @@ export default defineNuxtConfig({
    ** Add global CSS styles under this
    */
   css: [
-    "sparc-design-system-components-2/dist/style.css",
     "@/assets/base.scss",
     "@/assets/design-system-overrides.scss",
     "@/assets/new-design-base.scss",

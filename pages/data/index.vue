@@ -379,7 +379,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import 'sparc-design-system-components-2/src/assets/_variables.scss';
+@import '@/assets/scss/_variables.scss';
 
 .alternative-links {
   text-decoration: underline;

@@ -39,6 +39,7 @@
 <script>
 import { pluck, pathOr, propOr } from 'ramda'
 import FacetMenu from './FacetMenu.vue'
+import DropdownMultiselect from './DropdownMultiselect.vue'
 import { facetPropPathMapping } from '../../utils/algolia'
 
 const embargoedFacetCategory = {
@@ -63,7 +64,7 @@ const embargoFacetCategoryTooltip = "Epilepsy.science datasets are subject to a 
 export default {
   name: 'DatasetFacetMenu',
 
-  components: { FacetMenu },
+  components: { FacetMenu, DropdownMultiselect },
 
   props: {
     facets: {
@@ -252,7 +253,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'sparc-design-system-components-2/src/assets/_variables.scss';
+@import '@/assets/scss/_variables.scss';
 
 .dataset-facet-menu > .sparc-design-system-component-dropdown-multiselect:not(:last-child) {
   border-bottom: none;

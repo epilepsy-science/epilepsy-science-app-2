@@ -96,7 +96,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'sparc-design-system-components-2/src/assets/_variables.scss';
+@import '@/assets/scss/_variables.scss';
 .tags-container {
   padding: 0.75rem;
   hr {
