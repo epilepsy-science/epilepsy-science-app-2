@@ -41,9 +41,9 @@
                 </client-only>
                 <client-only>
                   <div class="pagination-wrapper">
-                    <pagination v-if="searchData.limit < searchData.total" :selected="curSearchPage"
-                      :page-size="searchData.limit" :total-count="searchData.total"
-                      @select-page="onPaginationPageChange" />
+                    <el-pagination v-if="searchData.limit < searchData.total" :current-page="curSearchPage"
+                      :page-size="searchData.limit" :total="searchData.total" layout="prev, pager, next"
+                      :pager-count="5" @current-change="onPaginationPageChange" />
                   </div>
                 </client-only>
               </div>
@@ -57,9 +57,9 @@
               </div>
               <div class="dataset-results-footer">
                 <client-only>
-                  <pagination v-if="searchData.limit < searchData.total" :selected="curSearchPage"
-                    :page-size="searchData.limit" :total-count="searchData.total"
-                    @select-page="onPaginationPageChange" />
+                  <el-pagination v-if="searchData.limit < searchData.total" :current-page="curSearchPage"
+                    :page-size="searchData.limit" :total="searchData.total" layout="prev, pager, next"
+                    :pager-count="5" @current-change="onPaginationPageChange" />
                 </client-only>
               </div>
             </el-col>
