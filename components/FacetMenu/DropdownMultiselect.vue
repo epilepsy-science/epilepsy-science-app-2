@@ -1,5 +1,5 @@
 <template>
-  <div class="sparc-design-system-component-dropdown-multiselect">
+  <div class="dropdown-multiselect">
     <dropdown-label
       ref="label"
       :disabled="!enabled"
@@ -333,7 +333,7 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
 
-.sparc-design-system-component-dropdown-multiselect {
+.dropdown-multiselect {
   background-color: white;
   border: 1px solid $lineColor2;
 }
