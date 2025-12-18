@@ -1,7 +1,7 @@
 @use "@/assets/scss/_variables.scss" as *;
 
 :root body {
-    --el-color-primary:  #{$es-primary-color} !important; // Interpolation required here 
+    --el-color-primary: #{$es-primary-color};
 }
 
 #epilepsy-science-app {
@@ -10,7 +10,7 @@
     }
 
     .tab1 {
-        color : $es-primary-color;
+        color: $es-primary-color;
     }
 
     .el-table a {
@@ -18,37 +18,39 @@
     }
 
     .filter-dropdown {
-        color : $es-primary-color;
+        color: $es-primary-color;
     }
 
     .help-icon {
-        fill : $es-primary-color;
+        fill: $es-primary-color;
     }
 
     .el-button:not(#cookie-close-btn) {
-        background: $es-primary-color !important;
-        border: 1px solid $es-primary-color !important;
+        background: $es-primary-color;
+        border: 1px solid $es-primary-color;
+        color: white;
         &:hover,
         &:focus,
         &[disabled],
         &[disabled]:hover,
         &[disabled]:focus {
-          background: $es-primary-color !important;
-          border: 1px solid $es-primary-color !important;
+          background: $es-primary-color;
+          border: 1px solid $es-primary-color;
+          color: white;
         }
 
         &.secondary,
         &.secondary[disabled],
         &.secondary[disabled]:hover,
         &.secondary[disabled]:focus {
-          background: $es-primary-color-light !important;
-          border: 1px solid $es-primary-color !important;
-          color: $es-primary-color !important;
+          background: $es-primary-color-light;
+          border: 1px solid $es-primary-color;
+          color: $es-primary-color;
         }
     }
 
     .el-input__inner {
-        border-color: $es-primary-color !important;
+        border-color: $es-primary-color;
     }
 
     .el-tree-node.is-checked {
@@ -57,10 +59,6 @@
         }
     }
 
-    
-    // .container {
-    //   max-width: 1024px;
-    // }
     .tab-link.active.style1, .tab-link:hover.style1 {
       border: 1px solid $es-primary-color;
       border-bottom: .125em solid $es-primary-color;
@@ -81,15 +79,15 @@
 }
 
 div.el-popper.is-customized {
-  background: $es-primary-color-light !important;
-  border: 1px solid $es-primary-color !important;
+  background: $es-primary-color-light;
+  border: 1px solid $es-primary-color;
   .el-popper__arrow:before {
-    background-color: $es-primary-color-light !important;
+    background-color: $es-primary-color-light;
     border: 1px solid $es-primary-color;
   }
 }
 
 div.el-popper.el-popover {
-  background: $es-primary-color-light !important;
-  border: 1px solid $es-primary-color !important;
+  background: $es-primary-color-light;
+  border: 1px solid $es-primary-color;
 }

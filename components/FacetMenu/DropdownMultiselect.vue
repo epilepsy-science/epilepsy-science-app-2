@@ -358,16 +358,16 @@ export default {
     text-transform: capitalize;
   }
 }
-.light-gray-background .el-tree {
+.light-gray-background :deep(.el-tree) {
   background: #FAFBFC;
 }
-.el-tree-node__expand-icon.el-icon-caret-right {
+:deep(.el-tree-node__expand-icon) {
   order: 1;
   text-align: right;
 }
-.el-tree-node__content {
-  margin-left: 1.5rem !important;
-  margin-right: 1rem !important;
+:deep(.el-tree-node__content) {
+  margin-left: 1.5rem;
+  margin-right: 1rem;
   .el-checkbox__input.is-focus:not(.is-checked) {
     .el-checkbox__inner {
       border-color: $lineColor1;
