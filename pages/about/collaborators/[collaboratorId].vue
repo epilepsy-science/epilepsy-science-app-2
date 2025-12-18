@@ -80,7 +80,7 @@ const parseMarkdown = marked.methods.parseMarkdown;
 </script>
 
 <style scoped lang="scss">
-@import 'sparc-design-system-components-2/src/assets/_variables.scss';
+@import '@/assets/scss/_variables.scss';
 
 .about-page {
   background-color: $background;

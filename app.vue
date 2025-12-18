@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout>
     <div class="loading-container" v-if="loading">
-      <img class="logo" :src="logo" />
+      Loading...
     </div>
     <NuxtPage />
   </NuxtLayout>
@@ -9,7 +9,6 @@
 
 <script>
 import { ref } from 'vue'
-import sparcLogoFast from '@/assets/sparcLogoFast.gif'
 import { successMessage } from './utils/notification-messages'
 
 export default {
@@ -17,7 +16,6 @@ export default {
     const nuxtApp = useNuxtApp()
     const loading = ref(false)
     const loaded = ref(false)
-    const logo = sparcLogoFast
     nuxtApp.hook("page:start", () => {
       setTimeout(() => {
         if (!loaded.value) {
@@ -31,7 +29,6 @@ export default {
     })
     const config = useRuntimeConfig()
     return {
-      logo,
       loading
     }
   },
@@ -59,13 +56,5 @@ export default {
   opacity: .5;
   width: 100vw;
   height: 100vh;
-}
-
-.logo {
-  position: absolute;
-  height: 5rem;
-  z-index: 2;
-  left: calc(50vw - 5rem);
-  top: calc(50vh - 5rem);
 }
 </style>
