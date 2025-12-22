@@ -144,20 +144,11 @@ export default defineNuxtConfig({
       discover_api_host:
         process.env.PENNSIEVE_DISCOVER_API_HOST ||
         "https://api.pennsieve.io/discover",
-      zipit_api_host:
-        process.env.ZIPIT_API_HOST || "https://api.pennsieve.io/zipit/discover",
       CTF_SPACE_ID: process.env.CTF_SPACE_ID,
       CTF_CDA_ACCESS_TOKEN: process.env.CTF_CDA_ACCESS_TOKEN,
       CTF_API_HOST: process.env.CTF_API_HOST || "preview.contentful.com",
       ctf_home_page_id: "4KuOw0SnxWqN7SZ6W68oey",
       ctf_portal_notification_entry_id: "1kGepfPts4FM3tDfOGVPnQ",
-      ctf_about_page_id: "eGyEJR9pBdNT4zI71Y6sD",
-      ctf_news_id: "news",
-      ctf_event_id: "event",
-      ctf_resource_id: "epilepsyResource",
-      ctf_news_and_events_page_id: "27g94v7HnxrqsCKKA8Wf7o",
-      ctf_tools_and_resources_page_id: "5gOQBmYpDBRPtJh7Yzj8SP",
-      ctf_consortia_content_type_id: "consortia",
       ctf_pedquest_about_page_id: "2GgKi7i5bruGNdLTrIBV7t",
       ctf_pedquest_collaborator_details: "1tbeLijAKo4toaZoyOLkTu",
       portal_api:
