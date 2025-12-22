@@ -153,40 +153,16 @@ export default defineNuxtConfig({
       ctf_pedquest_collaborator_details: "1tbeLijAKo4toaZoyOLkTu",
       portal_api:
         process.env.PORTAL_API_HOST || "https://sparc-api.herokuapp.com",
-      DEPLOY_ENV: process.env.DEPLOY_ENV || "development",
       ALGOLIA_API_KEY: process.env.ALGOLIA_API_KEY,
       ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
       ALGOLIA_INDEX: process.env.ALGOLIA_INDEX || "epilepsy_science_index",
       ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC:
         process.env.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC ||
         "epilepsy_science_index",
-      ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_ASC:
-        process.env.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_ASC ||
-        "epilepsy_science_index",
-      ALGOLIA_INDEX_PUBLISHED_TIME_DESC:
-        process.env.ALGOLIA_INDEX_PUBLISHED_TIME_DESC ||
-        "epilepsy_science_index",
-      ALGOLIA_INDEX_PUBLISHED_TIME_ASC:
-        process.env.ALGOLIA_INDEX_PUBLISHED_TIME_ASC ||
-        "epilepsy_science_index",
-      ALGOLIA_INDEX_ALPHABETICAL_A_Z:
-        process.env.ALGOLIA_INDEX_ALPHABETICAL_A_Z || "epilepsy_science_index",
-      ALGOLIA_INDEX_ALPHABETICAL_Z_A:
-        process.env.ALGOLIA_INDEX_ALPHABETICAL_Z_A || "epilepsy_science_index",
-      PENNSIEVE_API_VERSION_2:
-        process.env.PENNSIEVE_API_VERSION_2 || "https://api2.pennsieve.net",
-      SHOW_TIMESERIES_VIEWER: process.env.SHOW_TIMESERIES_VIEWER || "false",
-      ORCID_API_URL: process.env.ORCID_API_URL || "https://pub.orcid.org/v2.1",
-      crosscite_api_host:
-        process.env.CROSSCITE_API_HOST || "https://citation.doi.org",
       max_download_size: parseInt(
         process.env.MAX_DOWNLOAD_SIZE || "5000000000"
       ),
       ROOT_URL: process.env.ROOT_URL || "https://epilepsy.science",
-      METRICS_URL:
-        process.env.METRICS_URL || "https://metrics.epilepsy.science",
-      BITLY_ACCESS_TOKEN: process.env.BITLY_ACCESS_TOKEN,
-      bitly_expand_endpoint: "https://api-ssl.bitly.com/v4/expand",
       INTERNAL_TRAFFIC_KEY:
         process.env.INTERNAL_TRAFFIC_KEY || "internal_traffic",
       INTERNAL_TRAFFIC_VALUE: process.env.INTERNAL_TRAFFIC_VALUE || "internal",
