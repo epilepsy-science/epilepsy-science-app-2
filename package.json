@@ -20,7 +20,9 @@
     "sitemap": "^7.1.1"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
     "@element-plus/nuxt": "^1.0.6",
+    "element-plus": "^2.9.0",
     "@nuxtjs/sitemap": "^5.1.4",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
     "@pinia/nuxt": "^0.5.1",
@@ -35,7 +37,6 @@
     "marked": "^8.0.1",
     "pennsieve-ui-library": "1.0.6",
     "ramda": "^0.29.0",
-    "sparc-design-system-components-2": "0.0.26",
     "vue-chartjs": "^5.3.0",
     "vue-recaptcha-v3": "^2.0.1",
     "vue-social-sharing": "^4.0.0-alpha4",

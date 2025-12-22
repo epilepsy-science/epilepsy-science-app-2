@@ -66,7 +66,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'sparc-design-system-components-2/src/assets/_variables.scss';
+@import '@/assets/scss/_variables.scss';
 .search-form {
   display: flex;
   min-width: 275px;

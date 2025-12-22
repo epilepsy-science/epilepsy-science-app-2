@@ -24,7 +24,6 @@ Ensure that the following configuration variables are set in your environment pr
 * CTF_SPACE_ID
 * CTF_CDA_ACCESS_TOKEN
 * CTF_API_HOST
-* DEPLOY_ENV
 * PORTAL_API_HOST
 
 Add your env vars to `env_var_set.sh` and then run `source env_var_set.sh`
