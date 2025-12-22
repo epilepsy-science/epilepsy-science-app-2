@@ -144,58 +144,25 @@ export default defineNuxtConfig({
       discover_api_host:
         process.env.PENNSIEVE_DISCOVER_API_HOST ||
         "https://api.pennsieve.io/discover",
-      zipit_api_host:
-        process.env.ZIPIT_API_HOST || "https://api.pennsieve.io/zipit/discover",
       CTF_SPACE_ID: process.env.CTF_SPACE_ID,
       CTF_CDA_ACCESS_TOKEN: process.env.CTF_CDA_ACCESS_TOKEN,
       CTF_API_HOST: process.env.CTF_API_HOST || "preview.contentful.com",
       ctf_home_page_id: "4KuOw0SnxWqN7SZ6W68oey",
       ctf_portal_notification_entry_id: "1kGepfPts4FM3tDfOGVPnQ",
-      ctf_about_page_id: "eGyEJR9pBdNT4zI71Y6sD",
-      ctf_news_id: "news",
-      ctf_event_id: "event",
-      ctf_resource_id: "epilepsyResource",
-      ctf_news_and_events_page_id: "27g94v7HnxrqsCKKA8Wf7o",
-      ctf_tools_and_resources_page_id: "5gOQBmYpDBRPtJh7Yzj8SP",
-      ctf_consortia_content_type_id: "consortia",
       ctf_pedquest_about_page_id: "2GgKi7i5bruGNdLTrIBV7t",
       ctf_pedquest_collaborator_details: "1tbeLijAKo4toaZoyOLkTu",
       portal_api:
         process.env.PORTAL_API_HOST || "https://sparc-api.herokuapp.com",
-      DEPLOY_ENV: process.env.DEPLOY_ENV || "development",
       ALGOLIA_API_KEY: process.env.ALGOLIA_API_KEY,
       ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
       ALGOLIA_INDEX: process.env.ALGOLIA_INDEX || "epilepsy_science_index",
       ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC:
         process.env.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC ||
         "epilepsy_science_index",
-      ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_ASC:
-        process.env.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_ASC ||
-        "epilepsy_science_index",
-      ALGOLIA_INDEX_PUBLISHED_TIME_DESC:
-        process.env.ALGOLIA_INDEX_PUBLISHED_TIME_DESC ||
-        "epilepsy_science_index",
-      ALGOLIA_INDEX_PUBLISHED_TIME_ASC:
-        process.env.ALGOLIA_INDEX_PUBLISHED_TIME_ASC ||
-        "epilepsy_science_index",
-      ALGOLIA_INDEX_ALPHABETICAL_A_Z:
-        process.env.ALGOLIA_INDEX_ALPHABETICAL_A_Z || "epilepsy_science_index",
-      ALGOLIA_INDEX_ALPHABETICAL_Z_A:
-        process.env.ALGOLIA_INDEX_ALPHABETICAL_Z_A || "epilepsy_science_index",
-      PENNSIEVE_API_VERSION_2:
-        process.env.PENNSIEVE_API_VERSION_2 || "https://api2.pennsieve.net",
-      SHOW_TIMESERIES_VIEWER: process.env.SHOW_TIMESERIES_VIEWER || "false",
-      ORCID_API_URL: process.env.ORCID_API_URL || "https://pub.orcid.org/v2.1",
-      crosscite_api_host:
-        process.env.CROSSCITE_API_HOST || "https://citation.doi.org",
       max_download_size: parseInt(
         process.env.MAX_DOWNLOAD_SIZE || "5000000000"
       ),
       ROOT_URL: process.env.ROOT_URL || "https://epilepsy.science",
-      METRICS_URL:
-        process.env.METRICS_URL || "https://metrics.epilepsy.science",
-      BITLY_ACCESS_TOKEN: process.env.BITLY_ACCESS_TOKEN,
-      bitly_expand_endpoint: "https://api-ssl.bitly.com/v4/expand",
       INTERNAL_TRAFFIC_KEY:
         process.env.INTERNAL_TRAFFIC_KEY || "internal_traffic",
       INTERNAL_TRAFFIC_VALUE: process.env.INTERNAL_TRAFFIC_VALUE || "internal",

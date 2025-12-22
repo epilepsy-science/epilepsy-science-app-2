@@ -111,14 +111,6 @@ export default {
   async setup() {
     const config = useRuntimeConfig()
     const route = useRoute()
-    if (route.query.type == 'projects') {
-      const focusQuery = route.query.selectedProjectsAnatomicalFocusIds
-      let newPath = '/about/projects?consortiaType=SPARC'
-      if (focusQuery) {
-        newPath += `&selectedProjectsAnatomicalFocusIds=${focusQuery}`
-      }
-      return navigateTo(newPath)
-    }
     const { $algoliaClient } = useNuxtApp()
     const algoliaIndex = await $algoliaClient.initIndex(config.public.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC)
 
