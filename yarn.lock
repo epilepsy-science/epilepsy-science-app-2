@@ -7485,10 +7485,10 @@ tslib@^2.1.0, tslib@^2.4.0, tslib@^2.5.0, tslib@^2.6.2, tslib@^2.8.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
 
-tsviewer@^1.0.34:
-  version "1.0.34"
-  resolved "https://registry.yarnpkg.com/tsviewer/-/tsviewer-1.0.34.tgz#29f5452809981a838a2e64f317e1304601578198"
-  integrity sha512-vIg38CXBpNJzxP55OAsJ/XwdUy7SsNhkIG6B3DqsJODQ/ZvyLruSpApeSMOiuv5S0LmrbMy0vI04adYMK0pErA==
+tsviewer@1.0.35:
+  version "1.0.35"
+  resolved "https://registry.yarnpkg.com/tsviewer/-/tsviewer-1.0.35.tgz#3758dd496d87384e0ccf54226d529e7f7c907c84"
+  integrity sha512-vpz2nuNG7RpyB635Z3XreFqJoZz7cEAGgttjYjp1pa0tI1kVg83TNOmYGgoDBby38d1HC+h9WmSoR7lEKPZNXQ==
   dependencies:
     "@element-plus/icons-vue" "2.3.1"
     core-js "^3.8.3"

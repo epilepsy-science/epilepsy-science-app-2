@@ -22,27 +22,27 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@element-plus/nuxt": "^1.0.6",
-    "element-plus": "^2.9.0",
     "@nuxtjs/sitemap": "^5.1.4",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
     "@pinia/nuxt": "^0.5.1",
     "algoliasearch": "^4.19.1",
+    "aws-amplify": "^6.6.7",
     "axios": "^1.5.0",
     "chart.js": "^4.4.1",
     "contentful": "^10.5.1",
     "date-fns": "^2.30.0",
+    "element-plus": "^2.9.0",
     "flexboxgrid": "^6.3.1",
     "isomorphic-dompurify": "^1.9.0",
     "lodash": "^4.17.21",
     "marked": "^8.0.1",
     "pennsieve-ui-library": "1.0.6",
+    "pennsieve-visualization": "0.6.5",
     "ramda": "^0.29.0",
+    "tsviewer": "1.0.35",
     "vue-chartjs": "^5.3.0",
     "vue-recaptcha-v3": "^2.0.1",
-    "vue-social-sharing": "^4.0.0-alpha4",
-    "tsviewer": "^1.0.34",
-    "aws-amplify": "^6.6.7",
-    "pennsieve-visualization": "0.6.5"
+    "vue-social-sharing": "^4.0.0-alpha4"
   },
   "type": "module"
 }
