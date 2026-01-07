@@ -1056,21 +1056,6 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.28.5"
 
-"@carbon/grid@^11.20.0":
-  version "11.45.0"
-  resolved "https://registry.yarnpkg.com/@carbon/grid/-/grid-11.45.0.tgz#f63461c07aa17a7d23ab383a737d1c1d58d9fcb6"
-  integrity sha512-J8hh5li0Q0RRS6IGg+MVPQVfjp1ePxzQsyMyjQOHLux8i8HwiWJmKLQ+4lKMzRXorLG2RtEoPVl00EaKlQEgKQ==
-  dependencies:
-    "@carbon/layout" "^11.43.0"
-    "@ibm/telemetry-js" "^1.5.0"
-
-"@carbon/layout@^11.43.0":
-  version "11.43.0"
-  resolved "https://registry.yarnpkg.com/@carbon/layout/-/layout-11.43.0.tgz#6da2ae4e76f1fd89e5fadc9b7d9c423272a9e2e7"
-  integrity sha512-aOUNqVv/5TGhNTn1HV+620ZlqhE7+Chs0TJoxwe/CCsLOdziCX9st3c5inyINPZDyvDK46mas1RmqvZwNYe/mA==
-  dependencies:
-    "@ibm/telemetry-js" "^1.5.0"
-
 "@cloudflare/kv-asset-handler@^0.4.0":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.4.1.tgz#717319743437e36c2eaafbb317fdb76b5cff0d88"
@@ -1337,11 +1322,6 @@
   version "0.2.10"
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.10.tgz#a2a1e3812d14525f725d011a73eceb41fef5bc1c"
   integrity sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==
-
-"@ibm/telemetry-js@^1.5.0":
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/@ibm/telemetry-js/-/telemetry-js-1.10.2.tgz#6d4bfb5cce275b8a061c64199bcc9f1ad23477b2"
-  integrity sha512-F8+/NNUwtm8BuFz18O9KPvIFTFDo8GUSoyhPxPjEpk7nEyEzWGfhIiEPhL00B2NdHRLDSljh3AiCfSnL/tutiQ==
 
 "@ioredis/commands@1.4.0":
   version "1.4.0"
@@ -4368,14 +4348,14 @@ data-urls@^5.0.0:
     whatwg-mimetype "^4.0.0"
     whatwg-url "^14.0.0"
 
-date-fns@^2.3.0, date-fns@^2.30.0:
+date-fns@^2.30.0:
   version "2.30.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.30.0.tgz#f367e644839ff57894ec6ac480de40cae4b0f4d0"
   integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
   dependencies:
     "@babel/runtime" "^7.21.0"
 
-dayjs@^1.11.18:
+dayjs@^1.11.19:
   version "1.11.19"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.19.tgz#15dc98e854bb43917f12021806af897c58ae2938"
   integrity sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==
@@ -4560,10 +4540,10 @@ electron-to-chromium@^1.5.249:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.260.tgz#73f555d3e9b9fd16ff48fc406bbad84efa9b86c7"
   integrity sha512-ov8rBoOBhVawpzdre+Cmz4FB+y66Eqrk6Gwqd8NGxuhv99GQ8XqMAr351KEkOt7gukXWDg6gJWEMKgL2RLMPtA==
 
-element-plus@^2.4.2:
-  version "2.11.8"
-  resolved "https://registry.yarnpkg.com/element-plus/-/element-plus-2.11.8.tgz#6a06a24bd28a39bf3ee92a9e6a540103740666bb"
-  integrity sha512-2wzSj2uubFU1f0t/gHkkE1d09mUgV18fSZX5excw3Ar6hyWcxph4E57U8dgYLDt7HwkKYv1BiqPyBdy0WqWlOA==
+element-plus@^2.9.0:
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/element-plus/-/element-plus-2.12.0.tgz#489192aae6e2f08f0c78ac41c0115f8231e8c8c3"
+  integrity sha512-M9YLSn2np9OnqrSKWsiXvGe3qnF8pd94+TScsHj1aTMCD+nSEvucXermf807qNt6hOP040le0e5Aft7E9ZfHmA==
   dependencies:
     "@ctrl/tinycolor" "^3.4.1"
     "@element-plus/icons-vue" "^2.3.2"
@@ -4573,7 +4553,7 @@ element-plus@^2.4.2:
     "@types/lodash-es" "^4.17.12"
     "@vueuse/core" "^9.1.0"
     async-validator "^4.2.5"
-    dayjs "^1.11.18"
+    dayjs "^1.11.19"
     lodash "^4.17.21"
     lodash-es "^4.17.21"
     lodash-unified "^1.0.3"
@@ -5555,9 +5535,9 @@ local-pkg@^1.1.2:
     quansync "^0.2.11"
 
 lodash-es@^4.17.21:
-  version "4.17.21"
-  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
-  integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
+  version "4.17.22"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.22.tgz#eb7d123ec2470d69b911abe34f85cb694849b346"
+  integrity sha512-XEawp1t0gxSi9x01glktRZ5HDy0HXqrM0x5pXQM98EaI0NxO6jVM7omDOxsuEo5UIASAnm2bRp1Jt/e0a2XU8Q==
 
 lodash-unified@^1.0.3:
   version "1.0.3"
@@ -6727,7 +6707,7 @@ ramda@^0.28.0:
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.28.0.tgz#acd785690100337e8b063cab3470019be427cc97"
   integrity sha512-9QnLuG/kPVgWvMQ4aODhsBUFKOUmnbUnsSXACv+NCQZcHbeb+v8Lodp8OVxtRULN1/xOyYLLaL6npE6dMq5QTA==
 
-ramda@^0.29.0, ramda@^0.29.1:
+ramda@^0.29.0:
   version "0.29.1"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.29.1.tgz#408a6165b9555b7ba2fc62555804b6c5a2eca196"
   integrity sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==
@@ -7192,19 +7172,6 @@ source-map@^0.7.4, source-map@^0.7.6:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.6.tgz#a3658ab87e5b6429c8a1f3ba0083d4c61ca3ef02"
   integrity sha512-i5uvt8C3ikiWeNZSVZNWcfZPItFQOsYTUAOkcUPGd8DqDy1uOUikjt5dG+uRlwyvR108Fb9DOd4GvXfT0N2/uQ==
 
-sparc-design-system-components-2@0.0.26:
-  version "0.0.26"
-  resolved "https://registry.yarnpkg.com/sparc-design-system-components-2/-/sparc-design-system-components-2-0.0.26.tgz#943d71a00a97aa6c7701f559b2bcfccdc1fe40c1"
-  integrity sha512-BkJCd9SLgSs54EIp5nZxFMNS9bBdP2LYeF/cKh8of6dn65x2Eb61eJCYcNuNN3fa+EsZlkELtykPPr0vZ5UXwQ==
-  dependencies:
-    "@carbon/grid" "^11.20.0"
-    "@element-plus/icons-vue" "^2.3.1"
-    date-fns "^2.3.0"
-    element-plus "^2.4.2"
-    ramda "^0.29.1"
-    vue "^3.3.4"
-    vue-router "^4.2.5"
-
 speakingurl@^14.0.1:
   version "14.0.1"
   resolved "https://registry.yarnpkg.com/speakingurl/-/speakingurl-14.0.1.tgz#f37ec8ddc4ab98e9600c1c9ec324a8c48d772a53"
@@ -7518,10 +7485,10 @@ tslib@^2.1.0, tslib@^2.4.0, tslib@^2.5.0, tslib@^2.6.2, tslib@^2.8.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
 
-tsviewer@^1.0.34:
-  version "1.0.34"
-  resolved "https://registry.yarnpkg.com/tsviewer/-/tsviewer-1.0.34.tgz#29f5452809981a838a2e64f317e1304601578198"
-  integrity sha512-vIg38CXBpNJzxP55OAsJ/XwdUy7SsNhkIG6B3DqsJODQ/ZvyLruSpApeSMOiuv5S0LmrbMy0vI04adYMK0pErA==
+tsviewer@1.0.35:
+  version "1.0.35"
+  resolved "https://registry.yarnpkg.com/tsviewer/-/tsviewer-1.0.35.tgz#3758dd496d87384e0ccf54226d529e7f7c907c84"
+  integrity sha512-vpz2nuNG7RpyB635Z3XreFqJoZz7cEAGgttjYjp1pa0tI1kVg83TNOmYGgoDBby38d1HC+h9WmSoR7lEKPZNXQ==
   dependencies:
     "@element-plus/icons-vue" "2.3.1"
     core-js "^3.8.3"
@@ -7898,7 +7865,7 @@ vue-recaptcha-v3@^2.0.1:
   dependencies:
     recaptcha-v3 "^1.8.0"
 
-vue-router@^4.2.5, vue-router@^4.6.3:
+vue-router@^4.6.3:
   version "4.6.3"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.6.3.tgz#52a40a231b910806438a8203c065a411fd3f1faa"
   integrity sha512-ARBedLm9YlbvQomnmq91Os7ck6efydTSpRP3nuOKCvgJOHNrhRoJDSKtee8kcL1Vf7nz6U+PMBL+hTvR3bTVQg==
@@ -7921,7 +7888,7 @@ vue@3.5.13:
     "@vue/server-renderer" "3.5.13"
     "@vue/shared" "3.5.13"
 
-vue@^3.3.4, vue@^3.5.23:
+vue@^3.5.23:
   version "3.5.25"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.5.25.tgz#b68b5092b617c57a0a36e8e640fd2c09aa2a374d"
   integrity sha512-YLVdgv2K13WJ6n+kD5owehKtEXwdwXuj2TTyJMsO7pSeKw2bfRNZGjhB7YzrpbMYj5b5QsUebHpOqR3R3ziy/g==

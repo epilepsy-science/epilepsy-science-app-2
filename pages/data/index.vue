@@ -41,9 +41,9 @@
                 </client-only>
                 <client-only>
                   <div class="pagination-wrapper">
-                    <pagination v-if="searchData.limit < searchData.total" :selected="curSearchPage"
-                      :page-size="searchData.limit" :total-count="searchData.total"
-                      @select-page="onPaginationPageChange" />
+                    <el-pagination v-if="searchData.limit < searchData.total" :current-page="curSearchPage"
+                      :page-size="searchData.limit" :total="searchData.total" layout="prev, pager, next"
+                      :pager-count="5" @current-change="onPaginationPageChange" />
                   </div>
                 </client-only>
               </div>
@@ -57,9 +57,9 @@
               </div>
               <div class="dataset-results-footer">
                 <client-only>
-                  <pagination v-if="searchData.limit < searchData.total" :selected="curSearchPage"
-                    :page-size="searchData.limit" :total-count="searchData.total"
-                    @select-page="onPaginationPageChange" />
+                  <el-pagination v-if="searchData.limit < searchData.total" :current-page="curSearchPage"
+                    :page-size="searchData.limit" :total="searchData.total" layout="prev, pager, next"
+                    :pager-count="5" @current-change="onPaginationPageChange" />
                 </client-only>
               </div>
             </el-col>
@@ -111,14 +111,6 @@ export default {
   async setup() {
     const config = useRuntimeConfig()
     const route = useRoute()
-    if (route.query.type == 'projects') {
-      const focusQuery = route.query.selectedProjectsAnatomicalFocusIds
-      let newPath = '/about/projects?consortiaType=SPARC'
-      if (focusQuery) {
-        newPath += `&selectedProjectsAnatomicalFocusIds=${focusQuery}`
-      }
-      return navigateTo(newPath)
-    }
     const { $algoliaClient } = useNuxtApp()
     const algoliaIndex = await $algoliaClient.initIndex(config.public.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC)
 
@@ -379,7 +371,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import 'sparc-design-system-components-2/src/assets/_variables.scss';
+@import '@/assets/scss/_variables.scss';
 
 .alternative-links {
   text-decoration: underline;

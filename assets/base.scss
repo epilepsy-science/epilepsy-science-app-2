@@ -1,5 +1,13 @@
 @use "@/assets/scss/_variables.scss" as *;
-@import 'sparc-design-system-components-2/src/assets/_variables.scss';
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
 
 h1 {
   font-size:2rem;
