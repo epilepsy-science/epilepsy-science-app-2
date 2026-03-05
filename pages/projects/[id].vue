@@ -176,7 +176,7 @@ const datasetsUrl = computed(() => {
   if (!project.value?.fields?.collectionIds?.[0]) return null
   
   const collectionId = project.value.fields.collectionIds[0]
-  return `${runtimeConfig.public.discover_api_host}/datasets/${collectionId}/versions/1/dois?limit=25&offset=0`
+  return `${runtimeConfig.public.discover_api_host}/datasets/${collectionId}/versions/1/dois?limit=200&offset=0`
 })
 
 function fetchDatasets() {
