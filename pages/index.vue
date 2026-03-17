@@ -30,6 +30,7 @@ import { useMainStore } from '~/store/index';
 
 const pageStore = useMainStore();
 pageStore.loadMockPageStats();
+pageStore.fetchDatasetCount();
 </script>
 
 <style scoped lang="scss">
