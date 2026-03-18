@@ -10,15 +10,19 @@
 
     <div class="stats-boxes">
       <el-row :gutter="20" class="stats-row">
-        <el-col :span="8" class="stats-box datasets-stats">
+        <el-col :span="6" class="stats-box datasets-stats">
           <div class="stats-value">{{ stats.datasets }}</div>
           <div class="stats-label">Datasets Available</div>
         </el-col>
-        <el-col :span="8" class="stats-box">
+        <el-col :span="6" class="stats-box">
+          <div class="stats-value">{{ formattedTotalSize }}</div>
+          <div class="stats-label">Total Data</div>
+        </el-col>
+        <el-col :span="6" class="stats-box">
           <div class="stats-value">{{ stats.publicUsers + '+'}}</div>
           <div class="stats-label">Public Users</div>
         </el-col>
-        <el-col :span="8" class="stats-box">
+        <el-col :span="6" class="stats-box">
           <div class="stats-value">{{ stats.universities + '+'}}</div>
           <div class="stats-label">Universities</div>
         </el-col>
@@ -33,6 +37,13 @@ import { useMainStore } from '~/store/index';
 const pageStore = useMainStore();
 
 const stats = pageStore.pageStats;
+
+const formattedTotalSize = computed(() => {
+  if (typeof stats.totalDatasetSize === 'number') {
+    return useFormatMetric(stats.totalDatasetSize)
+  }
+  return stats.totalDatasetSize
+})
 </script>
 
 <style scoped lang="scss">
