@@ -30,7 +30,7 @@ The following environment variables are required to run locally. Values can be o
 | `DEPLOY_ENV` | Environment identifier |
 | `PORTAL_API_HOST` | Portal API endpoint |
 
-Create a file called `env_var_set.sh` in the project root with your values:
+Create a file called `env_var.sh` in the project root with your values:
 
 ```bash
 export ALGOLIA_API_KEY=your_key

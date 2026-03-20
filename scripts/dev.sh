@@ -1,12 +1,12 @@
 #!/bin/sh
 
-if [ -f env_var_set.sh ]; then
-  . env_var_set.sh
+if [ -f env_var.sh ]; then
+  . env_var.sh
 else
   echo ""
   echo "╔════════════════════════════════════════════════════════════════╗"
   echo "║                                                                ║"
-  echo "║   WARNING: env_var_set.sh not found!                           ║"
+  echo "║   WARNING: env_var.sh not found!                               ║"
   echo "║                                                                ║"
   echo "║   The app may not work correctly without environment vars.     ║"
   echo "║   See README.md for required environment variables.            ║"
