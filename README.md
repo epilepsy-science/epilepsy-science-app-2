@@ -15,18 +15,35 @@ yarn install
 
 2. Make sure to set any un-set environment variables found in the nuxt.config file
 
-## Important Note on Running Locally
+## Environment Variables
 
-Ensure that the following configuration variables are set in your environment prior to running (values can be obtained once you are given access to epilepsy.science developer apps on Heroku):
-* ALGOLIA_API_KEY
-* ALGOLIA_APP_ID
-* ALGOLIA_INDEX
-* CTF_SPACE_ID
-* CTF_CDA_ACCESS_TOKEN
-* CTF_API_HOST
-* PORTAL_API_HOST
+The following environment variables are required to run locally. Values can be obtained once you are given access to epilepsy.science developer apps on Heroku.
 
-Add your env vars to `env_var_set.sh` and then run `source env_var_set.sh`
+| Variable | Description |
+|---|---|
+| `ALGOLIA_API_KEY` | Algolia search API key |
+| `ALGOLIA_APP_ID` | Algolia application ID |
+| `ALGOLIA_INDEX` | Algolia search index name |
+| `CTF_SPACE_ID` | Contentful space ID |
+| `CTF_CDA_ACCESS_TOKEN` | Contentful Content Delivery API token |
+| `CTF_API_HOST` | Contentful API host |
+| `DEPLOY_ENV` | Environment identifier |
+| `PORTAL_API_HOST` | Portal API endpoint |
+
+Create a file called `env_var_set.sh` in the project root with your values:
+
+```bash
+export ALGOLIA_API_KEY=your_key
+export ALGOLIA_APP_ID=your_app_id
+export ALGOLIA_INDEX=your_index
+export CTF_SPACE_ID=your_space_id
+export CTF_CDA_ACCESS_TOKEN=your_token
+export CTF_API_HOST=your_host
+export DEPLOY_ENV=your_env
+export PORTAL_API_HOST=your_host
+```
+
+This file is not tracked by git. The `dev` script will source it automatically.
 ## Development Server
 
 Start the development server on `http://localhost:3000`:
