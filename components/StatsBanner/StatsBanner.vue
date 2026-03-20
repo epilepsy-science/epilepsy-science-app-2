@@ -123,7 +123,7 @@ const formattedTotalSize = computed(() => {
     }
 
     .stats-boxes {
-      flex: 1;
+      flex: 2;
     }
 
     .stats-row {
