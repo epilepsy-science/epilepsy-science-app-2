@@ -9,6 +9,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     accessToken: config.public.CTF_CDA_ACCESS_TOKEN,
     host: config.public.CTF_API_HOST,
   });
+  console.log('this is client', client)
 
   return {
     provide: {

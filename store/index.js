@@ -9,7 +9,8 @@ export const useMainStore = defineStore('main', {
     datasetTypeName: "",
     datasetFacetsData: [],
     pageStats: {
-      datasets: 0,
+      datasets: '-',
+      totalDatasetSize: '-',
       publicUsers: 0,
       universities: 0,
       files: 0,
@@ -64,6 +65,24 @@ export const useMainStore = defineStore('main', {
     },
     loadMockPageStats() {
       this.setPageStats(mockPageStats);
+    },
+    async fetchDatasetStats() {
+      try {
+        const { $algoliaClient } = useNuxtApp()
+        const config = useRuntimeConfig()
+        const index = $algoliaClient.initIndex(config.public.ALGOLIA_INDEX)
+        const { nbHits, facets_stats } = await index.search('', {
+          hitsPerPage: 0,
+          analytics: false,
+          facets: ['size'],
+        })
+        this.pageStats.datasets = nbHits
+        this.pageStats.totalDatasetSize = facets_stats?.size?.sum ?? '-'
+      } catch (e) {
+        this.pageStats.datasets = '-'
+        this.pageStats.totalDatasetSize = '-'
+        console.error('Failed to fetch dataset stats from Algolia:', e)
+      }
     },
     setSelectedPackage(pkg) {
       this.selectedPackage = pkg
