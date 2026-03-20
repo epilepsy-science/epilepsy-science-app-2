@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "source env_var_set.sh 2>/dev/null || echo '\\n⚠️  env_var_set.sh not found. See README.md for required environment variables.\\n' && nuxt dev",
+    "dev": "sh scripts/dev.sh",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "start": "node .output/server/index.mjs",
