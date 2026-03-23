@@ -7,7 +7,7 @@ const PORTAL_BASE_URL = process.env.ROOL_URL || 'https://staging.epilepsy.scienc
 // Algolia creds
 const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID
 const ALGOLIA_API_KEY = process.env.ALGOLIA_API_KEY
-const ALGOLIA_INDEX = process.env.ALGOLIA_INDEX || 'k-core_dev'
+const ALGOLIA_INDEX = process.env.ALGOLIA_INDEX || 'epilepsy_science_index'
 
 const algoliaClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY)
 const algoliaIndex = algoliaClient.initIndex(ALGOLIA_INDEX)
