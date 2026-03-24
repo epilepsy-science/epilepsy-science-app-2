@@ -13,6 +13,7 @@ import { successMessage } from './utils/notification-messages'
 
 export default {
   async setup() {
+    console.log('test permissions')
     const nuxtApp = useNuxtApp()
     const loading = ref(false)
     const loaded = ref(false)
