@@ -31,7 +31,7 @@ export const useFileContent = () => {
       };
 
       // Call zipit service to get the file
-      const response = await fetch(runtimeConfig.public.zipit_host, {
+      const response = await fetch(runtimeConfig.public.zipit_api_host, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

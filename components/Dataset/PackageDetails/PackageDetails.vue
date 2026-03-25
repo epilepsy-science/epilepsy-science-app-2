@@ -21,7 +21,7 @@ const downloadContent = computed(() => {
 })
 
 const zipitUrl = computed(() => {
-  return `${runtimeConfig.public.zipit_host}`
+  return `${runtimeConfig.public.zipit_api_host}`
 })
 
 const zipData = ref({})
