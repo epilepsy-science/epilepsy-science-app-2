@@ -159,6 +159,7 @@ export default defineNuxtConfig({
       ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC:
         process.env.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC ||
         "epilepsy_science_index",
+      zipit_host: process.env.ZIPIT_HOST || "https://api.pennsieve.io/zipit/discover",
       max_download_size: parseInt(
         process.env.MAX_DOWNLOAD_SIZE || "5000000000"
       ),
