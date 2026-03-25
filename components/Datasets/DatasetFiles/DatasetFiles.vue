@@ -162,7 +162,7 @@ function setPackage(data) {
 // ---- ZIPIT ----
 
 const zipitUrl = computed(() => {
-  return `${runtimeConfig.public.zipit_host}`
+  return `${runtimeConfig.public.zipit_api_host}`
 })
 
 // ---- DOWNLOAD ----
