@@ -120,7 +120,7 @@ const firstVersionPublishedDate = computed(() => {
  */
 const lastUpdatedDate = computed(() => {
   const date =
-    props.datasetDetails.revisedAt || props.datasetDetails.versionPublishedAt
+    propOr('', 'revisedAt', props.datasetDetails) || propOr('', 'versionPublishedAt', props.datasetDetails)
   return useFormatDate(date)
 })
 

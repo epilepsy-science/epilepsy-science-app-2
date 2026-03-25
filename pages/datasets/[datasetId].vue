@@ -178,8 +178,8 @@ useHead({
   <div class="dataset-details">
     <dataset-details
       v-if="isTombStone === false"
-      :dataset-details="dsDetails"
-      :versions="versions"
+      :dataset-details="dsDetails ?? {}"
+      :versions="versions ?? []"
       :markdown="markDown"
       :has-agreement="hasAgreement"
       :data-use-agreement="dataUseAgreement"
@@ -188,8 +188,8 @@ useHead({
     <dataset-tombstone
       v-else
       :tags="tags"
-      :dataset-details="dsDetails"
-      :versions="versions"
+      :dataset-details="dsDetails ?? {}"
+      :versions="versions ?? []"
     />
   </div>
 </template>
