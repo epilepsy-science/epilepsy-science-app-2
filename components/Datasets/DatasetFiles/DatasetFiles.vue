@@ -180,7 +180,7 @@ const confirmDownloadVisible = ref(false)
 const downloadDisabled = computed(() => {
   if (selectedFiles.value.length === 0) return true
   const totalSize = selectedFiles.value.reduce(
-    (total, node) => total + node.size || 0,
+    (total, node) => total + (node.size || 0),
     0
   )
 
