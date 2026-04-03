@@ -147,8 +147,6 @@ export default defineNuxtConfig({
       CTF_SPACE_ID: process.env.CTF_SPACE_ID,
       CTF_CDA_ACCESS_TOKEN: process.env.CTF_CDA_ACCESS_TOKEN,
       CTF_API_HOST: process.env.CTF_API_HOST || "preview.contentful.com",
-      ctf_home_page_id: "4KuOw0SnxWqN7SZ6W68oey",
-      ctf_portal_notification_entry_id: "1kGepfPts4FM3tDfOGVPnQ",
       ctf_pedquest_about_page_id: "2GgKi7i5bruGNdLTrIBV7t",
       ctf_pedquest_collaborator_details: "1tbeLijAKo4toaZoyOLkTu",
       portal_api:
