@@ -27,9 +27,14 @@ function wrapClientWithFallback(client) {
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig();
 
+  const isPreview = config.public.CTF_API_HOST === "preview.contentful.com";
+  const accessToken = isPreview
+    ? config.public.CTF_CPA_ACCESS_TOKEN
+    : config.public.CTF_CDA_ACCESS_TOKEN;
+
   const client = createClient({
     space: config.public.CTF_SPACE_ID,
-    accessToken: config.public.CTF_CDA_ACCESS_TOKEN,
+    accessToken,
     host: config.public.CTF_API_HOST,
     retryOnError: false,
   });
