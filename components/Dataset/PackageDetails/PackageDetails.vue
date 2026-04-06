@@ -167,11 +167,6 @@ function downloadFile(event) {
 
           </el-table>
         </div>
-
-        <h3 class="package-content-title">
-          Viewer
-        </h3>
-
       </div>
     </div>
 
