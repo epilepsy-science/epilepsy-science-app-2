@@ -327,7 +327,7 @@ function getRouteParams(data) {
               <ClientOnly>
                 <a
                   href="#"
-                  @click.prevent="getDatasetFiles(scope.row.path, scope.row.name)"
+                  @click.prevent="getDatasetFiles(scope.row.path)"
                 >
                   {{ scope.row.name }}
                 </a>
