@@ -256,9 +256,9 @@ function closeConfirmDownload() {
 
 // ---- ROUTING ----
 function getRouteParams(data) {
-  const  sourcePackageId  = data.sourcePackageId ? data.sourcePackageId : "details"
+  const fileId = data.sourcePackageId || data.name
   return { name: 'package-id',
-    params: { id: sourcePackageId } }
+    params: { id: fileId } }
 }
 
 

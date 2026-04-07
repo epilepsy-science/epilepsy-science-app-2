@@ -15,17 +15,11 @@ if (import.meta.client) {
   });
 }
 
-const route = useRoute();
 const runtimeConfig = useRuntimeConfig();
 const store = useMainStore();
-const packageFiles = ref([]);
 const packageType = ref("");
 const fileUri = ref("");
 const isLoading = ref(true);
-
-const PackageFilesUrl = computed(() => {
-  return `${runtimeConfig.public.discover_api_host}/packages/${route.params.id}/files`;
-});
 const viewerState = computed(() => {
   if (!packageType.value) {
     return { type: "processing", message: "Processing package information..." };
@@ -66,45 +60,6 @@ const viewerState = computed(() => {
     message: "Viewer is not available for this file type.",
   };
 });
-
-function getPackageFiles(url) {
-  return useSendXhr(PackageFilesUrl.value, {
-    header: {},
-    method: "GET",
-  })
-    .then((response) => {
-      packageFiles.value = response;
-    })
-    .then(() => {
-      if (packageFiles.value.files.length > 0) {
-        const firstFile = packageFiles.value.files[0];
-        fileUri.value = firstFile.uri;
-
-        // Get DatasetId and version from first file in package
-        const expr = /s3:\/\/[a-z-0-9]+\/([0-9]+)\/(.*)/;
-        const match = firstFile.uri.match(expr);
-        const datasetId = match[1];
-
-        store.setSelectedPackage({
-          datasetId: datasetId,
-          version: 1,
-          files: packageFiles.value.files,
-        });
-
-        // Determine package type
-        if (isMarkdownFile(firstFile.uri)) {
-          packageType.value = "Markdown";
-        } else {
-          packageType.value = firstFile.packageType;
-        }
-
-        packageId.value = firstFile.sourcePackageId;
-      }
-    })
-    .catch(() => {
-      console.log("An error occurred getting the files for the package.");
-    });
-}
 
 // FUNCTIONS HELPER
 function isMarkdownFile(uri) {
@@ -182,11 +137,7 @@ function fetchFileDetails() {
 }
 
 onMounted(() => {
-  if (route.params.id !== "details") {
-    getPackageFiles(PackageFilesUrl);
-  } else {
-    fetchFileDetails();
-  }
+  fetchFileDetails();
 });
 </script>
 
