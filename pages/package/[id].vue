@@ -138,9 +138,54 @@ function getFileType(uri) {
   return "text";
 }
 
-onMounted((to, from) => {
+function fetchFileDetails() {
+  const selectedPackage = store.selectedPackage;
+  if (!selectedPackage || !selectedPackage.files || selectedPackage.files.length === 0) {
+    isLoading.value = false;
+    return;
+  }
+
+  const fileData = selectedPackage.files[0];
+  const { datasetId, version } = selectedPackage;
+  const filePath = fileData.path;
+
+  const fileDetailUrl = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files?path=${encodeURIComponent(filePath)}`;
+
+  useSendXhr(fileDetailUrl, { method: "GET" })
+    .then((response) => {
+      fileUri.value = response.uri || "";
+
+      if (isMarkdownFile(response.uri)) {
+        packageType.value = "Markdown";
+      } else {
+        packageType.value = response.packageType || "";
+      }
+
+      store.setSelectedPackage({
+        datasetId,
+        version,
+        files: [response],
+      });
+    })
+    .catch(() => {
+      // Fall back to store data if the endpoint fails
+      fileUri.value = fileData.uri || "";
+      if (isMarkdownFile(fileData.uri)) {
+        packageType.value = "Markdown";
+      } else {
+        packageType.value = fileData.packageType || "";
+      }
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+}
+
+onMounted(() => {
   if (route.params.id !== "details") {
     getPackageFiles(PackageFilesUrl);
+  } else {
+    fetchFileDetails();
   }
 });
 </script>
