@@ -9,6 +9,7 @@ import DatasetFilesFooter from "~/components/Datasets/DatasetFilesFooter/Dataset
 import DatasetFilesHeader from "~/components/Datasets/DatasetFilesHeader/DatasetFilesHeader.vue";
 
 const store = useMainStore()
+const route = useRoute()
 const DEFAULT_ARCHIVE_NAME = 'pennsieve-discover-data'
 const runtimeConfig = useRuntimeConfig()
 
@@ -37,7 +38,8 @@ watch(getFilesUrl, () => {
 })
 
 onMounted(() => {
-  getDatasetFiles()
+  const initialPath = route.query.path || ''
+  getDatasetFiles(initialPath)
 })
 
 const isLoggedin = ref(false)

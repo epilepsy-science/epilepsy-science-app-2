@@ -10,6 +10,29 @@ import BfButton from "~/components/Shared/BfButton/BfButton.vue";
 
 const store = useMainStore()
 
+const parentFolderPath = computed(() => {
+  const files = store.selectedPackage?.files || []
+  if (files.length === 0) return ''
+  const filePath = files[0].path || ''
+  const lastSlash = filePath.lastIndexOf('/')
+  return lastSlash > 0 ? filePath.substring(0, lastSlash) : ''
+})
+
+const backToFilesRoute = computed(() => {
+  const datasetId = store.selectedPackage?.datasetId
+  const route = {
+    name: 'datasets-datasetId',
+    params: { datasetId },
+    hash: '#files'
+  }
+  if (parentFolderPath.value) {
+    route.query = { path: parentFolderPath.value }
+  }
+  return route
+})
+
+const backLinkLabel = 'Back to files'
+
 const headerContent = computed(() => {
   const files = propOr(store.selectedPackage,'files',[])
   return files.length > 1 ? "Package Files": "File Details"
@@ -118,9 +141,9 @@ function downloadFile(event) {
     <div class="container-fluid">
       <div class="row between-mb">
         <div class="col-xs-8 header-link">
-          <nuxt-link :to="{ name: 'datasets-datasetId', params: { datasetId: store.selectedPackage.datasetId } }">
+          <nuxt-link :to="backToFilesRoute">
             <IconArrowLeft class="header-link-icon" />
-            Back to dataset
+            {{ backLinkLabel }}
           </nuxt-link>
         </div>
         <div class="col-xs row end-xs">
