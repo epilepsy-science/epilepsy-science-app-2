@@ -1,6 +1,6 @@
 <script setup>
 import { useMainStore } from "~/store/index.js";
-import { ref, onMounted, computed, watch, shallowRef } from "vue";
+import { ref, onMounted, computed, shallowRef } from "vue";
 import { Markdown, TextViewer } from "pennsieve-visualization";
 
 // Dynamic imports for browser-only tsviewer
@@ -17,80 +17,38 @@ if (import.meta.client) {
 
 const runtimeConfig = useRuntimeConfig();
 const store = useMainStore();
-const packageType = ref("");
-const fileUri = ref("");
+const fileType = ref("");
 const isLoading = ref(true);
-const viewerState = computed(() => {
-  if (!packageType.value) {
-    return { type: "processing", message: "Processing package information..." };
+const fileContent = ref("");
+const isLoadingContent = ref(false);
+const contentError = ref("");
+const { fetchFileContent } = useFileContent();
+
+const timeseriesFileTypes = ["MEF", "EDF", "BDF", "NWB"]
+const textFileTypes = ["TXT", "CSV", "JSON", "XML", "LOG", "YAML", "YML"]
+const markdownFileTypes = ["MD", "MARKDOWN"]
+
+const isReady = computed(() => !isLoading.value && !!fileType.value)
+
+const viewerType = computed(() => {
+  if (!isReady.value) return null
+  const type = fileType.value.toUpperCase()
+  if (timeseriesFileTypes.includes(type)) return "timeseries"
+  if (markdownFileTypes.includes(type)) return "markdown"
+  if (textFileTypes.includes(type)) return "text"
+  return "unsupported"
+})
+
+async function loadFileContent(file, datasetId, version) {
+  isLoadingContent.value = true;
+  contentError.value = "";
+  try {
+    fileContent.value = await fetchFileContent(file, datasetId, version);
+  } catch (error) {
+    contentError.value = error.message || "Failed to load file content";
+  } finally {
+    isLoadingContent.value = false;
   }
-
-  if (isLoading.value) {
-    return { type: "loading", message: "Loading viewer..." };
-  }
-
-  // Handle Markdown
-  if (packageType.value === "Markdown" || isMarkdownFile(fileUri.value)) {
-    return { type: "markdown", message: null };
-  }
-
-  // Handle Text-based files
-  if (isTextFile(fileUri.value)) {
-    return {
-      type: "text",
-      message: null,
-      fileType: getFileType(fileUri.value),
-    };
-  }
-
-  // Handle TimeSeries
-  if (packageType.value === "TimeSeries") {
-    if (!isReady.value) {
-      return {
-        type: "error",
-        message:
-          "File is not processed, please try processing the timeseries file.",
-      };
-    }
-    return { type: "timeseries", message: null };
-  }
-
-  return {
-    type: "unsupported",
-    message: "Viewer is not available for this file type.",
-  };
-});
-
-// FUNCTIONS HELPER
-function isMarkdownFile(uri) {
-  if (!uri) return false;
-  const lowerUri = uri.toLowerCase();
-  return lowerUri.endsWith(".md") || lowerUri.endsWith(".markdown");
-}
-
-function isTextFile(uri) {
-  if (!uri) return false;
-  const lowerUri = uri.toLowerCase();
-  const textExtensions = [
-    ".txt",
-    ".csv",
-    ".json",
-    ".xml",
-    ".log",
-    ".yaml",
-    ".yml",
-  ];
-  return textExtensions.some((ext) => lowerUri.endsWith(ext));
-}
-
-function getFileType(uri) {
-  if (!uri) return "text";
-  const lowerUri = uri.toLowerCase();
-  if (lowerUri.endsWith(".csv")) return "csv";
-  if (lowerUri.endsWith(".json")) return "json";
-  if (lowerUri.endsWith(".xml")) return "xml";
-  if (lowerUri.endsWith(".yaml") || lowerUri.endsWith(".yml")) return "yaml";
-  return "text";
 }
 
 function fetchFileDetails() {
@@ -108,27 +66,22 @@ function fetchFileDetails() {
 
   useSendXhr(fileDetailUrl, { method: "GET" })
     .then((response) => {
-      fileUri.value = response.uri || "";
-
-      if (isMarkdownFile(response.uri)) {
-        packageType.value = "Markdown";
-      } else {
-        packageType.value = response.packageType || "";
-      }
-
+      fileType.value = response.fileType || "";
       store.setSelectedPackage({
         datasetId,
         version,
         files: [response],
       });
+      const type = (response.fileType || "").toUpperCase();
+      if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
+        loadFileContent(response, datasetId, version);
+      }
     })
     .catch(() => {
-      // Fall back to store data if the endpoint fails
-      fileUri.value = fileData.uri || "";
-      if (isMarkdownFile(fileData.uri)) {
-        packageType.value = "Markdown";
-      } else {
-        packageType.value = fileData.packageType || "";
+      fileType.value = fileData.fileType || "";
+      const type = (fileData.fileType || "").toUpperCase();
+      if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
+        loadFileContent(fileData, datasetId, version);
       }
     })
     .finally(() => {
@@ -146,61 +99,49 @@ onMounted(() => {
     <package-details class="package-details-content" />
 
     <div class="package-viewer">
-      <h3 class="viewer-title">{{ viewerState.type }} Viewer</h3>
-
+      <h3 v-if="isReady" class="viewer-title">File Viewer</h3>
       <div class="viewer-wrapper">
+        <!-- Loading State -->
+        <div v-if="!isReady" class="viewer-message">
+          Loading viewer...
+        </div>
+
         <!-- Timeseries Viewer -->
-        <client-only v-if="viewerState.type === 'timeseries'">
+        <client-only v-else-if="viewerType === 'timeseries'">
           <component :is="TSViewer" v-if="TSViewer" />
           <div v-else class="viewer-message">Loading viewer...</div>
         </client-only>
 
         <!-- Markdown Viewer -->
-        <!-- <div
-          v-else-if="viewerState.type === 'markdown'"
+        <div
+          v-else-if="viewerType === 'markdown'"
           class="markdown-viewer-container"
         >
-          <div v-if="isLoadingContent" class="viewer-message">
-            Loading markdown file...
-          </div>
-          <div
-            v-else-if="contentError"
-            class="viewer-message viewer-message--error"
-          >
-            Error loading file: {{ contentError }}
-          </div>
-          <div v-else class="markdown-viewer">
-            <Markdown :markdownText="fileContent" :disabled="true" />
-          </div>
+          <div v-if="isLoadingContent" class="viewer-message">Loading markdown file...</div>
+          <div v-else-if="contentError" class="viewer-message viewer-message--error">{{ contentError }}</div>
+          <Markdown v-else :markdownText="fileContent" :disabled="true" />
         </div>
--->
+
         <!-- Text/CSV/JSON Viewer -->
-        <!-- <div
-          v-else-if="viewerState.type === 'text'"
+        <div
+          v-else-if="viewerType === 'text'"
           class="text-viewer-container"
         >
-          <div v-if="isLoadingContent" class="viewer-message">
-            Loading text file...
-          </div>
-          <div
-            v-else-if="contentError"
-            class="viewer-message viewer-message--error"
-          >
-            Error loading file: {{ contentError }}
-          </div>
+          <div v-if="isLoadingContent" class="viewer-message">Loading file...</div>
+          <div v-else-if="contentError" class="viewer-message viewer-message--error">{{ contentError }}</div>
           <div v-else class="text-viewer-id">
             <TextViewer
               :content="fileContent"
-              :file-type="viewerState.fileType"
+              :file-type="fileType.toLowerCase()"
               :show-line-numbers="true"
               max-height="70vh"
             />
           </div>
-        </div> -->
+        </div>
 
-        <!-- Status Messages -->
+        <!-- Unsupported -->
         <div v-else class="viewer-message">
-          {{ viewerState.message }}
+          Viewer is not available for this file type.
         </div>
       </div>
     </div>
