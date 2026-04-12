@@ -1,7 +1,8 @@
 <script setup>
 import { useMainStore } from "~/store/index.js";
 import { ref, onMounted, computed, shallowRef } from "vue";
-import { Markdown, TextViewer } from "pennsieve-visualization";
+import { Markdown, TextViewer, CSVViewer } from "@pennsieve-viz/core";
+import "@pennsieve-viz/core/style.css";
 
 // Dynamic imports for browser-only tsviewer
 const TSViewer = shallowRef(null);
@@ -18,6 +19,8 @@ if (import.meta.client) {
 const runtimeConfig = useRuntimeConfig();
 const store = useMainStore();
 const fileType = ref("");
+const fileUri = ref("");
+const presignedUrl = ref("");
 const isLoading = ref(true);
 const fileContent = ref("");
 const isLoadingContent = ref(false);
@@ -25,7 +28,8 @@ const contentError = ref("");
 const { fetchFileContent } = useFileContent();
 
 const timeseriesFileTypes = ["MEF", "EDF", "BDF", "NWB"]
-const textFileTypes = ["TXT", "CSV", "JSON", "XML", "LOG", "YAML", "YML"]
+const csvFileTypes = ["CSV", "TSV"]
+const textFileTypes = ["TXT", "JSON", "XML", "LOG", "YAML", "YML"]
 const markdownFileTypes = ["MD", "MARKDOWN"]
 
 const isReady = computed(() => !isLoading.value && !!fileType.value)
@@ -34,10 +38,24 @@ const viewerType = computed(() => {
   if (!isReady.value) return null
   const type = fileType.value.toUpperCase()
   if (timeseriesFileTypes.includes(type)) return "timeseries"
+  if (csvFileTypes.includes(type)) return "csv"
   if (markdownFileTypes.includes(type)) return "markdown"
   if (textFileTypes.includes(type)) return "text"
   return "unsupported"
 })
+
+async function fetchPresignedUrl(filePath, datasetId, version) {
+  const manifestUrl = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files/download-manifest`;
+  try {
+    const response = await useSendXhr(manifestUrl, {
+      method: "POST",
+      body: { paths: [filePath] },
+    });
+    presignedUrl.value = response?.data?.[0]?.url || "";
+  } catch {
+    // presignedUrl stays empty; CSVViewer won't render
+  }
+}
 
 async function loadFileContent(file, datasetId, version) {
   isLoadingContent.value = true;
@@ -67,6 +85,7 @@ function fetchFileDetails() {
   useSendXhr(fileDetailUrl, { method: "GET" })
     .then((response) => {
       fileType.value = response.fileType || "";
+      fileUri.value = response.uri || "";
       store.setSelectedPackage({
         datasetId,
         version,
@@ -76,12 +95,19 @@ function fetchFileDetails() {
       if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
         loadFileContent(response, datasetId, version);
       }
+      if (csvFileTypes.includes(type)) {
+        fetchPresignedUrl(response.path, datasetId, version);
+      }
     })
     .catch(() => {
       fileType.value = fileData.fileType || "";
+      fileUri.value = fileData.uri || "";
       const type = (fileData.fileType || "").toUpperCase();
       if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
         loadFileContent(fileData, datasetId, version);
+      }
+      if (csvFileTypes.includes(type)) {
+        fetchPresignedUrl(fileData.path, datasetId, version);
       }
     })
     .finally(() => {
@@ -111,6 +137,16 @@ onMounted(() => {
           <component :is="TSViewer" v-if="TSViewer" />
           <div v-else class="viewer-message">Loading viewer...</div>
         </client-only>
+
+        <!-- CSV/TSV Viewer -->
+        <div v-else-if="viewerType === 'csv'" class="csv-viewer-container">
+          <CSVViewer
+            v-if="presignedUrl"
+            :src-url="presignedUrl"
+            :file-type="fileType"
+            :rows-per-page="25"
+          />
+        </div>
 
         <!-- Markdown Viewer -->
         <div
@@ -185,6 +221,12 @@ onMounted(() => {
     background-color: #ffebe9;
     border-radius: 6px;
   }
+}
+
+.csv-viewer-container {
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 .markdown-viewer-container {
