@@ -2108,10 +2108,10 @@
     "@parcel/watcher-win32-ia32" "2.5.1"
     "@parcel/watcher-win32-x64" "2.5.1"
 
-"@pennsieve-viz/core@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@pennsieve-viz/core/-/core-0.3.0.tgz#5e5ff7581b4196375257a0d9b7268a9e3ba145ac"
-  integrity sha512-+KOTzbssc3Cbe+Xx996L1B+WyWLU1cTUsfNIieUmp2H0cSI3lZcH5QFhmSL1uYuJEwwEgqxhwr2YOGicCq/0pw==
+"@pennsieve-viz/core@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@pennsieve-viz/core/-/core-0.3.1.tgz#9a16f8dec36aa177a5c4a1aa91ca0a10c4675ccc"
+  integrity sha512-qJ3VMZb84frnXa+kM1VWJwNZi1tu+2GhpfAKzrLiKYEqfct3uM8CHLqtFxLifcTYrpUMwM8mHczArv9cZ62jeg==
   dependencies:
     "@element-plus/icons-vue" "^2.3.1"
     "@niivue/niivue" "^0.68.1"

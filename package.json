@@ -23,7 +23,7 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@element-plus/nuxt": "^1.0.6",
     "@nuxtjs/sitemap": "^5.1.4",
-    "@pennsieve-viz/core": "^0.3.0",
+    "@pennsieve-viz/core": "^0.3.1",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
     "@pinia/nuxt": "^0.5.1",
     "algoliasearch": "^4.19.1",

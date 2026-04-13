@@ -194,22 +194,20 @@ onMounted(() => {
   margin-bottom: 2rem;
 }
 
-.pennsieve-viewer {
-  display: flex;
-}
-
 .package-viewer {
   padding-inline: 2rem;
   padding-bottom: 4rem;
+  margin-top: 2rem;
 }
 
 .viewer-title {
   color: $gray_4;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 40px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
+  margin: 0 0 12px;
 }
 
 .viewer-wrapper {
@@ -228,30 +226,13 @@ onMounted(() => {
   }
 }
 
-.csv-viewer-container {
-  width: 100%;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-}
-
-.markdown-viewer-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-}
-
+.csv-viewer-container,
+.markdown-viewer-container,
 .text-viewer-container {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
 }
 
 .text-viewer-id {
   width: 100%;
-  max-width: 1200px;
 }
 </style>

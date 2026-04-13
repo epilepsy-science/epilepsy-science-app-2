@@ -139,11 +139,11 @@ function downloadFile(event) {
 <template>
   <div class="dataset-details">
     <div class="container-fluid">
-      <div class="row between-mb">
-        <div class="col-xs-8 header-link">
-          <nuxt-link :to="backToFilesRoute">
-            <IconArrowLeft class="header-link-icon" />
-            {{ backLinkLabel }}
+      <div class="row between-mb action-row">
+        <div class="col-xs-8 back-link-col">
+          <nuxt-link :to="backToFilesRoute" class="back-link">
+            <IconArrowLeft class="back-link-icon" />
+            <span>{{ backLinkLabel }}</span>
           </nuxt-link>
         </div>
         <div class="col-xs row end-xs">
@@ -155,7 +155,6 @@ function downloadFile(event) {
             {{downloadContent}}
           </bf-button>
         </div>
-
       </div>
       <div class="package-content">
 <!--        <div class="button-row">-->
@@ -205,11 +204,6 @@ function downloadFile(event) {
 .file-info {
   margin-top: 24px;
 }
-.el-table--border {
-  border: 1px solid $gray_2;
-}
-
-
 
 .table {
   .file-name-container {
@@ -229,64 +223,59 @@ function downloadFile(event) {
 
 :deep(.el-table) {
   .el-table--border {
-    border:none
+    border: none;
   }
   .el-table__header-wrapper {
     height: 40px;
-
-    .el-table__header {
-    }
   }
-
 }
 
 .dataset-details {
   margin-top: 24px;
 }
 
-.header-link {
-  color: $purple_1;
+.action-row {
+  align-items: center;
+}
+
+.back-link-col {
+  display: flex;
+  align-items: center;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #297fca;
   font-size: 14px;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 1;
+  text-decoration: none;
+  transition: color 0.15s ease;
 
-  &:focus {
-    color: $purple_2;
+  &:hover,
+  &:focus-visible {
+    color: #1c5f9b;
+    text-decoration: none;
 
+    .back-link-icon {
+      transform: translateX(-2px);
+    }
   }
-  &:hover {
-    text-decoration: underline;
-  }
 
-  .header-link-icon {
-    color: $purple_1;
-    height: 10px;
-    width: 10px;
-    margin-bottom: 3px;
-    margin-right: 8px;
+  .back-link-icon {
+    height: 14px;
+    width: 14px;
+    color: currentColor;
+    transition: transform 0.15s ease;
   }
 }
+
 
 .package-content {
-  display:flex;
-  flex-direction: column ;
+  display: flex;
+  flex-direction: column;
   justify-content: space-between;
-
-  .button-row {
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
 }
-
-.package-content-title {
-  color: $gray_4;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 40px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-
 </style>
