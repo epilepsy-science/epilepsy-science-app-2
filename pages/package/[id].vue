@@ -190,12 +190,17 @@ onMounted(() => {
   flex-direction: column;
 }
 
+.package-details-content {
+  margin-bottom: 2rem;
+}
+
 .pennsieve-viewer {
   display: flex;
 }
 
 .package-viewer {
   padding-inline: 2rem;
+  padding-bottom: 4rem;
 }
 
 .viewer-title {
