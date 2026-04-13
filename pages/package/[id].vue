@@ -253,13 +253,5 @@ onMounted(() => {
 .text-viewer-id {
   width: 100%;
   max-width: 1200px;
-  overflow: auto;
-  border: 1px solid #e1e4e8;
-  border-radius: 8px;
-  padding: 2rem;
-  background-color: #ffffff;
-}
-:deep(.text-viewer__footer) {
-  position: absolute;
 }
 </style>
