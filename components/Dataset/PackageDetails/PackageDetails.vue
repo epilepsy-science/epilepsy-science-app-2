@@ -1,13 +1,9 @@
 <script setup>
+import { pathOr } from 'ramda'
+import { useMainStore } from '~/store/index.js'
+import BfButton from '~/components/Shared/BfButton/BfButton.vue'
 
-import {ref} from 'vue'
-import {pathOr, propOr} from "ramda";
 const runtimeConfig = useRuntimeConfig()
-
-
-import {useMainStore} from '~/store/index.js'
-import BfButton from "~/components/Shared/BfButton/BfButton.vue";
-
 const store = useMainStore()
 
 const parentFolderPath = computed(() => {
@@ -33,99 +29,40 @@ const backToFilesRoute = computed(() => {
 
 const backLinkLabel = 'Back to files'
 
-const headerContent = computed(() => {
-  const files = propOr(store.selectedPackage,'files',[])
-  return files.length > 1 ? "Package Files": "File Details"
-})
-
 const downloadContent = computed(() => {
-  const files = propOr(store.selectedPackage,'files',[])
-  return files.length > 1 ? "Download Package": "Download File"
+  const files = store.selectedPackage?.files || []
+  return files.length > 1 ? 'Download Package' : 'Download File'
 })
-
-const zipitUrl = computed(() => {
-  return `${runtimeConfig.public.zipit_api_host}`
-})
-
-const zipData = ref({})
 
 function formatStorage(row, column, cellValue) {
   return useFormatMetric(cellValue)
 }
 
-function sizeString(sizeInBytes) {
-  return useFormatMetric(sizeInBytes)
-}
-
-function onDownloadClick() {
-  executeDownload()
-}
-
-const archiveName = ref('')
-const selected = ref([])
-const zipFormRef = ref(null)
-
-
-async function executeDownload() {
-
-
-  const mainPayload = {
-    paths: store.selectedPackage.files.map((f) => {
-      return f.path
-    }),
-    datasetId: store.selectedPackage.datasetId,
-    version: store.selectedPackage.version,
-  }
-
-  const rootPathPayload = {} // path ? { rootPath: path.join('/') } : {}
-  const archiveNamePayload =
-    archiveName && selected.length > 1
-      ? { archiveName: archiveName.value }
-      : {}
-
-  const payload = {
-    ...mainPayload,
-    ...rootPathPayload,
-    ...archiveNamePayload
-  }
-  zipData.value = JSON.stringify(payload, undefined)
-
-  zipFormRef.value.submit() // eslint-disable-line no-undef
-}
-
 function downloadFile(event) {
-  event.preventDefault();
+  event.preventDefault()
 
   const datasetId = store.selectedPackage.datasetId
   const version = store.selectedPackage.version
-  const filePath = store.selectedPackage.files.map((f) => {
-    return f.path
-  })
+  const filePaths = store.selectedPackage.files.map((f) => f.path)
 
-  // Get PresignedUrl
   const manifestUrl = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files/download-manifest`
-  useSendXhr(manifestUrl,{
-    method:"POST",
-    body:{
-      paths: filePath
-    }
+  useSendXhr(manifestUrl, {
+    method: 'POST',
+    body: { paths: filePaths }
   })
     .then(response => {
-      const presignedUrl = pathOr('',['data',[0],'url'], response)
+      const presignedUrl = pathOr('', ['data', [0], 'url'], response)
       if (presignedUrl) {
-        const link = document.createElement('a');
-        link.href = presignedUrl;
-        link.setAttribute('download',true);
-        link.setAttribute('target','_blank')
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const link = document.createElement('a')
+        link.href = presignedUrl
+        link.setAttribute('download', true)
+        link.setAttribute('target', '_blank')
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
       }
     })
 }
-
-
-
 </script>
 
 <template>
