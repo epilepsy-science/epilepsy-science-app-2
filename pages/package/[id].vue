@@ -194,7 +194,7 @@ onMounted(() => {
 }
 
 .package-details-content {
-  margin-bottom: 28px;
+  margin-bottom: 48px;
 }
 
 .package-viewer {

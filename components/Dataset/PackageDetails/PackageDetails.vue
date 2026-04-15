@@ -67,23 +67,19 @@ function downloadFile(event) {
 
 <template>
   <div class="dataset-details">
-    <div class="row between-mb action-row">
-        <div class="col-xs-8 back-link-col">
-          <nuxt-link :to="backToFilesRoute" class="back-link">
-            <IconArrowLeft class="back-link-icon" />
-            <span>{{ backLinkLabel }}</span>
-          </nuxt-link>
-        </div>
-        <div class="col-xs row end-xs">
-          <bf-button
-            key="btn-get-dataset"
-            class="get-dataset-button"
-            @click="downloadFile"
-          >
-            {{downloadContent}}
-          </bf-button>
-        </div>
-      </div>
+    <div class="action-row">
+      <nuxt-link :to="backToFilesRoute" class="back-link">
+        <IconArrowLeft class="back-link-icon" />
+        <span>{{ backLinkLabel }}</span>
+      </nuxt-link>
+      <bf-button
+        key="btn-get-dataset"
+        class="get-dataset-button"
+        @click="downloadFile"
+      >
+        {{ downloadContent }}
+      </bf-button>
+    </div>
       <div class="package-content">
         <el-table
           class="table"
@@ -119,7 +115,7 @@ function downloadFile(event) {
 }
 
 .table {
-  margin-top: 24px;
+  margin-top: 12px;
 
   .file-name-container {
     display: flex;
@@ -183,12 +179,9 @@ function downloadFile(event) {
 }
 
 .action-row {
-  align-items: center;
-}
-
-.back-link-col {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .back-link {
