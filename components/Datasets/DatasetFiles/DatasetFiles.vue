@@ -9,6 +9,7 @@ import DatasetFilesFooter from "~/components/Datasets/DatasetFilesFooter/Dataset
 import DatasetFilesHeader from "~/components/Datasets/DatasetFilesHeader/DatasetFilesHeader.vue";
 
 const store = useMainStore()
+const route = useRoute()
 const DEFAULT_ARCHIVE_NAME = 'pennsieve-discover-data'
 const runtimeConfig = useRuntimeConfig()
 
@@ -37,7 +38,8 @@ watch(getFilesUrl, () => {
 })
 
 onMounted(() => {
-  getDatasetFiles()
+  const initialPath = route.query.path || ''
+  getDatasetFiles(initialPath)
 })
 
 const isLoggedin = ref(false)
@@ -256,9 +258,9 @@ function closeConfirmDownload() {
 
 // ---- ROUTING ----
 function getRouteParams(data) {
-  const  sourcePackageId  = data.sourcePackageId ? data.sourcePackageId : "details"
+  const fileId = data.sourcePackageId || data.name
   return { name: 'package-id',
-    params: { id: sourcePackageId } }
+    params: { id: fileId } }
 }
 
 
@@ -327,7 +329,7 @@ function getRouteParams(data) {
               <ClientOnly>
                 <a
                   href="#"
-                  @click.prevent="getDatasetFiles(scope.row.path, scope.row.name)"
+                  @click.prevent="getDatasetFiles(scope.row.path)"
                 >
                   {{ scope.row.name }}
                 </a>

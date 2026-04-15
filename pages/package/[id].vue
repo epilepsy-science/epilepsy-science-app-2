@@ -1,7 +1,8 @@
 <script setup>
 import { useMainStore } from "~/store/index.js";
-import { ref, onMounted, computed, watch, shallowRef } from "vue";
-import { Markdown, TextViewer } from "pennsieve-visualization";
+import { ref, onMounted, computed, shallowRef } from "vue";
+import { Markdown, TextViewer, CSVViewer } from "@pennsieve-viz/core";
+import "@pennsieve-viz/core/style.css";
 
 // Dynamic imports for browser-only tsviewer
 const TSViewer = shallowRef(null);
@@ -15,133 +16,107 @@ if (import.meta.client) {
   });
 }
 
-const route = useRoute();
 const runtimeConfig = useRuntimeConfig();
 const store = useMainStore();
-const packageFiles = ref([]);
-const packageType = ref("");
+const fileType = ref("");
 const fileUri = ref("");
+const presignedUrl = ref("");
 const isLoading = ref(true);
+const fileContent = ref("");
+const isLoadingContent = ref(false);
+const contentError = ref("");
+const { fetchFileContent } = useFileContent();
 
-const PackageFilesUrl = computed(() => {
-  return `${runtimeConfig.public.discover_api_host}/packages/${route.params.id}/files`;
-});
-const viewerState = computed(() => {
-  if (!packageType.value) {
-    return { type: "processing", message: "Processing package information..." };
+const timeseriesFileTypes = ["MEF", "EDF", "BDF", "NWB"]
+const csvFileTypes = ["CSV", "TSV"]
+const textFileTypes = ["TXT", "JSON", "XML", "LOG", "YAML", "YML"]
+const markdownFileTypes = ["MD", "MARKDOWN"]
+
+const isReady = computed(() => !isLoading.value && !!fileType.value)
+
+const viewerType = computed(() => {
+  if (!isReady.value) return null
+  const type = fileType.value.toUpperCase()
+  if (timeseriesFileTypes.includes(type)) return "timeseries"
+  if (csvFileTypes.includes(type)) return "csv"
+  if (markdownFileTypes.includes(type)) return "markdown"
+  if (textFileTypes.includes(type)) return "text"
+  return "unsupported"
+})
+
+async function fetchPresignedUrl(filePath, datasetId, version) {
+  const manifestUrl = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files/download-manifest`;
+  try {
+    const response = await useSendXhr(manifestUrl, {
+      method: "POST",
+      body: { paths: [filePath] },
+    });
+    presignedUrl.value = response?.data?.[0]?.url || "";
+  } catch {
+    // presignedUrl stays empty; CSVViewer won't render
+  }
+}
+
+async function loadFileContent(file, datasetId, version) {
+  isLoadingContent.value = true;
+  contentError.value = "";
+  try {
+    fileContent.value = await fetchFileContent(file, datasetId, version);
+  } catch (error) {
+    contentError.value = error.message || "Failed to load file content";
+  } finally {
+    isLoadingContent.value = false;
+  }
+}
+
+function fetchFileDetails() {
+  const selectedPackage = store.selectedPackage;
+  if (!selectedPackage || !selectedPackage.files || selectedPackage.files.length === 0) {
+    isLoading.value = false;
+    return;
   }
 
-  if (isLoading.value) {
-    return { type: "loading", message: "Loading viewer..." };
-  }
+  const fileData = selectedPackage.files[0];
+  const { datasetId, version } = selectedPackage;
+  const filePath = fileData.path;
 
-  // Handle Markdown
-  if (packageType.value === "Markdown" || isMarkdownFile(fileUri.value)) {
-    return { type: "markdown", message: null };
-  }
+  const fileDetailUrl = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files?path=${encodeURIComponent(filePath)}`;
 
-  // Handle Text-based files
-  if (isTextFile(fileUri.value)) {
-    return {
-      type: "text",
-      message: null,
-      fileType: getFileType(fileUri.value),
-    };
-  }
-
-  // Handle TimeSeries
-  if (packageType.value === "TimeSeries") {
-    if (!isReady.value) {
-      return {
-        type: "error",
-        message:
-          "File is not processed, please try processing the timeseries file.",
-      };
-    }
-    return { type: "timeseries", message: null };
-  }
-
-  return {
-    type: "unsupported",
-    message: "Viewer is not available for this file type.",
-  };
-});
-
-function getPackageFiles(url) {
-  return useSendXhr(PackageFilesUrl.value, {
-    header: {},
-    method: "GET",
-  })
+  useSendXhr(fileDetailUrl, { method: "GET" })
     .then((response) => {
-      packageFiles.value = response;
-    })
-    .then(() => {
-      if (packageFiles.value.files.length > 0) {
-        const firstFile = packageFiles.value.files[0];
-        fileUri.value = firstFile.uri;
-
-        // Get DatasetId and version from first file in package
-        const expr = /s3:\/\/[a-z-0-9]+\/([0-9]+)\/(.*)/;
-        const match = firstFile.uri.match(expr);
-        const datasetId = match[1];
-
-        store.setSelectedPackage({
-          datasetId: datasetId,
-          version: 1,
-          files: packageFiles.value.files,
-        });
-
-        // Determine package type
-        if (isMarkdownFile(firstFile.uri)) {
-          packageType.value = "Markdown";
-        } else {
-          packageType.value = firstFile.packageType;
-        }
-
-        packageId.value = firstFile.sourcePackageId;
+      fileType.value = response.fileType || "";
+      fileUri.value = response.uri || "";
+      store.setSelectedPackage({
+        datasetId,
+        version,
+        files: [response],
+      });
+      const type = (response.fileType || "").toUpperCase();
+      if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
+        loadFileContent(response, datasetId, version);
+      }
+      if (csvFileTypes.includes(type)) {
+        fetchPresignedUrl(response.path, datasetId, version);
       }
     })
     .catch(() => {
-      console.log("An error occurred getting the files for the package.");
+      fileType.value = fileData.fileType || "";
+      fileUri.value = fileData.uri || "";
+      const type = (fileData.fileType || "").toUpperCase();
+      if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
+        loadFileContent(fileData, datasetId, version);
+      }
+      if (csvFileTypes.includes(type)) {
+        fetchPresignedUrl(fileData.path, datasetId, version);
+      }
+    })
+    .finally(() => {
+      isLoading.value = false;
     });
 }
 
-// FUNCTIONS HELPER
-function isMarkdownFile(uri) {
-  if (!uri) return false;
-  const lowerUri = uri.toLowerCase();
-  return lowerUri.endsWith(".md") || lowerUri.endsWith(".markdown");
-}
-
-function isTextFile(uri) {
-  if (!uri) return false;
-  const lowerUri = uri.toLowerCase();
-  const textExtensions = [
-    ".txt",
-    ".csv",
-    ".json",
-    ".xml",
-    ".log",
-    ".yaml",
-    ".yml",
-  ];
-  return textExtensions.some((ext) => lowerUri.endsWith(ext));
-}
-
-function getFileType(uri) {
-  if (!uri) return "text";
-  const lowerUri = uri.toLowerCase();
-  if (lowerUri.endsWith(".csv")) return "csv";
-  if (lowerUri.endsWith(".json")) return "json";
-  if (lowerUri.endsWith(".xml")) return "xml";
-  if (lowerUri.endsWith(".yaml") || lowerUri.endsWith(".yml")) return "yaml";
-  return "text";
-}
-
-onMounted((to, from) => {
-  if (route.params.id !== "details") {
-    getPackageFiles(PackageFilesUrl);
-  }
+onMounted(() => {
+  fetchFileDetails();
 });
 </script>
 
@@ -150,61 +125,59 @@ onMounted((to, from) => {
     <package-details class="package-details-content" />
 
     <div class="package-viewer">
-      <h3 class="viewer-title">{{ viewerState.type }} Viewer</h3>
-
+      <h3 v-if="isReady" class="viewer-title">File Viewer</h3>
       <div class="viewer-wrapper">
+        <!-- Loading State -->
+        <div v-if="!isReady" class="viewer-message">
+          Loading viewer...
+        </div>
+
         <!-- Timeseries Viewer -->
-        <client-only v-if="viewerState.type === 'timeseries'">
+        <client-only v-else-if="viewerType === 'timeseries'">
           <component :is="TSViewer" v-if="TSViewer" />
           <div v-else class="viewer-message">Loading viewer...</div>
         </client-only>
 
+        <!-- CSV/TSV Viewer -->
+        <div v-else-if="viewerType === 'csv'" class="csv-viewer-container">
+          <CSVViewer
+            v-if="presignedUrl"
+            :src-url="presignedUrl"
+            :file-type="fileType"
+            :rows-per-page="25"
+          />
+        </div>
+
         <!-- Markdown Viewer -->
-        <!-- <div
-          v-else-if="viewerState.type === 'markdown'"
+        <div
+          v-else-if="viewerType === 'markdown'"
           class="markdown-viewer-container"
         >
-          <div v-if="isLoadingContent" class="viewer-message">
-            Loading markdown file...
-          </div>
-          <div
-            v-else-if="contentError"
-            class="viewer-message viewer-message--error"
-          >
-            Error loading file: {{ contentError }}
-          </div>
-          <div v-else class="markdown-viewer">
-            <Markdown :markdownText="fileContent" :disabled="true" />
-          </div>
+          <div v-if="isLoadingContent" class="viewer-message">Loading markdown file...</div>
+          <div v-else-if="contentError" class="viewer-message viewer-message--error">{{ contentError }}</div>
+          <Markdown v-else :markdownText="fileContent" :disabled="true" />
         </div>
--->
+
         <!-- Text/CSV/JSON Viewer -->
-        <!-- <div
-          v-else-if="viewerState.type === 'text'"
+        <div
+          v-else-if="viewerType === 'text'"
           class="text-viewer-container"
         >
-          <div v-if="isLoadingContent" class="viewer-message">
-            Loading text file...
-          </div>
-          <div
-            v-else-if="contentError"
-            class="viewer-message viewer-message--error"
-          >
-            Error loading file: {{ contentError }}
-          </div>
+          <div v-if="isLoadingContent" class="viewer-message">Loading file...</div>
+          <div v-else-if="contentError" class="viewer-message viewer-message--error">{{ contentError }}</div>
           <div v-else class="text-viewer-id">
             <TextViewer
               :content="fileContent"
-              :file-type="viewerState.fileType"
+              :file-type="fileType.toLowerCase()"
               :show-line-numbers="true"
               max-height="70vh"
             />
           </div>
-        </div> -->
+        </div>
 
-        <!-- Status Messages -->
+        <!-- Unsupported -->
         <div v-else class="viewer-message">
-          {{ viewerState.message }}
+          Viewer is not available for this file type.
         </div>
       </div>
     </div>
@@ -215,23 +188,27 @@ onMounted((to, from) => {
 .package-details {
   display: flex;
   flex-direction: column;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 2rem 64px;
 }
 
-.pennsieve-viewer {
-  display: flex;
+.package-details-content {
+  margin-bottom: 48px;
 }
 
 .package-viewer {
-  padding-inline: 2rem;
+  margin-top: 0;
 }
 
 .viewer-title {
   color: $gray_4;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 40px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
+  margin: 0 0 12px;
 }
 
 .viewer-wrapper {
@@ -250,32 +227,13 @@ onMounted((to, from) => {
   }
 }
 
-.markdown-viewer-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-}
-
+.csv-viewer-container,
+.markdown-viewer-container,
 .text-viewer-container {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
 }
 
 .text-viewer-id {
   width: 100%;
-  max-width: 1200px;
-  overflow: auto;
-  border: 1px solid #e1e4e8;
-  border-radius: 8px;
-  padding: 2rem;
-  background-color: #ffffff;
-}
-:deep(.text-viewer__footer) {
-  position: absolute;
 }
 </style>
