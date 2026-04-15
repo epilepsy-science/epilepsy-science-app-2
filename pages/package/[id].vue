@@ -188,16 +188,17 @@ onMounted(() => {
 .package-details {
   display: flex;
   flex-direction: column;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 2rem 64px;
 }
 
 .package-details-content {
-  margin-bottom: 2rem;
+  margin-bottom: 28px;
 }
 
 .package-viewer {
-  padding-inline: 2rem;
-  padding-bottom: 4rem;
-  margin-top: 2rem;
+  margin-top: 0;
 }
 
 .viewer-title {

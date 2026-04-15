@@ -49,14 +49,6 @@ const zipitUrl = computed(() => {
 
 const zipData = ref({})
 
-function formatType(row) {
-  return row.fileType
-}
-
-function formatHeader(row, index) {
-  return "background-color: red;"
-}
-
 function formatStorage(row, column, cellValue) {
   return useFormatMetric(cellValue)
 }
@@ -138,8 +130,7 @@ function downloadFile(event) {
 
 <template>
   <div class="dataset-details">
-    <div class="container-fluid">
-      <div class="row between-mb action-row">
+    <div class="row between-mb action-row">
         <div class="col-xs-8 back-link-col">
           <nuxt-link :to="backToFilesRoute" class="back-link">
             <IconArrowLeft class="back-link-icon" />
@@ -157,81 +148,101 @@ function downloadFile(event) {
         </div>
       </div>
       <div class="package-content">
-<!--        <div class="button-row">-->
-<!--          <h3 class="package-content-title">-->
-<!--            {{headerContent}}-->
-<!--          </h3>-->
-
-
-
-        <div class="file-info">
-          <el-table
-            ref="table"
-            class="table"
-            :data="store.selectedPackage.files"
-            :highlight-current-row="false"
-            border
-            header-row-class-name="header-class"
-          >
-            <el-table-column label="File Name">
-              <template #default="scope">
-                <div class="file-name-container">
-                  <img :src="useFileIcon(scope.row.icon, scope.row.type)" alt="Icon" />
-                  <div class="name">
-                      {{ scope.row.name }}
-                  </div>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column :formatter="formatType" label="Type" />
-            <el-table-column prop="size" label="Size" :formatter="formatStorage" />
-            <el-table-column prop="uri" label="URI" min-width="200px" align="right"/>
-
-          </el-table>
-        </div>
+        <el-table
+          class="table"
+          :data="store.selectedPackage.files"
+          :highlight-current-row="false"
+        >
+          <el-table-column label="File Name">
+            <template #default="scope">
+              <div class="file-name-container">
+                <img :src="useFileIcon(scope.row.icon, scope.row.type)" alt="" />
+                <span class="name">{{ scope.row.name }}</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="fileType" label="Type" width="120" />
+          <el-table-column prop="size" label="Size" :formatter="formatStorage" width="120" />
+          <el-table-column prop="uri" label="URI" min-width="240" />
+        </el-table>
       </div>
-    </div>
-
-
-<!--    <form ref="zipFormRef" id="zipForm" method="POST" :action="downloadFile">-->
-<!--      <input v-model="zipData" type="hidden" name="data" />-->
-<!--    </form>-->
   </div>
 </template>
 
 <style lang="scss" scoped>
+.get-dataset-button {
+  font-weight: 600;
+  line-height: 16px;
+  font-size: 14px;
+  background-color: $purple_3;
 
-.file-info {
-  margin-top: 24px;
+  &:focus {
+    background-color: $purple_3;
+  }
 }
 
 .table {
+  margin-top: 24px;
+
   .file-name-container {
     display: flex;
+    align-items: center;
+    gap: 8px;
 
     img {
-      height: 20px;
-      width: 20px;
-      margin: 2px 5px 0px 0px;
+      height: 18px;
+      width: 18px;
+      flex-shrink: 0;
     }
 
     .name {
-      margin-top: 0px;
+      color: $text-color;
+      word-break: break-word;
     }
   }
 }
 
 :deep(.el-table) {
-  .el-table--border {
-    border: none;
+  width: 100%;
+  table-layout: fixed;
+
+  .el-table__body-wrapper {
+    border: solid 1px $cortex;
+    border-top: none;
   }
+
+  &::before {
+    display: none;
+  }
+
+  th.is-leaf {
+    background-color: $axon;
+    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    border-top: solid 1px $cortex;
+    border-left: solid 1px $cortex;
+
+    &:last-child {
+      border-right: solid 1px $cortex;
+    }
+  }
+
   .el-table__header-wrapper {
     height: 40px;
   }
-}
 
-.dataset-details {
-  margin-top: 24px;
+  td.el-table__cell {
+    border-color: $cortex;
+    border-right: none;
+    font-size: 14px;
+    color: $text-color;
+
+    .cell {
+      word-break: break-all;
+      white-space: normal;
+    }
+  }
 }
 
 .action-row {
@@ -246,32 +257,23 @@ function downloadFile(event) {
 .back-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: #297fca;
+  color: $purple_2;
   font-size: 14px;
   font-weight: 600;
-  line-height: 1;
+  line-height: 16px;
   text-decoration: none;
-  transition: color 0.15s ease;
 
-  &:hover,
-  &:focus-visible {
-    color: #1c5f9b;
-    text-decoration: none;
-
-    .back-link-icon {
-      transform: translateX(-2px);
-    }
+  &:focus {
+    color: $purple_2;
   }
 
   .back-link-icon {
-    height: 14px;
-    width: 14px;
-    color: currentColor;
-    transition: transform 0.15s ease;
+    color: $purple_2;
+    height: 10px;
+    width: 10px;
+    margin-right: 4px;
   }
 }
-
 
 .package-content {
   display: flex;
