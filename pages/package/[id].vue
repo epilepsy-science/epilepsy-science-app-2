@@ -31,6 +31,7 @@ const timeseriesFileTypes = ["MEF", "EDF", "BDF", "NWB"]
 const csvFileTypes = ["CSV", "TSV"]
 const textFileTypes = ["TXT", "JSON", "XML", "LOG", "YAML", "YML"]
 const markdownFileTypes = ["MD", "MARKDOWN"]
+const imageFileTypes = ["PNG", "JPG", "JPEG", "GIF", "SVG", "WEBP", "BMP", "ICO"]
 
 const isReady = computed(() => !isLoading.value && !!fileType.value)
 
@@ -41,6 +42,7 @@ const viewerType = computed(() => {
   if (csvFileTypes.includes(type)) return "csv"
   if (markdownFileTypes.includes(type)) return "markdown"
   if (textFileTypes.includes(type)) return "text"
+  if (imageFileTypes.includes(type)) return "image"
   return "unsupported"
 })
 
@@ -95,7 +97,7 @@ function fetchFileDetails() {
       if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
         loadFileContent(response, datasetId, version);
       }
-      if (csvFileTypes.includes(type)) {
+      if ([...csvFileTypes, ...imageFileTypes].includes(type)) {
         fetchPresignedUrl(response.path, datasetId, version);
       }
     })
@@ -106,7 +108,7 @@ function fetchFileDetails() {
       if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
         loadFileContent(fileData, datasetId, version);
       }
-      if (csvFileTypes.includes(type)) {
+      if ([...csvFileTypes, ...imageFileTypes].includes(type)) {
         fetchPresignedUrl(fileData.path, datasetId, version);
       }
     })
@@ -175,6 +177,20 @@ onMounted(() => {
           </div>
         </div>
 
+        <!-- Image Viewer -->
+        <div
+          v-else-if="viewerType === 'image'"
+          class="image-viewer-container"
+        >
+          <div v-if="!presignedUrl" class="viewer-message">Loading image...</div>
+          <img
+            v-else
+            :src="presignedUrl"
+            :alt="fileType"
+            class="image-viewer"
+          />
+        </div>
+
         <!-- Unsupported -->
         <div v-else class="viewer-message">
           Viewer is not available for this file type.
@@ -229,11 +245,20 @@ onMounted(() => {
 
 .csv-viewer-container,
 .markdown-viewer-container,
-.text-viewer-container {
+.text-viewer-container,
+.image-viewer-container {
   width: 100%;
 }
 
 .text-viewer-id {
   width: 100%;
+}
+
+.image-viewer {
+  display: block;
+  max-width: 100%;
+  max-height: 70vh;
+  margin: 0 auto;
+  object-fit: contain;
 }
 </style>
