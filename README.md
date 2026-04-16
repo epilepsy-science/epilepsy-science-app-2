@@ -46,7 +46,7 @@ export PORTAL_API_HOST=your_host
 This file is not tracked by git. The `dev` script will source it automatically.
 ## Development Server
 
-Start the development server on `http://localhost:3000`:
+Start the development serer on `http://localhost:3000`:
 
 
 ```bash
