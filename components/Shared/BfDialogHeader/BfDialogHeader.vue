@@ -2,7 +2,7 @@
   <div class="bf-dialog-header">
     <span class="bf-dialog-header-title">{{ title }}</span>
     <button v-if="!this.$slots.tabs" class="icon-close-button" @click="onClose">
-      <IconRemove :height="12" :width="12" />
+      <IconRemove :height="16" :width="16" />
     </button>
     <slot name="tabs" />
   </div>
@@ -45,8 +45,18 @@ export default {
     background: none;
     border: none;
     outline: none;
-    padding: 0;
-    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+    color: $gray_4;
+
+    &:hover {
+      background-color: $gray_0;
+      color: $gray_6;
+    }
   }
 }
 .bf-dialog-header-title {

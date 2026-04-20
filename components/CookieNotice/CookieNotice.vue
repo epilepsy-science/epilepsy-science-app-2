@@ -17,7 +17,7 @@
       </div>
       <div class="cookie-notice__actions">
         <el-button type="primary" @click="closeNotice">Accept</el-button>
-        <el-button id="cookie-close-btn" class="btn-close" @click="closeNotice">✕</el-button>
+        <button class="btn-close" @click="closeNotice">✕</button>
       </div>
     </div>
     <accessibility-dialog
@@ -151,16 +151,19 @@ export default {
 }
 
 .btn-close {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  color: $gray_4 !important;
-  font-size: 1rem;
-  padding: 0.25rem !important;
+  background: none;
+  border: none;
+  outline: none;
+  color: $gray_4;
+  font-size: 1.1rem;
+  padding: 10px;
+  border-radius: 50%;
   cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
 
   &:hover {
-    color: $gray_6 !important;
+    background-color: $gray_0;
+    color: $gray_6;
   }
 }
 </style>

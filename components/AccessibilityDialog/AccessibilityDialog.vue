@@ -3,6 +3,7 @@
     v-model="showModal"
     :show-close="false"
     :append-to-body="true"
+    class="accessibility-dialog"
     @close="closeDialog"
   >
     <template #header>
@@ -66,8 +67,12 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-:deep(.el-dialog) {
-  width: 75%;
+<style lang="scss">
+.accessibility-dialog.el-dialog {
+  padding: 32px;
+
+  .el-dialog__header {
+    padding-bottom: 32px
+  }
 }
 </style>
