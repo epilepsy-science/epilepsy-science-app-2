@@ -60,7 +60,4 @@ export const useMainStore = defineStore('main', {
       this.selectedPackage = pkg
     },
   },
-  persist: {
-    storage: persistedState.localStorage,
-  }
 })
