@@ -9,9 +9,9 @@
           </div>
           <p>
             To learn more, please refer to the
-            <nuxt-link to="about/policies-and-standards/privacy-policy">
+            <a href="https://docs.pennsieve.io/docs/privacy-policy" target="_blank" rel="noopener">
               Privacy Policy.
-            </nuxt-link>
+            </a>
             By closing this banner or clicking accept, you agree to the use of
             cookies.
           </p>
