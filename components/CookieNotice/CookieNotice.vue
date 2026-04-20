@@ -1,32 +1,25 @@
 <template>
   <div class="cookie-notice">
-    <div class="container">
-      <div class="cookie-notice__content">
-        <div class="cookie-notice__copy">
-          <div class="heading2">
-            This website uses cookies to ensure that you get the best
-            experience.
-          </div>
-          <p>
-            To learn more, please refer to the
-            <a href="https://docs.pennsieve.io/docs/privacy-policy" target="_blank" rel="noopener">
-              Privacy Policy.
-            </a>
-            By closing this banner or clicking accept, you agree to the use of
-            cookies.
-          </p>
+    <div class="cookie-notice__inner">
+      <div class="cookie-notice__icon">🍪</div>
+      <div class="cookie-notice__copy">
+        <p class="cookie-notice__heading">
+          This website uses cookies to ensure you get the best experience.
+        </p>
+        <p class="cookie-notice__body">
+          By closing this banner or clicking accept, you agree to the use of cookies.
+          <a href="https://docs.pennsieve.io/docs/privacy-policy" target="_blank" rel="noopener">
+            Privacy Policy
+          </a>
+          <span class="cookie-notice__separator">·</span>
           <a href="#" @click.prevent="openAccessibilityDialog">Accessibility Standards</a>
-        </div>
-        <div>
-          <el-button @click="closeNotice">
-            Accept
-          </el-button>
-        </div>
+        </p>
+      </div>
+      <div class="cookie-notice__actions">
+        <el-button type="primary" @click="closeNotice">Accept</el-button>
+        <el-button id="cookie-close-btn" class="btn-close" @click="closeNotice">✕</el-button>
       </div>
     </div>
-    <el-button id="cookie-close-btn" class="btn-close" @click="closeNotice">
-      <svgo-icon-remove class="body4"/>
-    </el-button>
     <accessibility-dialog
       v-model:visible="accessibilityDialogVisible"
       @close="closeAccessibilityDialog"
@@ -79,61 +72,95 @@ export default {
 
 <style lang="scss" scoped>
 .cookie-notice {
-  background: #fff;
+  position: fixed;
   bottom: 0;
-  box-shadow: 0px -2px 8px 0px rgba(0, 0, 0, 0.07);
-  color: $es-primary-color;
   left: 0;
   right: 0;
-  padding: 2rem 0;
-  position: fixed;
   z-index: 10000;
+  background: #fff;
+  color: $gray_6;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
 }
-.cookie-notice__content {
-  max-width: 80%;
-  @media (min-width: 48em) {
-    align-items: center;
-    display: flex;
-    max-width: none;
-    justify-content: space-between;
+
+.cookie-notice__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  @media (max-width: 48em) {
+    flex-wrap: wrap;
   }
 }
+
+.cookie-notice__icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+
+  @media (max-width: 48em) {
+    display: none;
+  }
+}
+
 .cookie-notice__copy {
-  margin-bottom: 1em;
-  @media (min-width: 48em) {
-    margin: 0 1em 0 0;
-    max-width: 53.75em;
+  flex: 1;
+}
+
+.cookie-notice__heading {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+  line-height: 1.3;
+}
+
+.cookie-notice__body {
+  font-size: 0.8rem;
+  margin: 0;
+  line-height: 1.4;
+  opacity: 0.85;
+
+  a {
+    color: $es-primary-color;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
 }
-h2 {
-  font-size: 1.1em;
-  margin: 0;
-  line-height: 1.2;
-  @media (min-width: 48em) {
-    font-size: 1.5em;
+
+.cookie-notice__separator {
+  margin: 0 0.35rem;
+  opacity: 0.5;
+}
+
+.cookie-notice__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+
+  :deep(.el-button--primary) {
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 0.5rem 1.5rem;
   }
 }
-a {
-  font-size: 1em;
-  color: #303133;
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: underline;
-}
-p {
-  font-size: 0.875em;
-  line-height: 1.2;
-  margin: 0;
-}
+
 .btn-close {
   background: none !important;
   border: none !important;
   box-shadow: none !important;
-  padding: 0 !important;
+  color: $gray_4 !important;
+  font-size: 1rem;
+  padding: 0.25rem !important;
   cursor: pointer;
-  position: absolute;
-  right: 1rem;
-  top: 0.25rem;
+
+  &:hover {
+    color: $gray_6 !important;
+  }
 }
 </style>
