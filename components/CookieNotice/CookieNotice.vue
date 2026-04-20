@@ -1,7 +1,6 @@
 <template>
   <div class="cookie-notice">
     <div class="cookie-notice__inner">
-      <div class="cookie-notice__icon">🍪</div>
       <div class="cookie-notice__copy">
         <p class="cookie-notice__heading">
           This website uses cookies to ensure you get the best experience.
@@ -15,10 +14,8 @@
           <a href="#" @click.prevent="openAccessibilityDialog">Accessibility Standards</a>
         </p>
       </div>
-      <div class="cookie-notice__actions">
-        <el-button type="primary" @click="closeNotice">Accept</el-button>
-        <button class="btn-close" @click="closeNotice">✕</button>
-      </div>
+      <el-button type="primary" @click="closeNotice">Accept</el-button>
+      <button class="btn-close" @click="closeNotice">✕</button>
     </div>
     <accessibility-dialog
       v-model:visible="accessibilityDialogVisible"
@@ -79,7 +76,7 @@ export default {
   z-index: 10000;
   background: #fff;
   color: $gray_6;
-  padding: 1rem 1.5rem;
+  padding: 1.5rem 2rem;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -92,15 +89,6 @@ export default {
 
   @media (max-width: 48em) {
     flex-wrap: wrap;
-  }
-}
-
-.cookie-notice__icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
-
-  @media (max-width: 48em) {
-    display: none;
   }
 }
 
@@ -137,17 +125,11 @@ export default {
   opacity: 0.5;
 }
 
-.cookie-notice__actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+:deep(.el-button--primary) {
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.5rem 1.5rem;
   flex-shrink: 0;
-
-  :deep(.el-button--primary) {
-    font-weight: 600;
-    border-radius: 6px;
-    padding: 0.5rem 1.5rem;
-  }
 }
 
 .btn-close {
@@ -159,6 +141,8 @@ export default {
   padding: 10px;
   border-radius: 50%;
   cursor: pointer;
+  margin-left: auto;
+  flex-shrink: 0;
   transition: background-color 0.2s, color 0.2s;
 
   &:hover {
