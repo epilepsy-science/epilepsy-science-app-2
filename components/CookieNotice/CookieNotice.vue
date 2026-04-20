@@ -78,7 +78,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/_variables.scss';
 .cookie-notice {
   background: #fff;
   bottom: 0;

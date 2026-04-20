@@ -96,7 +96,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/_variables.scss';
 .tags-container {
   padding: 0.75rem;
   hr {
