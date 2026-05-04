@@ -124,6 +124,10 @@ export default defineNuxtConfig({
     },
   },
 
+  build: {
+    transpile: ['dayjs'],
+  },
+
   routeRules: {},
 
   hooks: {
