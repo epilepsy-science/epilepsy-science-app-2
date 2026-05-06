@@ -36,7 +36,6 @@
     "isomorphic-dompurify": "^1.9.0",
     "lodash": "^4.17.21",
     "marked": "^8.0.1",
-    "pennsieve-dashboard": "^1.0.0",
     "pennsieve-ui-library": "1.0.6",
     "pennsieve-visualization": "0.6.5",
     "pinia": "^3.0.4",
