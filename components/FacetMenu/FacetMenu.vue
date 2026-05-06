@@ -49,7 +49,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/_variables.scss';
 .white-background {
   background-color: white;
   border: 1px solid $lineColor2;

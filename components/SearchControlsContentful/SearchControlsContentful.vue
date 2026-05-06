@@ -66,7 +66,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/_variables.scss';
 .search-form {
   display: flex;
   min-width: 275px;

@@ -3,18 +3,17 @@
     v-model="showModal"
     :show-close="false"
     :append-to-body="true"
+    class="accessibility-dialog"
     @close="closeDialog"
   >
     <template #header>
-      <div class="bf-dialog-header">
-        <span class="bf-dialog-header-title">Accessibility Standards</span>
-      </div>
+      <bf-dialog-header title="Accessibility Standards" @close="closeDialog" />
     </template>
 
     <div class="bf-dialog-body">
       <div>
         <p>
-          The SPARC Portal is partially conformant with 
+          The Epilepsy.Science is partially conformant with 
           <a
             href="https://www.w3.org/WAI/standards-guidelines/wcag/"
             alt="WCAG Guidelines"
@@ -25,9 +24,9 @@
           do not fully conform to the accessibility standard.
         </p>
         <p>
-          We welcome your feedback on the accessibility of SPARC Portal.
-          Please let us know if you encounter accessibility barriers on SPARC
-          Portal:
+          We welcome your feedback on the accessibility of Epilepsy.Science.
+          Please let us know if you encounter accessibility barriers on
+          Epilepsy.Science:
         </p>
         <ul>
           <li>
@@ -38,14 +37,6 @@
         <p>We try to respond to feedback within 3-5 business days.</p>
       </div>
     </div>
-
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button class="secondary" @click="closeDialog">
-          Close
-        </el-button>
-      </div>
-    </template>
   </el-dialog>
 </template>
 
@@ -76,14 +67,12 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-:deep(.el-dialog) {
-  width: 75%;
-}
-.bf-dialog-header {
-  text-align: center;
-}
-.dialog-footer {
-  justify-content: center;
+<style lang="scss">
+.accessibility-dialog.el-dialog {
+  padding: 32px;
+
+  .el-dialog__header {
+    padding-bottom: 32px
+  }
 }
 </style>

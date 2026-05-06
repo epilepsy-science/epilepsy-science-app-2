@@ -28,7 +28,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/_variables.scss';
 
 .page-hero {
   background: #264653;

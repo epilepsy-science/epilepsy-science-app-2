@@ -10,7 +10,7 @@
       <div class="cta-buttons">
         <!-- TODO: hiding this button as there is no specific function attached to it at the moment, added it to match with the designs -->
         <!-- <el-button type="default" class="cta-button">{{ contentData.redirectLink1Text }}</el-button> -->
-        <el-link :underline="false" :href="contentData.redirectLink2Url" class="cta-link">
+        <el-link underline="hover" :href="contentData.redirectLink2Url" class="cta-link">
           {{ contentData.redirectLink2Text ? contentData.redirectLink2Text+' >': ''}}
         </el-link>
       </div>
@@ -86,12 +86,6 @@ const props = defineProps({
 
       .cta-link {
         width: 100%;
-
-        &:hover,
-        &:focus {
-          color: #0066cc;
-          text-decoration: underline;
-        }
       }
 
       .cta-button,
