@@ -87,7 +87,6 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    "@element-plus/nuxt",
     "nuxt-svgo",
     "@pinia/nuxt",
     "@nuxtjs/sitemap",
