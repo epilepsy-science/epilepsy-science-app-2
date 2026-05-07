@@ -1,8 +1,10 @@
 <template>
   <div class="dashboard-page">
-    <client-only>
-      <PennsieveDashboard :options="dashboardOptions" />
-    </client-only>
+    <div class="dashboard-container">
+      <client-only>
+        <PennsieveDashboard :options="dashboardOptions" />
+      </client-only>
+    </div>
   </div>
 </template>
 
@@ -75,11 +77,22 @@ const defaultLayout = computed(() => [
 const dashboardOptions = computed(() => ({
   availableWidgets,
   defaultLayout: defaultLayout.value,
+  hideEditGrid: true,
 }))
 </script>
 
 <style scoped lang="scss">
 .dashboard-page {
-  padding: 20px;
+  background-color: #eef3f8;
+  min-height: calc(100vh - 140px);
+  padding: 40px;
+
+  .dashboard-container {
+    background-color: #fff;
+    border-radius: 12px;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 24px;
+  }
 }
 </style>
