@@ -1078,6 +1078,14 @@
   dependencies:
     apache-arrow "^17.0.0"
 
+"@duckdb/duckdb-wasm@^1.33.1-dev45.0":
+  version "1.33.1-dev45.0"
+  resolved "https://registry.yarnpkg.com/@duckdb/duckdb-wasm/-/duckdb-wasm-1.33.1-dev45.0.tgz#2bc0283d14da0b160a3da1fd0db3195e2ca08874"
+  integrity sha512-ETlrjhiGQzNdaOhpro/Y9u/RCcK+iyuczLy7uOn0kG5Mqlj8C+gTuhBXjs4JpK9ocdUgr3oT8zYYIbUnFD9AYA==
+  dependencies:
+    apache-arrow "^17.0.0"
+    qs "^6.14.1"
+
 "@dxup/nuxt@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@dxup/nuxt/-/nuxt-0.4.0.tgz#39069916f179c871521ee8c94a21c0cc219953d6"
@@ -6954,7 +6962,7 @@ punycode@^2.1.1, punycode@^2.3.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
 
-qs@^6.11.2:
+qs@^6.11.2, qs@^6.14.1:
   version "6.15.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.15.1.tgz#bdb55aed06bfac257a90c44a446a73fba5575c8f"
   integrity sha512-6YHEFRL9mfgcAvql/XhwTvf5jKcOiiupt2FiJxHkiX1z4j7WL8J/jRHYLluORvc1XxB5rV20KoeK00gVJamspg==

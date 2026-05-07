@@ -116,7 +116,7 @@ export default defineNuxtConfig({
       dedupe: ["vue"],
     },
     optimizeDeps: {
-      exclude: ["tsviewer"],
+      exclude: ["tsviewer", "@duckdb/duckdb-wasm"],
     },
     ssr: {
       noExternal: ["tsviewer"],

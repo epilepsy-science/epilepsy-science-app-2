@@ -9,7 +9,7 @@
 <script setup>
 import { PennsieveDashboard, TextWidget, MarkdownWidget } from 'pennsieve-dashboard'
 import 'pennsieve-dashboard/style.css'
-import { markRaw, computed } from 'vue'
+import { markRaw, computed, ref, onMounted } from 'vue'
 import { useMainStore } from '~/store/index'
 
 const pageStore = useMainStore()
@@ -21,6 +21,26 @@ const formattedTotalSize = computed(() => {
     return useFormatMetric(stats.value.totalDatasetSize)
   }
   return stats.value.totalDatasetSize
+})
+
+const patientStats = ref({ total: '-' })
+
+async function fetchPatientStats() {
+  const { queryRaw, table } = useDuckDB()
+  const results = await queryRaw(`
+    SELECT
+      COUNT(DISTINCT person_id) AS total
+    FROM ${table('pennepi_person.parquet')}
+  `)
+  if (results.length > 0) {
+    patientStats.value = {
+      total: String(results[0].total),
+    }
+  }
+}
+
+onMounted(() => {
+  fetchPatientStats()
 })
 
 const availableWidgets = [
@@ -44,18 +64,11 @@ const defaultLayout = computed(() => [
     Props: { displayText: formattedTotalSize.value },
   },
   {
-    x: 6, y: 0, w: 6, h: 4,
-    id: 'intro',
-    component: markRaw(MarkdownWidget),
-    componentName: 'Epilepsy.Science',
-    Props: { markdownText: '## Epilepsy.Science\nAims to transform epilepsy research around the world by making data available to scientists.' },
-  },
-  {
-    x: 0, y: 4, w: 6, h: 4,
-    id: 'markdown-1',
-    component: markRaw(MarkdownWidget),
-    componentName: 'About',
-    Props: { markdownText: '## About\nUse this dashboard to organize and visualize your research data.' },
+    x: 0, y: 4, w: 4, h: 4,
+    id: 'stats-patients',
+    component: markRaw(TextWidget),
+    componentName: 'Unique Patients',
+    Props: { displayText: patientStats.value.total },
   },
 ])
 
