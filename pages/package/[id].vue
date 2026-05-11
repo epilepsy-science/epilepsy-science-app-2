@@ -7,12 +7,14 @@ import "@pennsieve-viz/core/style.css";
 // Dynamic imports for browser-only tsviewer
 const TSViewer = shallowRef(null);
 const viewerStore = shallowRef(null);
+const tsViewerReady = ref(false);
+const tsViewerError = ref("");
 
 if (import.meta.client) {
-  import("tsviewer/style");
-  import("tsviewer").then((module) => {
+  import("@pennsieve-viz/tsviewer/style.css");
+  import("@pennsieve-viz/tsviewer").then((module) => {
     TSViewer.value = module.TSViewer;
-    viewerStore.value = module.useViewerStore();
+    viewerStore.value = module.createViewerStore("package-viewer");
   });
 }
 
@@ -71,6 +73,22 @@ async function loadFileContent(file, datasetId, version) {
   }
 }
 
+async function initTimeseriesViewer(sourcePackageId) {
+  if (!viewerStore.value || !sourcePackageId) return;
+  tsViewerError.value = "";
+  try {
+    viewerStore.value.setViewerConfig({
+      timeseriesDiscoverApi: "wss://api.pennsieve.io/timeseries",
+      apiUrl: "https://api.pennsieve.io",
+    });
+    await viewerStore.value.fetchAndSetActiveViewer({ packageId: sourcePackageId });
+    tsViewerReady.value = true;
+  } catch (error) {
+    console.error("Failed to initialize timeseries viewer:", error);
+    tsViewerError.value = "Failed to load timeseries viewer. The data source may be unavailable.";
+  }
+}
+
 function fetchFileDetails() {
   const selectedPackage = store.selectedPackage;
   if (!selectedPackage || !selectedPackage.files || selectedPackage.files.length === 0) {
@@ -100,6 +118,9 @@ function fetchFileDetails() {
       if ([...csvFileTypes, ...imageFileTypes].includes(type)) {
         fetchPresignedUrl(response.path, datasetId, version);
       }
+      if (timeseriesFileTypes.includes(type)) {
+        initTimeseriesViewer(response.sourcePackageId);
+      }
     })
     .catch(() => {
       fileType.value = fileData.fileType || "";
@@ -110,6 +131,9 @@ function fetchFileDetails() {
       }
       if ([...csvFileTypes, ...imageFileTypes].includes(type)) {
         fetchPresignedUrl(fileData.path, datasetId, version);
+      }
+      if (timeseriesFileTypes.includes(type)) {
+        initTimeseriesViewer(fileData.sourcePackageId);
       }
     })
     .finally(() => {
@@ -136,7 +160,8 @@ onMounted(() => {
 
         <!-- Timeseries Viewer -->
         <client-only v-else-if="viewerType === 'timeseries'">
-          <component :is="TSViewer" v-if="TSViewer" />
+          <component :is="TSViewer" v-if="TSViewer && tsViewerReady" instance-id="package-viewer" />
+          <div v-else-if="tsViewerError" class="viewer-message viewer-message--error">{{ tsViewerError }}</div>
           <div v-else class="viewer-message">Loading viewer...</div>
         </client-only>
 

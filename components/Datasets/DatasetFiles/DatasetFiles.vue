@@ -263,6 +263,21 @@ function getRouteParams(data) {
     params: { id: fileId } }
 }
 
+const timeseriesFileTypes = ["MEF", "EDF", "BDF", "NWB"]
+
+function isTimeseriesDirectory(row) {
+  const type = (row.type || '').toLowerCase()
+  if (type !== 'directory' && type !== 'folder') return false
+  if (!row.sourcePackageId) return false
+  const properties = (row.properties || '').toUpperCase()
+  return timeseriesFileTypes.some(ft => properties.includes(ft))
+}
+
+function handleTimeseriesDirectoryClick(row) {
+  setPackage(row)
+  navigateTo(getRouteParams(row))
+}
+
 
 
 
@@ -324,7 +339,12 @@ function getRouteParams(data) {
       <el-table-column label="File Name">
         <template #default="scope">
           <div class="file-name-container">
-            <img :src="useFileIcon(scope.row.icon, scope.row.type)" alt="Icon" />
+            <img
+              :src="useFileIcon(scope.row.icon, scope.row.type)"
+              alt="Icon"
+              :class="{ 'clickable-icon': isTimeseriesDirectory(scope.row) }"
+              @click="isTimeseriesDirectory(scope.row) && handleTimeseriesDirectoryClick(scope.row)"
+            />
             <div v-if="formatType(scope.row) === 'Folder'" class="name">
               <ClientOnly>
                 <a
@@ -575,6 +595,16 @@ function getRouteParams(data) {
         height: 20px;
         width: 20px;
         margin: 2px 5px 0 0;
+
+        &.clickable-icon {
+          cursor: pointer;
+          border-radius: 3px;
+          transition: background-color 0.15s;
+
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.08);
+          }
+        }
       }
 
       .name {

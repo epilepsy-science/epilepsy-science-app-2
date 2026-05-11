@@ -21,9 +21,9 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "@element-plus/nuxt": "^1.0.6",
     "@nuxtjs/sitemap": "^5.1.4",
     "@pennsieve-viz/core": "^0.3.1",
+    "@pennsieve-viz/tsviewer": "^1.1.12",
     "@pinia/nuxt": "^0.11.0",
     "algoliasearch": "^4.19.1",
     "aws-amplify": "^6.6.7",
@@ -40,7 +40,6 @@
     "pennsieve-visualization": "0.6.5",
     "pinia": "^3.0.4",
     "ramda": "^0.29.0",
-    "tsviewer": "1.0.35",
     "vue-chartjs": "^5.3.0",
     "vue-recaptcha-v3": "^2.0.1",
     "vue-social-sharing": "^4.0.0-alpha4"

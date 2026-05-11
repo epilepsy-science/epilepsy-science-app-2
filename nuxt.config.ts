@@ -87,7 +87,6 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    "@element-plus/nuxt",
     "nuxt-svgo",
     "@pinia/nuxt",
     "@nuxtjs/sitemap",
@@ -117,10 +116,10 @@ export default defineNuxtConfig({
       dedupe: ["vue"],
     },
     optimizeDeps: {
-      exclude: ["tsviewer"],
+      exclude: ["@pennsieve-viz/tsviewer"],
     },
     ssr: {
-      noExternal: ["tsviewer"],
+      noExternal: ["@pennsieve-viz/tsviewer"],
     },
   },
 
