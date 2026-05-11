@@ -15,8 +15,8 @@
           <li><nuxt-link to="/data?type=dataset">Data</nuxt-link></li>
           <li><nuxt-link to="/projects">Projects</nuxt-link></li>
           <li><nuxt-link to="/dashboard">Dashboard</nuxt-link></li>
-          <li><a href="https://cde.epilepsy.science" target="_blank" rel="noopener">CDE's</a></li>
           <li><nuxt-link to="/about">About</nuxt-link></li>
+          <li><a class="cde-link" href="https://cde.epilepsy.science" target="_blank" rel="noopener"><strong>CDE's</strong> <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-left: 2px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></li>
         </ul>
       </nav>
     </div>
@@ -115,6 +115,22 @@ onBeforeUnmount(() => {
     width: 0;
     background-color: #297FCA;
     transition: width 0.4s ease;
+  }
+}
+
+.header-nav a.cde-link {
+  background-color: #297fca;
+  color: #ffffff;
+  border-radius: 4px;
+  text-transform: none;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: #ffffff;
+    background-color: #1a5a9e;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(41, 127, 202, 0.4);
   }
 }
 
