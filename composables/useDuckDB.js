@@ -29,11 +29,7 @@ async function initDB() {
   return initPromise
 }
 
-const PARQUET_BASE = '/data/penn_cnt_records'
-
-function getBaseUrl() {
-  return window.location.origin
-}
+const PARQUET_BASE = 'https://epilepsy-parquet-metadata.s3.us-east-1.amazonaws.com'
 
 export function useDuckDB() {
   /**
@@ -71,7 +67,7 @@ export function useDuckDB() {
    * @returns {string} - e.g. "read_parquet('/data/penn_cnt_records/pennepi_person.parquet')"
    */
   function table(filename) {
-    return `read_parquet('${getBaseUrl()}${PARQUET_BASE}/${filename}')`
+    return `read_parquet('${PARQUET_BASE}/${filename}')`
   }
 
   /**
