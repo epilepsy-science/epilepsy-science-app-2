@@ -16,7 +16,7 @@
           <li><nuxt-link to="/projects">Projects</nuxt-link></li>
           <li><nuxt-link to="/dashboard">Dashboard</nuxt-link></li>
           <li><nuxt-link to="/about">About</nuxt-link></li>
-          <li><a class="cde-link" href="https://cde.epilepsy.science" target="_blank" rel="noopener"><strong>CDE's</strong> <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-left: 2px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></li>
+          <li><a class="cde-link" href="https://cde.epilepsy.science" target="_blank" rel="noopener"><strong>CDE's</strong> <el-icon :size="12" style="vertical-align: middle; margin-left: 2px;"><TopRight /></el-icon></a></li>
         </ul>
       </nav>
     </div>
@@ -25,6 +25,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { TopRight } from "@element-plus/icons-vue";
 
 const menuOpen = ref(false);
 const windowWidth = ref(typeof window !== "undefined" ? window.innerWidth : 0);
