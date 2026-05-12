@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { PennsieveDashboard, TextWidget, MarkdownWidget } from 'pennsieve-dashboard'
+import { PennsieveDashboard, TextWidget } from 'pennsieve-dashboard'
 import 'pennsieve-dashboard/style.css'
 import { markRaw, computed, ref, onMounted } from 'vue'
 import { useMainStore } from '~/store/index'
@@ -47,7 +47,6 @@ onMounted(() => {
 
 const availableWidgets = [
   { name: 'TextWidget', component: markRaw(TextWidget) },
-  { name: 'MarkdownWidget', component: markRaw(MarkdownWidget) },
 ]
 
 const defaultLayout = computed(() => [
