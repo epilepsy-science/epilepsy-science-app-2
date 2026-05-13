@@ -263,24 +263,20 @@ function getRouteParams(data) {
     params: { id: fileId } }
 }
 
-const timeseriesFileTypes = ["MEF", "EDF", "BDF", "NWB"]
-
 function isTimeseriesDirectory(row) {
   const type = (row.type || '').toLowerCase()
   if (type !== 'directory' && type !== 'folder') return false
-  if (!row.sourcePackageId) return false
-  const properties = (row.properties || '').toUpperCase()
-  return timeseriesFileTypes.some(ft => properties.includes(ft))
+  const path = (row.path || row.name || '').toLowerCase()
+  return path.includes('ieeg-mef')
 }
 
 function handleTimeseriesDirectoryClick(row) {
-  setPackage(row)
-  navigateTo(getRouteParams(row))
+  // TODO: remove mock sourcePackageId once the API returns it
+  const mockSourcePackageId = row.sourcePackageId || 'N:package:mock-timeseries-id'
+  const packageData = { ...row, sourcePackageId: mockSourcePackageId, fileType: 'MEF' }
+  setPackage(packageData)
+  navigateTo({ name: 'package-id', params: { id: mockSourcePackageId } })
 }
-
-
-
-
 </script>
 
 <template>
