@@ -57,7 +57,7 @@ async function fetchPresignedUrl(filePath, datasetId, version) {
     });
     presignedUrl.value = response?.data?.[0]?.url || "";
   } catch {
-    // presignedUrl stays empty; CSVViewer won't render
+    // presignedUrl stays empty; viewer won't render
   }
 }
 
@@ -89,56 +89,41 @@ async function initTimeseriesViewer(sourcePackageId) {
   }
 }
 
-function fetchFileDetails() {
+function processFileData(fileData, datasetId, version) {
+  fileType.value = fileData.fileType || "";
+  fileUri.value = fileData.uri || "";
+  const type = fileType.value.toUpperCase();
+  if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
+    loadFileContent(fileData, datasetId, version);
+  }
+  if ([...csvFileTypes, ...imageFileTypes].includes(type)) {
+    fetchPresignedUrl(fileData.path, datasetId, version);
+  }
+  if (timeseriesFileTypes.includes(type)) {
+    initTimeseriesViewer(fileData.sourcePackageId);
+  }
+}
+
+async function fetchFileDetails() {
   const selectedPackage = store.selectedPackage;
-  if (!selectedPackage || !selectedPackage.files || selectedPackage.files.length === 0) {
+  if (!selectedPackage?.files?.length) {
     isLoading.value = false;
     return;
   }
 
   const fileData = selectedPackage.files[0];
   const { datasetId, version } = selectedPackage;
-  const filePath = fileData.path;
+  const fileDetailUrl = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files?path=${encodeURIComponent(fileData.path)}`;
 
-  const fileDetailUrl = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files?path=${encodeURIComponent(filePath)}`;
-
-  useSendXhr(fileDetailUrl, { method: "GET" })
-    .then((response) => {
-      fileType.value = response.fileType || "";
-      fileUri.value = response.uri || "";
-      store.setSelectedPackage({
-        datasetId,
-        version,
-        files: [response],
-      });
-      const type = (response.fileType || "").toUpperCase();
-      if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
-        loadFileContent(response, datasetId, version);
-      }
-      if ([...csvFileTypes, ...imageFileTypes].includes(type)) {
-        fetchPresignedUrl(response.path, datasetId, version);
-      }
-      if (timeseriesFileTypes.includes(type)) {
-        initTimeseriesViewer(response.sourcePackageId);
-      }
-    })
-    .catch(() => {
-      fileType.value = fileData.fileType || "";
-      fileUri.value = fileData.uri || "";
-      const type = (fileData.fileType || "").toUpperCase();
-      if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
-        loadFileContent(fileData, datasetId, version);
-      }
-      if ([...csvFileTypes, ...imageFileTypes].includes(type)) {
-        fetchPresignedUrl(fileData.path, datasetId, version);
-      }
-      if (timeseriesFileTypes.includes(type)) {
-        initTimeseriesViewer(fileData.sourcePackageId);
-      }
-    })
-    .finally(() => {
-      isLoading.value = false;
-    });
+  try {
+    const response = await useSendXhr(fileDetailUrl, { method: "GET" });
+    store.setSelectedPackage({ datasetId, version, files: [response] });
+    processFileData(response, datasetId, version);
+  } catch {
+    processFileData(fileData, datasetId, version);
+  } finally {
+    isLoading.value = false;
+  }
 }
 
 onMounted(() => {
