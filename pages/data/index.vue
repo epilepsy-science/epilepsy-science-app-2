@@ -112,7 +112,7 @@ export default {
     const config = useRuntimeConfig()
     const route = useRoute()
     const { $algoliaClient } = useNuxtApp()
-    const algoliaIndex = await $algoliaClient.initIndex(config.public.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC)
+    const algoliaIndex = await $algoliaClient.initIndex(config.public.ALGOLIA_INDEX)
 
     const searchType = searchTypes.find(searchType => {
       return searchType.type == route.query.type

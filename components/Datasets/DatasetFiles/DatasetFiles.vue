@@ -271,11 +271,9 @@ function isTimeseriesDirectory(row) {
 }
 
 function handleTimeseriesDirectoryClick(row) {
-  // TODO: remove mock sourcePackageId once the API returns it
-  const mockSourcePackageId = row.sourcePackageId || 'N:package:mock-timeseries-id'
-  const packageData = { ...row, sourcePackageId: mockSourcePackageId, fileType: 'MEF' }
+  const packageData = { ...row, fileType: 'MEF' }
   setPackage(packageData)
-  navigateTo({ name: 'package-id', params: { id: mockSourcePackageId } })
+  navigateTo({ name: 'package-id', params: { id: row.sourcePackageId } })
 }
 </script>
 
