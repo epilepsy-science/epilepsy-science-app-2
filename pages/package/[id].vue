@@ -19,6 +19,7 @@ if (import.meta.client) {
 }
 
 const runtimeConfig = useRuntimeConfig();
+const route = useRoute();
 const store = useMainStore();
 const fileType = ref("");
 const fileUri = ref("");
@@ -100,27 +101,60 @@ function processFileData(fileData, datasetId, version) {
     fetchPresignedUrl(fileData.path, datasetId, version);
   }
   if (timeseriesFileTypes.includes(type)) {
-    initTimeseriesViewer(fileData.sourcePackageId);
+    initTimeseriesViewer(fileData.sourcePackageId || route.params.id);
   }
+}
+
+async function fetchFromSourcePackageId(sourcePackageId, datasetId, version) {
+  const url = `${runtimeConfig.public.discover_api_host}/packages/${sourcePackageId}/files`;
+  const response = await useSendXhr(url, { method: "GET" });
+  const files = response.files || [];
+  store.setSelectedPackage({ datasetId, version, files });
+  if (files.length > 0) {
+    processFileData(files[0], datasetId, version);
+  }
+}
+
+async function fetchFromPath(datasetId, version, path) {
+  const url = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files?path=${encodeURIComponent(path)}`;
+  const response = await useSendXhr(url, { method: "GET" });
+  store.setSelectedPackage({ datasetId, version, files: [response] });
+  processFileData(response, datasetId, version);
 }
 
 async function fetchFileDetails() {
   const selectedPackage = store.selectedPackage;
-  if (!selectedPackage?.files?.length) {
-    isLoading.value = false;
-    return;
-  }
-
-  const fileData = selectedPackage.files[0];
-  const { datasetId, version } = selectedPackage;
-  const fileDetailUrl = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files?path=${encodeURIComponent(fileData.path)}`;
+  const datasetId = Number(selectedPackage?.datasetId || route.query.datasetId);
+  const version = Number(selectedPackage?.version || route.query.version);
+  const path = selectedPackage?.files?.[0]?.path || route.query.path;
+  const sourcePackageId = route.params.id;
 
   try {
-    const response = await useSendXhr(fileDetailUrl, { method: "GET" });
-    store.setSelectedPackage({ datasetId, version, files: [response] });
-    processFileData(response, datasetId, version);
-  } catch {
-    processFileData(fileData, datasetId, version);
+    if (selectedPackage?.files?.length) {
+      // Store has data (normal navigation)
+      const fileData = selectedPackage.files[0];
+      const existingType = (fileData.fileType || "").toUpperCase();
+      if (timeseriesFileTypes.includes(existingType)) {
+        processFileData(fileData, datasetId, version);
+      } else {
+        try {
+          await fetchFromPath(datasetId, version, path);
+        } catch {
+          processFileData(fileData, datasetId, version);
+        }
+      }
+    } else {
+      // Store is empty (page reload) — try sourcePackageId, fall back to path
+      try {
+        await fetchFromSourcePackageId(sourcePackageId, datasetId, version);
+      } catch {
+        if (datasetId && version && path) {
+          await fetchFromPath(datasetId, version, path);
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Failed to fetch package details:", error);
   } finally {
     isLoading.value = false;
   }

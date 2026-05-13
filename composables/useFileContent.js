@@ -27,6 +27,7 @@ export const useFileContent = () => {
           paths: [filePath],
           datasetId: datasetId,
           version: version,
+          userToken: "",
         },
       };
 
