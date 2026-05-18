@@ -268,15 +268,6 @@ function handleTimeseriesDirectoryClick(row) {
 
 <template>
   <div class="dataset-files">
-    <h3>Files</h3>
-    <p v-if="isEmbargoed && isLoggedin" class="dataset-files__message">
-      This dataset is currently under embargo. Files are only visible to those
-      with access to this dataset.
-    </p>
-    <p v-else-if="isEmbargoed" class="dataset-files__message">
-      This dataset is currently under embargo. Files will be made publicly
-      available on {{ embargoedReleaseDate }}.
-    </p>
     <dataset-files-header
       v-if="!isEmbargoed"
       :total-file-count="totalFileCount"
