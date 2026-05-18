@@ -166,6 +166,8 @@ export default defineNuxtConfig({
         process.env.USER_POOL_WEB_CLIENT_ID || "703lm5d8odccu21pagcfjkeaea",
       masterUserName: process.env.MASTERUSER_USERNAME,
       masterUserPW: process.env.MASTERUSER_PASSWORD,
+      pennsieve_api_host: process.env.PENNSIEVE_API_HOST || "https://api.pennsieve.io",
+      packages_api_host: process.env.PACKAGES_API_HOST || "https://api2.pennsieve.io/packages",
     },
   },
 

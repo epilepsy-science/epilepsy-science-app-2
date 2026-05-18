@@ -10,9 +10,10 @@ const viewerStore = shallowRef(null);
 const tsViewerReady = ref(false);
 const tsViewerError = ref("");
 
+let tsViewerLoaded = Promise.resolve();
 if (import.meta.client) {
   import("@pennsieve-viz/tsviewer/style.css");
-  import("@pennsieve-viz/tsviewer").then((module) => {
+  tsViewerLoaded = import("@pennsieve-viz/tsviewer").then((module) => {
     TSViewer.value = module.TSViewer;
     viewerStore.value = module.createViewerStore("package-viewer");
   });
@@ -49,6 +50,16 @@ const viewerType = computed(() => {
   return "unsupported"
 })
 
+async function fetchViewerAssets(sourcePackageId) {
+  const url = `${runtimeConfig.public.packages_api_host}/discover/assets?package_id=${encodeURIComponent(sourcePackageId)}`;
+  try {
+    const response = await useSendXhr(url, { method: "GET" });
+    return response?.assets || [];
+  } catch {
+    return [];
+  }
+}
+
 async function fetchPresignedUrl(filePath, datasetId, version) {
   const manifestUrl = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files/download-manifest`;
   try {
@@ -74,15 +85,22 @@ async function loadFileContent(file, datasetId, version) {
   }
 }
 
-async function initTimeseriesViewer(sourcePackageId) {
-  if (!viewerStore.value || !sourcePackageId) return;
+async function initTimeseriesViewer(sourcePackageId, assetId) {
+  if (!sourcePackageId && !assetId) return;
+  await tsViewerLoaded;
+  if (!viewerStore.value) return;
   tsViewerError.value = "";
   try {
+    const apiHost = runtimeConfig.public.pennsieve_api_host;
+    const wsHost = apiHost.replace(/^https?:\/\//, "wss://");
     viewerStore.value.setViewerConfig({
-      timeseriesDiscoverApi: "wss://api.pennsieve.io/timeseries",
-      apiUrl: "https://api.pennsieve.io",
+      timeseriesDiscoverApi: `${wsHost}/streaming/discover/ts/query`,
+      apiUrl: apiHost,
     });
-    await viewerStore.value.fetchAndSetActiveViewer({ packageId: sourcePackageId });
+    const viewerParams = assetId
+      ? { viewerAssetId: assetId }
+      : { packageId: sourcePackageId };
+    await viewerStore.value.fetchAndSetActiveViewer(viewerParams);
     tsViewerReady.value = true;
   } catch (error) {
     console.error("Failed to initialize timeseries viewer:", error);
@@ -101,7 +119,12 @@ function processFileData(fileData, datasetId, version) {
     fetchPresignedUrl(fileData.path, datasetId, version);
   }
   if (timeseriesFileTypes.includes(type)) {
-    initTimeseriesViewer(fileData.sourcePackageId || route.params.id);
+    const sourcePackageId = fileData.sourcePackageId || route.params.id;
+    fetchViewerAssets(sourcePackageId).then((assets) => {
+      const assetId = assets.length > 0 ? assets[0].id : undefined;
+      console.log('asset id is' , assetId)
+      initTimeseriesViewer(sourcePackageId, assetId);
+    });
   }
 }
 
