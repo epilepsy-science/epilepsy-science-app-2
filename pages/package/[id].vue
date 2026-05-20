@@ -98,7 +98,7 @@ async function initTimeseriesViewer(sourcePackageId, assetId) {
       apiUrl: apiHost,
     });
     const viewerParams = assetId
-      ? { viewerAssetId: assetId }
+      ? { viewerAssetId: assetId, packageId: sourcePackageId }
       : { packageId: sourcePackageId };
     await viewerStore.value.fetchAndSetActiveViewer(viewerParams);
     tsViewerReady.value = true;
@@ -202,7 +202,7 @@ onMounted(() => {
 
         <!-- Timeseries Viewer -->
         <client-only v-else-if="viewerType === 'timeseries'">
-          <component :is="TSViewer" v-if="TSViewer && tsViewerReady" instance-id="package-viewer" />
+          <component :is="TSViewer" v-if="TSViewer && tsViewerReady" instance-id="package-viewer" style="min-height: 100vh;" />
           <div v-else-if="tsViewerError" class="viewer-message viewer-message--error">{{ tsViewerError }}</div>
           <div v-else class="viewer-message">Loading viewer...</div>
         </client-only>
