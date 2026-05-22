@@ -3,6 +3,8 @@
 import {compose, head, propOr} from "ramda";
 
 import BfButton from '~/components/Shared/BfButton/BfButton.vue'
+import { CopyDocument } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 
 
 const runtimeConfig = useRuntimeConfig()
@@ -39,7 +41,7 @@ const isDatasetSizeLarge = computed(() => {
  * @returns {String}
  */
 const width = computed(() => {
-  return isDatasetSizeLarge.value ? '490px' : '772px'
+  return isDatasetSizeLarge.value ? '540px' : '772px'
 })
 
 /**
@@ -66,6 +68,43 @@ const version = computed(() => {
 const datasetArn = computed(() => {
   return propOr('', 'uri', props.datasetDetails)
 })
+
+/**
+ * Computes the S3 URI from the dataset ARN
+ * @returns {String}
+ */
+const s3Uri = computed(() => {
+  const uri = datasetArn.value
+  if (!uri) return ''
+  // Convert arn:aws:s3:::bucket/path to s3://bucket/path
+  const arnPrefix = 'arn:aws:s3:::'
+  if (uri.startsWith(arnPrefix)) {
+    return `s3://${uri.slice(arnPrefix.length)}`
+  }
+  // If already an s3:// URI
+  if (uri.startsWith('s3://')) {
+    return uri
+  }
+  return uri
+})
+
+const exploreCommand = computed(() => {
+  return `aws s3 ls --no-sign-request ${s3Uri.value}`
+})
+
+const downloadCommand = computed(() => {
+  return `aws s3 cp --no-sign-request ${s3Uri.value} . --recursive`
+})
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    ElMessage({
+      message: 'Copied to clipboard.',
+      type: 'success',
+      duration: 3000
+    })
+  })
+}
 
 
 /**
@@ -201,27 +240,35 @@ function openRehydrationModal() {
               class="close-icon"
             />
           </button>
-          <h1>Download from AWS</h1>
+          <h1>AWS Open Data</h1>
           <p>
-            Raw files and metadata are stored in an AWS S3 Requester Pays
-            bucket. You can learn more about
-            <a
-              href="https://docs.pennsieve.io/docs/downloading-a-public-dataset"
-              target="_blank"
-            >
-              downloading data from AWS
-            </a>
-            in the Help Center.
+            Access data directly from the registry of
+            <a href="https://registry.opendata.aws/" target="_blank">open data on AWS</a>,
+            free of charge using the
+            <a href="https://aws.amazon.com/cli/" target="_blank">AWS CLI</a>.
+            No AWS account required.
           </p>
-          <h2>Resource Type</h2>
-          <p>Amazon S3 Bucket (Requester Pays)</p>
-          <h2>Amazon S3 Bucket</h2>
-          <div class="text-block">
-            {{ datasetArn }}
+          <div class="aws-cli-section">
+            <div class="aws-cli-label">Explore this dataset:</div>
+              <div class="text-block">
+                <span class="cli-command">{{ exploreCommand }}</span>
+                <button class="copy-button" @click="copyToClipboard(exploreCommand)">
+                  <CopyDocument width="16" height="16" />
+                </button>
+              </div>
+            </div>
+            <div class="aws-cli-section">
+              <div class="aws-cli-label">Download this dataset:</div>
+              <div class="text-block">
+                <span class="cli-command">{{ downloadCommand }}</span>
+                <button class="copy-button" @click="copyToClipboard(downloadCommand)">
+                  <CopyDocument width="16" height="16" />
+                </button>
+              </div>
           </div>
-          <h2>AWS Region</h2>
-          <div class="text-block">
-            us-east-1
+          <div class="aws-help-text">
+            * See our <a href="https://docs.pennsieve.io/docs/downloading-a-public-dataset" target="_blank">Help page</a> for information on
+            AWS S3 and links to tutorials.
           </div>
         </div>
       </div>
@@ -351,19 +398,55 @@ function openRehydrationModal() {
   }
 
   .text-block {
-    font-family: Courier,serif;
-    border-radius: 2px;
+    font-family: Courier, serif;
+    border-radius: 4px;
     background-color: #f1f1f3;
-    padding: 8px 8px 8px 8px;
+    padding: 10px 12px;
     margin-bottom: 16px;
     font-size: 14px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    .cli-command {
+      word-break: break-all;
+    }
   }
+
+  .aws-cli-section {
+    margin-bottom: 4px;
+  }
+
+  .aws-cli-label {
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: #000000;
+  }
+
+  .copy-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #888;
+    flex-shrink: 0;
+
+    &:hover {
+      color: #333;
+    }
+
+  }
+
+  .aws-help-text {
+    font-size: 14px;
+    color: #000000;
+  }
+
 
   .aws-block {
     box-sizing: border-box;
-    padding: 40px 40px 0;
+    padding: 40px;
   }
 
   .download-illo {
@@ -394,14 +477,18 @@ function openRehydrationModal() {
 .download-dataset-dialog.el-dialog {
   border-radius: 0;
   padding:0;
-  
+
   .el-dialog__header {
-    padding: 0 !important; // Remove important after removing the sparc stylesheets dependency
+    padding: 0;
   }
 
   .el-dialog__body {
     padding: 0;
   }
-
 }
+
+.el-message {
+  z-index: 99999 !important;
+}
+
 </style>
