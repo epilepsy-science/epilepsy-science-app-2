@@ -116,10 +116,10 @@ export default defineNuxtConfig({
       dedupe: ["vue"],
     },
     optimizeDeps: {
-      exclude: ["tsviewer", "@duckdb/duckdb-wasm"],
+      exclude: ["@pennsieve-viz/tsviewer", "@duckdb/duckdb-wasm"],
     },
     ssr: {
-      noExternal: ["tsviewer"],
+      noExternal: ["@pennsieve-viz/tsviewer"],
     },
   },
 
@@ -153,9 +153,6 @@ export default defineNuxtConfig({
       ALGOLIA_API_KEY: process.env.ALGOLIA_API_KEY,
       ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
       ALGOLIA_INDEX: process.env.ALGOLIA_INDEX || "epilepsy_science_index",
-      ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC:
-        process.env.ALGOLIA_INDEX_VERSION_PUBLISHED_TIME_DESC ||
-        "epilepsy_science_index",
       zipit_api_host: process.env.ZIPIT_API_HOST || "https://api.pennsieve.io/zipit/discover",
       max_download_size: parseInt(
         process.env.MAX_DOWNLOAD_SIZE || "5000000000"
@@ -169,6 +166,8 @@ export default defineNuxtConfig({
         process.env.USER_POOL_WEB_CLIENT_ID || "703lm5d8odccu21pagcfjkeaea",
       masterUserName: process.env.MASTERUSER_USERNAME,
       masterUserPW: process.env.MASTERUSER_PASSWORD,
+      pennsieve_api_host: process.env.PENNSIEVE_API_HOST || "https://api.pennsieve.io",
+      packages_api_host: process.env.PACKAGES_API_HOST || "https://api2.pennsieve.io/packages",
     },
   },
 

@@ -7,16 +7,20 @@ import "@pennsieve-viz/core/style.css";
 // Dynamic imports for browser-only tsviewer
 const TSViewer = shallowRef(null);
 const viewerStore = shallowRef(null);
+const tsViewerReady = ref(false);
+const tsViewerError = ref("");
 
+let tsViewerLoaded = Promise.resolve();
 if (import.meta.client) {
-  import("tsviewer/style");
-  import("tsviewer").then((module) => {
+  import("@pennsieve-viz/tsviewer/style.css");
+  tsViewerLoaded = import("@pennsieve-viz/tsviewer").then((module) => {
     TSViewer.value = module.TSViewer;
-    viewerStore.value = module.useViewerStore();
+    viewerStore.value = module.createViewerStore("package-viewer");
   });
 }
 
 const runtimeConfig = useRuntimeConfig();
+const route = useRoute();
 const store = useMainStore();
 const fileType = ref("");
 const fileUri = ref("");
@@ -46,6 +50,16 @@ const viewerType = computed(() => {
   return "unsupported"
 })
 
+async function fetchViewerAssets(sourcePackageId) {
+  const url = `${runtimeConfig.public.packages_api_host}/discover/assets?package_id=${encodeURIComponent(sourcePackageId)}`;
+  try {
+    const response = await useSendXhr(url, { method: "GET" });
+    return response?.assets || [];
+  } catch {
+    return [];
+  }
+}
+
 async function fetchPresignedUrl(filePath, datasetId, version) {
   const manifestUrl = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files/download-manifest`;
   try {
@@ -55,7 +69,7 @@ async function fetchPresignedUrl(filePath, datasetId, version) {
     });
     presignedUrl.value = response?.data?.[0]?.url || "";
   } catch {
-    // presignedUrl stays empty; CSVViewer won't render
+    // presignedUrl stays empty; viewer won't render
   }
 }
 
@@ -71,50 +85,102 @@ async function loadFileContent(file, datasetId, version) {
   }
 }
 
-function fetchFileDetails() {
-  const selectedPackage = store.selectedPackage;
-  if (!selectedPackage || !selectedPackage.files || selectedPackage.files.length === 0) {
-    isLoading.value = false;
-    return;
-  }
-
-  const fileData = selectedPackage.files[0];
-  const { datasetId, version } = selectedPackage;
-  const filePath = fileData.path;
-
-  const fileDetailUrl = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files?path=${encodeURIComponent(filePath)}`;
-
-  useSendXhr(fileDetailUrl, { method: "GET" })
-    .then((response) => {
-      fileType.value = response.fileType || "";
-      fileUri.value = response.uri || "";
-      store.setSelectedPackage({
-        datasetId,
-        version,
-        files: [response],
-      });
-      const type = (response.fileType || "").toUpperCase();
-      if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
-        loadFileContent(response, datasetId, version);
-      }
-      if ([...csvFileTypes, ...imageFileTypes].includes(type)) {
-        fetchPresignedUrl(response.path, datasetId, version);
-      }
-    })
-    .catch(() => {
-      fileType.value = fileData.fileType || "";
-      fileUri.value = fileData.uri || "";
-      const type = (fileData.fileType || "").toUpperCase();
-      if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
-        loadFileContent(fileData, datasetId, version);
-      }
-      if ([...csvFileTypes, ...imageFileTypes].includes(type)) {
-        fetchPresignedUrl(fileData.path, datasetId, version);
-      }
-    })
-    .finally(() => {
-      isLoading.value = false;
+async function initTimeseriesViewer(sourcePackageId, assetId) {
+  if (!sourcePackageId && !assetId) return;
+  await tsViewerLoaded;
+  if (!viewerStore.value) return;
+  tsViewerError.value = "";
+  try {
+    const apiHost = runtimeConfig.public.pennsieve_api_host;
+    const wsHost = apiHost.replace(/^https?:\/\//, "wss://");
+    viewerStore.value.setViewerConfig({
+      timeseriesDiscoverApi: `${wsHost}/streaming/discover/ts/query`,
+      apiUrl: apiHost,
     });
+    const viewerParams = assetId
+      ? { viewerAssetId: assetId, packageId: sourcePackageId }
+      : { packageId: sourcePackageId };
+    await viewerStore.value.fetchAndSetActiveViewer(viewerParams);
+    tsViewerReady.value = true;
+  } catch (error) {
+    console.error("Failed to initialize timeseries viewer:", error);
+    tsViewerError.value = "Failed to load timeseries viewer. The data source may be unavailable.";
+  }
+}
+
+function processFileData(fileData, datasetId, version) {
+  fileType.value = fileData.fileType || "";
+  fileUri.value = fileData.uri || "";
+  const type = fileType.value.toUpperCase();
+  if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
+    loadFileContent(fileData, datasetId, version);
+  }
+  if ([...csvFileTypes, ...imageFileTypes].includes(type)) {
+    fetchPresignedUrl(fileData.path, datasetId, version);
+  }
+  if (timeseriesFileTypes.includes(type)) {
+    const sourcePackageId = fileData.sourcePackageId || route.params.id;
+    fetchViewerAssets(sourcePackageId).then((assets) => {
+      const assetId = assets.length > 0 ? assets[0].id : undefined;
+      console.log('asset id is' , assetId)
+      initTimeseriesViewer(sourcePackageId, assetId);
+    });
+  }
+}
+
+async function fetchFromSourcePackageId(sourcePackageId, datasetId, version) {
+  const url = `${runtimeConfig.public.discover_api_host}/packages/${sourcePackageId}/files`;
+  const response = await useSendXhr(url, { method: "GET" });
+  const files = response.files || [];
+  store.setSelectedPackage({ datasetId, version, files });
+  if (files.length > 0) {
+    processFileData(files[0], datasetId, version);
+  }
+}
+
+async function fetchFromPath(datasetId, version, path) {
+  const url = `${runtimeConfig.public.discover_api_host}/datasets/${datasetId}/versions/${version}/files?path=${encodeURIComponent(path)}`;
+  const response = await useSendXhr(url, { method: "GET" });
+  store.setSelectedPackage({ datasetId, version, files: [response] });
+  processFileData(response, datasetId, version);
+}
+
+async function fetchFileDetails() {
+  const selectedPackage = store.selectedPackage;
+  const datasetId = Number(selectedPackage?.datasetId || route.query.datasetId);
+  const version = Number(selectedPackage?.version || route.query.version);
+  const path = selectedPackage?.files?.[0]?.path || route.query.path;
+  const sourcePackageId = route.params.id;
+
+  try {
+    if (selectedPackage?.files?.length) {
+      // Store has data (normal navigation)
+      const fileData = selectedPackage.files[0];
+      const existingType = (fileData.fileType || "").toUpperCase();
+      if (timeseriesFileTypes.includes(existingType)) {
+        processFileData(fileData, datasetId, version);
+      } else {
+        try {
+          await fetchFromPath(datasetId, version, path);
+        } catch {
+          processFileData(fileData, datasetId, version);
+        }
+      }
+    } else {
+      // Store is empty (page reload) — try sourcePackageId, fall back to path
+      try {
+        await fetchFromSourcePackageId(sourcePackageId, datasetId, version);
+      } catch {
+        if (datasetId && version && path) {
+          await fetchFromPath(datasetId, version, path);
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Failed to fetch package details:", error);
+  } finally {
+    isLoading.value = false;
+  }
 }
 
 onMounted(() => {
@@ -136,7 +202,8 @@ onMounted(() => {
 
         <!-- Timeseries Viewer -->
         <client-only v-else-if="viewerType === 'timeseries'">
-          <component :is="TSViewer" v-if="TSViewer" />
+          <component :is="TSViewer" v-if="TSViewer && tsViewerReady" instance-id="package-viewer" style="min-height: 100vh;" />
+          <div v-else-if="tsViewerError" class="viewer-message viewer-message--error">{{ tsViewerError }}</div>
           <div v-else class="viewer-message">Loading viewer...</div>
         </client-only>
 

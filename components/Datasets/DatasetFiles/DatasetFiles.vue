@@ -60,27 +60,12 @@ function getDatasetFiles(selectedDirectoryPath = '', loadMoreFiles = false) {
   directoryPath.value = selectedDirectoryPath
   const url = `${getFilesUrl.value}?path=${selectedDirectoryPath}&limit=${limit.value}&offset=${offset.value}`
   useSendXhr(url).then((response) => {
-    switch (props.datasetType) {
-      case 'research':
-        if (offset.value > 0) {
-          response.files.forEach((resp) => {
-            datasetFiles.value.push(resp)
-          })
-        } else {
-          totalFileCount.value = response.totalCount
-          datasetFiles.value = response.files
-        }
-        break;
-      case 'release':
-        if (offset.value > 0) {
-          response.assets.forEach((resp) => {
-            datasetFiles.value.push(resp)
-          })
-        } else {
-          totalFileCount.value = response.totalCount
-          datasetFiles.value = response.assets
-        }
-        break;
+    const files = props.datasetType === 'release' ? response.assets : response.files
+    if (offset.value > 0) {
+      datasetFiles.value.push(...files)
+    } else {
+      totalFileCount.value = response.totalCount
+      datasetFiles.value = files
     }
   })
   .catch((error) => {
@@ -258,27 +243,31 @@ function closeConfirmDownload() {
 
 // ---- ROUTING ----
 function getRouteParams(data) {
-  const fileId = data.sourcePackageId || data.name
-  return { name: 'package-id',
-    params: { id: fileId } }
+  const fileId = data.sourcePackageId || encodeURIComponent(data.name)
+  return {
+    name: 'package-id',
+    params: { id: fileId },
+    query: { datasetId: props.datasetId, version: props.version, path: data.path }
+  }
 }
 
+// TODO: replace with packageType check once the API returns it on directory rows
+function isTimeseriesDirectory(row) {
+  const type = (row.type || '').toLowerCase()
+  if (type !== 'directory' && type !== 'folder') return false
+  const path = (row.path || row.name || '').toLowerCase()
+  return path.includes('ieeg-mef')
+}
 
-
-
+function handleTimeseriesDirectoryClick(row) {
+  const packageData = { ...row, fileType: 'MEF' }
+  setPackage(packageData)
+  navigateTo(getRouteParams(packageData))
+}
 </script>
 
 <template>
   <div class="dataset-files">
-    <h3>Files</h3>
-    <p v-if="isEmbargoed" class="dataset-files__message">
-      This dataset is currently under embargo. Files are only visible to those
-      with access to this dataset.
-    </p>
-    <p v-else-if="isEmbargoed && !isLoggedin" class="dataset-files__message">
-      This dataset is currently under embargo. Files will be made publicly
-      available on {{ embargoedReleaseDate }}.
-    </p>
     <dataset-files-header
       v-if="!isEmbargoed"
       :total-file-count="totalFileCount"
@@ -324,7 +313,12 @@ function getRouteParams(data) {
       <el-table-column label="File Name">
         <template #default="scope">
           <div class="file-name-container">
-            <img :src="useFileIcon(scope.row.icon, scope.row.type)" alt="Icon" />
+            <img
+              :src="useFileIcon(scope.row.icon, scope.row.type)"
+              alt="Icon"
+              :class="{ 'clickable-icon': isTimeseriesDirectory(scope.row) }"
+              @click="isTimeseriesDirectory(scope.row) && handleTimeseriesDirectoryClick(scope.row)"
+            />
             <div v-if="formatType(scope.row) === 'Folder'" class="name">
               <ClientOnly>
                 <a
@@ -366,7 +360,7 @@ function getRouteParams(data) {
     </div>
 
     <dataset-files-footer
-      v-if="!isEmbargoed || (isEmbargoed && isLoggedin)"
+      v-if="!isEmbargoed || isLoggedin"
       :limit="limit"
       :total-file-count="totalFileCount"
       :loaded-file-count="loadedFileCount"
@@ -575,6 +569,16 @@ function getRouteParams(data) {
         height: 20px;
         width: 20px;
         margin: 2px 5px 0 0;
+
+        &.clickable-icon {
+          cursor: pointer;
+          border-radius: 3px;
+          transition: background-color 0.15s;
+
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.08);
+          }
+        }
       }
 
       .name {

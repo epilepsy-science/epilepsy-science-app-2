@@ -144,7 +144,7 @@ function closeDialog() {
 
   .el-dialog__header {
     background-color: #f1f1f3;
-    padding-block: 16px 8px !important; // TODO revert imporntant on this line after getting rid of sparc stylesheets dependency 
+    padding-block: 16px 8px;
     margin-right: 0px;
 
     .bf-dialog-header-title {
