@@ -35,42 +35,33 @@
 
       <div class="tab-content">
         <div v-if="activeTab === 'overview'" class="overview-section">
-          <el-card class="project-info-card" shadow="never">
-            <div class="project-header-content">
-              <div v-if="projectDescription" class="project-description">
-                <h2>Description</h2>
-                <div class="description-text" v-html="formattedDescription"></div>
-              </div>
-
-              <div v-if="projectBannerImage" class="project-banner">
-                <img :src="projectBannerImage" alt="Project banner" class="banner-image" />
-              </div>
-            </div>
-
-            <el-divider v-if="projectDescription && (projectInvestigators.length > 0 || projectFunding.length > 0)" />
-
-            <div class="project-details">
-              <div class="details-grid">
-                <div v-if="projectInvestigators.length > 0" class="detail-item">
-                  <span class="detail-label">Investigators:</span>
-                  <span class="detail-value">{{ formattedInvestigators }}</span>
-                </div>
-
-                <div v-if="projectFunding.length > 0" class="detail-item">
-                  <span class="detail-label">Funding:</span>
-                  <span class="detail-value">{{ formattedFunding }}</span>
-                </div>
-              </div>
-            </div>
-          </el-card>
-
-          <div class="dashboard-section">
-            <h2>Dashboard</h2>
-            <div class="dashboard-container">
+          <div class="overview-layout">
+            <div class="overview-main">
               <client-only>
                 <PennsieveDashboard :options="dashboardOptions" />
               </client-only>
             </div>
+
+            <aside class="overview-sidebar">
+              <div v-if="projectBannerImage" class="sidebar-logo-wrapper">
+                <img :src="projectBannerImage" alt="Project banner" class="sidebar-logo" />
+              </div>
+
+              <div v-if="projectDescription" class="sidebar-item">
+                <h3 class="sidebar-label">Description</h3>
+                <div class="sidebar-text" v-html="formattedDescription"></div>
+              </div>
+
+              <div v-if="projectInvestigators.length > 0" class="sidebar-item">
+                <h3 class="sidebar-label">Investigators</h3>
+                <p class="sidebar-text">{{ formattedInvestigators }}</p>
+              </div>
+
+              <div v-if="projectFunding.length > 0" class="sidebar-item">
+                <h3 class="sidebar-label">Funding</h3>
+                <p class="sidebar-text">{{ formattedFunding }}</p>
+              </div>
+            </aside>
           </div>
         </div>
 
@@ -294,7 +285,7 @@ watch([activeTab, project], ([newTab, projectData]) => {
 
 <style scoped lang="scss">
 .project-detail-page {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 1rem 2rem 2rem 2rem;
 }
@@ -385,7 +376,67 @@ watch([activeTab, project], ([newTab, projectData]) => {
   margin-top: 2rem;
 }
 
-.overview-section,
+.overview-section {
+  width: 100%;
+}
+
+.overview-layout {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.overview-main {
+  flex: 1;
+  min-width: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 24px;
+}
+
+.overview-sidebar {
+  width: 380px;
+  flex-shrink: 0;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sidebar-logo-wrapper {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+
+  .sidebar-logo {
+    width: 80px;
+    height: 80px;
+    display: block;
+    object-fit: contain;
+  }
+}
+
+.sidebar-item {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.sidebar-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #999;
+  margin: 0 0 0.35rem 0;
+}
+
+.sidebar-text {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #444;
+  margin: 0;
+}
+
 .datasets-section {
   width: 100%;
 }
@@ -400,103 +451,6 @@ watch([activeTab, project], ([newTab, projectData]) => {
   color: #666;
 }
 
-.project-info-card {
-  :deep(.el-card__body) {
-    padding: 2rem;
-  }
-}
-
-.project-header-content {
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-  margin-bottom: 2rem;
-
-  .project-description {
-    flex: 1;
-  }
-}
-
-.project-banner {
-  flex-shrink: 0;
-  width: 400px;
-  height: 400px;
-
-  .banner-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 4px;
-  }
-}
-
-.project-description {
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0 0 1rem 0;
-    color: #333;
-  }
-
-  .description-text {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-    margin: 0;
-  }
-}
-
-.project-details {
-  margin: 1.5rem 0;
-}
-
-.details-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-}
-
-.detail-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.detail-label {
-  font-weight: 600;
-  color: #666;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.detail-value {
-  color: #333;
-  font-size: 1rem;
-}
-
-:deep(.el-divider) {
-  margin: 1.5rem 0;
-}
-
-.dashboard-section {
-  margin-top: 2rem;
-
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0 0 1rem 0;
-    color: #333;
-  }
-
-  .dashboard-container {
-    background-color: #fff;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    padding: 24px;
-  }
-}
-
 @media (max-width: 768px) {
   .project-detail-page {
     padding: 1rem 1rem 2rem 1rem;
@@ -506,24 +460,12 @@ watch([activeTab, project], ([newTab, projectData]) => {
     font-size: 1.5rem;
   }
 
-  .project-header-content {
+  .overview-layout {
     flex-direction: column;
   }
 
-  .project-banner {
+  .overview-sidebar {
     width: 100%;
-    height: 300px;
-    order: -1;
-  }
-
-  .details-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .project-info-card {
-    :deep(.el-card__body) {
-      padding: 1.5rem;
-    }
   }
 }
 </style>
