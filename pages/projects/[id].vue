@@ -409,8 +409,8 @@ watch([activeTab, project], ([newTab, projectData]) => {
   justify-content: center;
 
   .sidebar-logo {
-    width: 80px;
-    height: 80px;
+    width: 240px;
+    height: 240px;
     display: block;
     object-fit: contain;
   }
