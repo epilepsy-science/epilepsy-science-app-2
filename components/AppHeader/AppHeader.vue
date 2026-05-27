@@ -14,7 +14,6 @@
         <ul>
           <li><nuxt-link to="/data?type=dataset">Data</nuxt-link></li>
           <li><nuxt-link to="/projects">Projects</nuxt-link></li>
-          <li><nuxt-link to="/dashboard">Dashboard</nuxt-link></li>
           <li><nuxt-link to="/about">About</nuxt-link></li>
           <li><a class="cde-link" href="https://cde.epilepsy.science" target="_blank" rel="noopener"><strong>CDE's</strong> <el-icon :size="12" style="vertical-align: middle; margin-left: 2px;"><TopRight /></el-icon></a></li>
         </ul>

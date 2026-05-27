@@ -63,6 +63,15 @@
               </div>
             </div>
           </el-card>
+
+          <div class="dashboard-section">
+            <h2>Dashboard</h2>
+            <div class="dashboard-container">
+              <client-only>
+                <PennsieveDashboard :options="dashboardOptions" />
+              </client-only>
+            </div>
+          </div>
         </div>
 
         <div v-if="activeTab === 'datasets'" class="datasets-section">
@@ -94,9 +103,12 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, watch, markRaw, onMounted } from 'vue'
 import DatasetCard from '~/components/Datasets/DatasetCard/DatasetCard.vue'
 import markedMixin from '@/mixins/marked/index'
+import { PennsieveDashboard, TextWidget } from 'pennsieve-dashboard'
+import 'pennsieve-dashboard/style.css'
+import { useMainStore } from '~/store/index'
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
@@ -157,6 +169,72 @@ const formattedFunding = computed(() => {
   if (projectFunding.value.length === 0) return ''
   return projectFunding.value.join(', ')
 })
+
+// Dashboard
+const pageStore = useMainStore()
+pageStore.fetchDatasetStats()
+const stats = computed(() => pageStore.pageStats)
+
+const formattedTotalSize = computed(() => {
+  if (typeof stats.value.totalDatasetSize === 'number') {
+    return useFormatMetric(stats.value.totalDatasetSize)
+  }
+  return stats.value.totalDatasetSize
+})
+
+const patientStats = ref({ total: '-' })
+
+async function fetchPatientStats() {
+  const { queryRaw, table } = useDuckDB()
+  const results = await queryRaw(`
+    SELECT
+      COUNT(DISTINCT person_id) AS total
+    FROM ${table('pennepi_person.parquet')}
+  `)
+  if (results.length > 0) {
+    patientStats.value = {
+      total: String(results[0].total),
+    }
+  }
+}
+
+onMounted(() => {
+  fetchPatientStats()
+})
+
+const availableWidgets = [
+  { name: 'TextWidget', component: markRaw(TextWidget) },
+]
+
+const defaultLayout = computed(() => [
+  {
+    x: 0, y: 0, w: 3, h: 4,
+    id: 'stats-datasets',
+    component: markRaw(TextWidget),
+    componentName: 'Datasets Available',
+    Props: { displayText: String(stats.value.datasets) },
+  },
+  {
+    x: 3, y: 0, w: 3, h: 4,
+    id: 'stats-total-data',
+    component: markRaw(TextWidget),
+    componentName: 'Total Data',
+    Props: { displayText: formattedTotalSize.value },
+  },
+  {
+    x: 0, y: 4, w: 4, h: 4,
+    id: 'stats-patients',
+    component: markRaw(TextWidget),
+    componentName: 'Unique Patients',
+    Props: { displayText: patientStats.value.total },
+  },
+])
+
+const dashboardOptions = computed(() => ({
+  availableWidgets,
+  defaultLayout: defaultLayout.value,
+  hideEditGrid: true,
+}))
 
 const seoTitle = computed(() => {
   return project.value ? `${projectName.value} - Projects` : 'Project'
@@ -399,6 +477,24 @@ watch([activeTab, project], ([newTab, projectData]) => {
 
 :deep(.el-divider) {
   margin: 1.5rem 0;
+}
+
+.dashboard-section {
+  margin-top: 2rem;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: #333;
+  }
+
+  .dashboard-container {
+    background-color: #fff;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    padding: 24px;
+  }
 }
 
 @media (max-width: 768px) {
