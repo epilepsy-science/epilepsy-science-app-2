@@ -10,14 +10,12 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "start": "node .output/server/index.mjs",
-    "postinstall": "nuxt prepare",
-    "sitemap": "node generate_sitemap.js"
+    "postinstall": "nuxt prepare"
   },
   "devDependencies": {
     "nuxt": "^3.8.2",
     "nuxt-svgo": "^3.5.6",
-    "sass": "^1.79.5",
-    "sitemap": "^7.1.1"
+    "sass": "^1.79.5"
   },
   "dependencies": {
     "@duckdb/duckdb-wasm": "^1.33.1-dev45.0",
