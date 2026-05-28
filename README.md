@@ -27,7 +27,6 @@ The following environment variables are required to run locally. Values can be o
 | `CTF_SPACE_ID` | Contentful space ID |
 | `CTF_CDA_ACCESS_TOKEN` | Contentful Content Delivery API token |
 | `CTF_API_HOST` | Contentful API host |
-| `DEPLOY_ENV` | Environment identifier |
 | `PORTAL_API_HOST` | Portal API endpoint |
 
 Create a file called `env_var.sh` in the project root with your values:
@@ -39,7 +38,6 @@ export ALGOLIA_INDEX=your_index
 export CTF_SPACE_ID=your_space_id
 export CTF_CDA_ACCESS_TOKEN=your_token
 export CTF_API_HOST=your_host
-export DEPLOY_ENV=your_env
 export PORTAL_API_HOST=your_host
 ```
 

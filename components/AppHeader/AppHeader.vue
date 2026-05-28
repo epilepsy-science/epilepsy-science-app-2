@@ -15,6 +15,7 @@
           <li><nuxt-link to="/data?type=dataset">Data</nuxt-link></li>
           <li><nuxt-link to="/projects">Projects</nuxt-link></li>
           <li><nuxt-link to="/about">About</nuxt-link></li>
+          <li><a class="cde-link" href="https://cde.epilepsy.science" target="_blank" rel="noopener"><strong>CDE's</strong> <el-icon :size="12" style="vertical-align: middle; margin-left: 2px;"><TopRight /></el-icon></a></li>
         </ul>
       </nav>
     </div>
@@ -23,6 +24,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { TopRight } from "@element-plus/icons-vue";
 
 const menuOpen = ref(false);
 const windowWidth = ref(typeof window !== "undefined" ? window.innerWidth : 0);
@@ -113,6 +115,22 @@ onBeforeUnmount(() => {
     width: 0;
     background-color: #297FCA;
     transition: width 0.4s ease;
+  }
+}
+
+.header-nav a.cde-link {
+  background-color: #297fca;
+  color: #ffffff;
+  border-radius: 4px;
+  text-transform: none;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: #ffffff;
+    background-color: #1a5a9e;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(41, 127, 202, 0.4);
   }
 }
 
