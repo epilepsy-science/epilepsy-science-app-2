@@ -168,6 +168,7 @@ export default defineNuxtConfig({
       masterUserPW: process.env.MASTERUSER_PASSWORD,
       pennsieve_api_host: process.env.PENNSIEVE_API_HOST || "https://api.pennsieve.io",
       packages_api_host: process.env.PACKAGES_API_HOST || "https://api2.pennsieve.io/packages",
+      deploy_env: process.env.DEPLOY_ENV || "prod",
     },
   },
 
