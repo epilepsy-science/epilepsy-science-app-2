@@ -23,10 +23,15 @@
 
 <script setup>
 const { $contentfulClient } = useNuxtApp()
+const runtimeConfig = useRuntimeConfig()
+
+const projectsContentType = runtimeConfig.public.deploy_env === "dev"
+  ? "devEnvironmentProject"
+  : "project"
 
 const { data: contentfulProjects, error, status } = useLazyAsyncData("projects", () => {
   return $contentfulClient.getEntries({
-    content_type: "project",
+    content_type: projectsContentType,
   });
 })
 
