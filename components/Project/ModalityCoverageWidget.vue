@@ -1,0 +1,102 @@
+<template>
+  <div class="modality-coverage-widget">
+    <div class="widget-header">
+      <h3 class="widget-title">Modality coverage</h3>
+      <p class="widget-subtitle">
+        % of N = {{ totalPatientCount }} patients with a record in each table
+      </p>
+    </div>
+    <div class="bar-list">
+      <div
+        v-for="modality in modalityCoverage"
+        :key="modality.key"
+        class="bar-row"
+      >
+        <span class="bar-label">{{ modality.label }}</span>
+        <div class="bar-track">
+          <div
+            class="bar-fill"
+            :style="{ width: `${modality.coveragePercent}%` }"
+          />
+        </div>
+        <span class="bar-value">
+          {{ modality.coveredPatientCount }} / {{ totalPatientCount }}
+          ({{ modality.coveragePercent }}%)
+        </span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+defineProps({
+  modalityCoverage: { type: Array, required: true },
+  totalPatientCount: { type: Number, required: true },
+})
+</script>
+
+<style scoped lang="scss">
+.modality-coverage-widget {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.widget-header {
+  margin-bottom: 16px;
+}
+
+.widget-title {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.widget-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.bar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 160px;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.bar-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.bar-track {
+  height: 14px;
+  background-color: #eef1f6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background-color: #297fca;
+  transition: width 0.3s ease;
+}
+
+.bar-value {
+  text-align: right;
+  color: #555;
+  font-variant-numeric: tabular-nums;
+}
+</style>
