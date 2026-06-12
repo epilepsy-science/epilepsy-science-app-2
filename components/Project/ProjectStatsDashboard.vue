@@ -1,6 +1,8 @@
 <template>
   <client-only>
-    <PennsieveDashboard :options="dashboardOptions" />
+    <div class="project-stats-dashboard">
+      <PennsieveDashboard :options="dashboardOptions" />
+    </div>
   </client-only>
 </template>
 
@@ -60,6 +62,10 @@ const defaultLayout = computed(() => [
       totalPatientCount: totalPatientCount.value,
     },
   },
+  textWidget({ id: 'stats-mri-lesion',         x: 0, y: 16, w: 6, h: 4, name: 'Pre-implant · MRI lesion',     value: epilepsyStats.value.mriLesionBreakdown }),
+  textWidget({ id: 'stats-five-sense',         x: 6, y: 16, w: 6, h: 4, name: 'Pre-implant · 5-SENSE score',  value: epilepsyStats.value.fiveSenseScore }),
+  textWidget({ id: 'stats-ieeg-focality',      x: 0, y: 20, w: 6, h: 4, name: 'Post-implant · iEEG focality', value: epilepsyStats.value.ieegFocalityBreakdown }),
+  textWidget({ id: 'stats-intervention-type',  x: 6, y: 20, w: 6, h: 4, name: 'Post-implant · Intervention type', value: epilepsyStats.value.interventionTypeBreakdown }),
 ])
 
 const dashboardOptions = computed(() => ({
@@ -73,3 +79,13 @@ onMounted(() => {
   fetchModalityCoverage()
 })
 </script>
+
+<style scoped lang="scss">
+.project-stats-dashboard :deep(.text-widget-wrap h2) {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+  color: #1c1c1c;
+}
+</style>
