@@ -2,6 +2,9 @@ import { ref } from 'vue'
 
 const SEX_MALE_COLOR = '#5b8fe8'
 const SEX_FEMALE_COLOR = '#4a2d9c'
+const MRI_LESIONAL_COLOR = '#5b3fb1'
+const MRI_NONLESIONAL_COLOR = '#3eaf7c'
+const MRI_UNKNOWN_COLOR = '#c5cbd3'
 
 const EMPTY_SEX_BREAKDOWN = {
   totalCount: 0,
@@ -19,13 +22,29 @@ const EMPTY_AGE_BREAKDOWN = {
   maxAge: null,
 }
 
+const EMPTY_MRI_BREAKDOWN = {
+  segments: [],
+  totalKnownCount: 0,
+  unknownCount: 0,
+  totalPatientCount: 0,
+}
+
+const EMPTY_FIVE_SENSE_BREAKDOWN = {
+  binCounts: [],
+  medianScore: null,
+  q1Score: null,
+  q3Score: null,
+  totalScoredCount: 0,
+  totalPatientCount: 0,
+}
+
 const DEFAULT_STATS = {
   patients: '-',
   ieegRecordings: '-',
   sexBreakdown: EMPTY_SEX_BREAKDOWN,
   ageAtIeegImplant: EMPTY_AGE_BREAKDOWN,
-  mriLesionBreakdown: '-',
-  fiveSenseScore: '-',
+  mriLesionBreakdown: EMPTY_MRI_BREAKDOWN,
+  fiveSenseScore: EMPTY_FIVE_SENSE_BREAKDOWN,
   ieegFocalityBreakdown: '-',
   interventionTypeBreakdown: '-',
 }
@@ -73,12 +92,10 @@ export function useEpilepsyStats() {
         GROUP BY LOWER(TRIM(mri_lesion))
       `),
       queryRaw(`
-        SELECT
-          MEDIAN(CAST(fivesensescore AS DOUBLE)) AS median_score,
-          MIN(CAST(fivesensescore AS DOUBLE)) AS min_score,
-          MAX(CAST(fivesensescore AS DOUBLE)) AS max_score
+        SELECT MAX(CAST(fivesensescore AS DOUBLE)) AS score
         FROM ${table('pennepi_5sense.parquet')}
         WHERE fivesensescore IS NOT NULL AND TRIM(fivesensescore) != ''
+        GROUP BY person_id
       `),
       queryRaw(`
         SELECT LOWER(TRIM(ieeg_isfocal)) AS ieeg_isfocal, COUNT(DISTINCT person_id) AS count
@@ -95,16 +112,15 @@ export function useEpilepsyStats() {
       `),
     ])
 
+    const totalPatientCount = Number(patientCountRows[0]?.total ?? 0)
+
     stats.value = {
       patients: formatCount(patientCountRows),
       ieegRecordings: formatCount(ieegCountRows),
       sexBreakdown: buildSexBreakdown(sexRows),
       ageAtIeegImplant: buildAgeBreakdown(ageRows),
-      mriLesionBreakdown: formatBinaryBreakdown(mriLesionRows, 'mri_lesion', [
-        { matchValue: 'lesional', displayLabel: 'Lesional' },
-        { matchValue: 'nonlesional', displayLabel: 'Nonlesional' },
-      ]),
-      fiveSenseScore: formatScoreRange(fiveSenseRows[0]),
+      mriLesionBreakdown: buildMriLesionBreakdown(mriLesionRows, totalPatientCount),
+      fiveSenseScore: buildFiveSenseBreakdown(fiveSenseRows, totalPatientCount),
       ieegFocalityBreakdown: formatBinaryBreakdown(ieegFocalityRows, 'ieeg_isfocal', [
         { matchValue: 'focal', displayLabel: 'Focal' },
         { matchValue: 'nonfocal', displayLabel: 'Nonfocal' },
@@ -196,12 +212,71 @@ function computeHistogramBinCounts(sortedValues, minValue, maxValue, binCount) {
   return binCounts
 }
 
-function formatScoreRange(row) {
-  if (!row || row.median_score == null) return '-'
-  const medianScore = Number(row.median_score).toFixed(2)
-  const minScore = Number(row.min_score).toFixed(2)
-  const maxScore = Number(row.max_score).toFixed(2)
-  return `Median ${medianScore} (range ${minScore}–${maxScore})`
+function buildMriLesionBreakdown(rows, totalPatientCount) {
+  if (totalPatientCount === 0) return EMPTY_MRI_BREAKDOWN
+  const countsByValue = Object.fromEntries(
+    rows.map((row) => [String(row.mri_lesion ?? '').toLowerCase(), Number(row.count)]),
+  )
+  const lesionalCount = countsByValue.lesional ?? 0
+  const nonlesionalCount = countsByValue.nonlesional ?? 0
+  const totalKnownCount = lesionalCount + nonlesionalCount
+  const unknownCount = Math.max(totalPatientCount - totalKnownCount, 0)
+  const computePercent = (count) =>
+    totalPatientCount > 0 ? Math.round((count / totalPatientCount) * 100) : 0
+  return {
+    totalKnownCount,
+    unknownCount,
+    totalPatientCount,
+    segments: [
+      {
+        label: 'Lesional',
+        count: lesionalCount,
+        percent: computePercent(lesionalCount),
+        color: MRI_LESIONAL_COLOR,
+      },
+      {
+        label: 'Nonlesional',
+        count: nonlesionalCount,
+        percent: computePercent(nonlesionalCount),
+        color: MRI_NONLESIONAL_COLOR,
+      },
+      {
+        label: 'Unknown',
+        count: unknownCount,
+        percent: computePercent(unknownCount),
+        color: MRI_UNKNOWN_COLOR,
+      },
+    ],
+  }
+}
+
+const FIVE_SENSE_BIN_COUNT = 10
+const FIVE_SENSE_SCALE_MIN = 0
+const FIVE_SENSE_SCALE_MAX = 1
+
+function buildFiveSenseBreakdown(rows, totalPatientCount) {
+  const scoreValues = rows
+    .map((row) => Number(row.score))
+    .filter((score) => Number.isFinite(score))
+    .sort((a, b) => a - b)
+
+  if (scoreValues.length === 0) {
+    return { ...EMPTY_FIVE_SENSE_BREAKDOWN, totalPatientCount }
+  }
+
+  return {
+    totalScoredCount: scoreValues.length,
+    totalPatientCount,
+    medianScore: computePercentile(scoreValues, 0.5),
+    q1Score: computePercentile(scoreValues, 0.25),
+    q3Score: computePercentile(scoreValues, 0.75),
+    binCounts: computeHistogramBinCounts(
+      scoreValues,
+      FIVE_SENSE_SCALE_MIN,
+      FIVE_SENSE_SCALE_MAX,
+      FIVE_SENSE_BIN_COUNT,
+    ),
+  }
 }
 
 function formatBinaryBreakdown(rows, categoryColumn, categoryConfigs) {

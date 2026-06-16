@@ -14,6 +14,8 @@ import { useMainStore } from '~/store/index'
 import ModalityCoverageWidget from './StatsWidgets/ModalityCoverageWidget.vue'
 import SexBreakdownWidget from './StatsWidgets/SexBreakdownWidget.vue'
 import AgeAtIeegImplantWidget from './StatsWidgets/AgeAtIeegImplantWidget.vue'
+import MriLesionWidget from './StatsWidgets/MriLesionWidget.vue'
+import FiveSenseScoreWidget from './StatsWidgets/FiveSenseScoreWidget.vue'
 import SectionHeaderWidget from './StatsWidgets/SectionHeaderWidget.vue'
 
 const pageStore = useMainStore()
@@ -37,6 +39,8 @@ const availableWidgets = [
   { name: 'ModalityCoverageWidget', component: markRaw(ModalityCoverageWidget) },
   { name: 'SexBreakdownWidget', component: markRaw(SexBreakdownWidget) },
   { name: 'AgeAtIeegImplantWidget', component: markRaw(AgeAtIeegImplantWidget) },
+  { name: 'MriLesionWidget', component: markRaw(MriLesionWidget) },
+  { name: 'FiveSenseScoreWidget', component: markRaw(FiveSenseScoreWidget) },
   { name: 'SectionHeaderWidget', component: markRaw(SectionHeaderWidget) },
 ]
 
@@ -108,10 +112,39 @@ const defaultLayout = computed(() => [
       totalPatientCount: totalPatientCount.value,
     },
   },
-  textWidget({ id: 'stats-mri-lesion',         x: 0, y: 19, w: 6, h: 4, name: 'Pre-implant · MRI lesion',     value: epilepsyStats.value.mriLesionBreakdown }),
-  textWidget({ id: 'stats-five-sense',         x: 6, y: 19, w: 6, h: 4, name: 'Pre-implant · 5-SENSE score',  value: epilepsyStats.value.fiveSenseScore }),
-  textWidget({ id: 'stats-ieeg-focality',      x: 0, y: 23, w: 6, h: 4, name: 'Post-implant · iEEG focality', value: epilepsyStats.value.ieegFocalityBreakdown }),
-  textWidget({ id: 'stats-intervention-type',  x: 6, y: 23, w: 6, h: 4, name: 'Post-implant · Intervention type', value: epilepsyStats.value.interventionTypeBreakdown }),
+  sectionHeaderWidget({ id: 'section-preimplant', x: 0, y: 19, w: 12, title: 'C · Preimplant' }),
+  {
+    id: 'stats-mri-lesion',
+    x: 0, y: 20, w: 6, h: 8,
+    componentKey: 'MriLesionWidget',
+    component: markRaw(MriLesionWidget),
+    componentName: '',
+    hideHeader: true,
+    Props: {
+      segments: epilepsyStats.value.mriLesionBreakdown.segments,
+      totalKnownCount: epilepsyStats.value.mriLesionBreakdown.totalKnownCount,
+      unknownCount: epilepsyStats.value.mriLesionBreakdown.unknownCount,
+      totalPatientCount: epilepsyStats.value.mriLesionBreakdown.totalPatientCount,
+    },
+  },
+  {
+    id: 'stats-five-sense',
+    x: 6, y: 20, w: 6, h: 8,
+    componentKey: 'FiveSenseScoreWidget',
+    component: markRaw(FiveSenseScoreWidget),
+    componentName: '',
+    hideHeader: true,
+    Props: {
+      binCounts: epilepsyStats.value.fiveSenseScore.binCounts,
+      medianScore: epilepsyStats.value.fiveSenseScore.medianScore,
+      q1Score: epilepsyStats.value.fiveSenseScore.q1Score,
+      q3Score: epilepsyStats.value.fiveSenseScore.q3Score,
+      totalScoredCount: epilepsyStats.value.fiveSenseScore.totalScoredCount,
+      totalPatientCount: epilepsyStats.value.fiveSenseScore.totalPatientCount,
+    },
+  },
+  textWidget({ id: 'stats-ieeg-focality',      x: 0, y: 28, w: 6, h: 4, name: 'Post-implant · iEEG focality', value: epilepsyStats.value.ieegFocalityBreakdown }),
+  textWidget({ id: 'stats-intervention-type',  x: 6, y: 28, w: 6, h: 4, name: 'Post-implant · Intervention type', value: epilepsyStats.value.interventionTypeBreakdown }),
 ])
 
 const dashboardOptions = computed(() => ({
