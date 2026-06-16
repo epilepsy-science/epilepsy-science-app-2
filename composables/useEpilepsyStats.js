@@ -1,10 +1,29 @@
 import { ref } from 'vue'
 
+const SEX_MALE_COLOR = '#5b8fe8'
+const SEX_FEMALE_COLOR = '#4a2d9c'
+
+const EMPTY_SEX_BREAKDOWN = {
+  totalCount: 0,
+  segments: [],
+  sourceLabel: 'person table',
+}
+
+const EMPTY_AGE_BREAKDOWN = {
+  totalCount: 0,
+  binCounts: [],
+  medianAge: null,
+  q1Age: null,
+  q3Age: null,
+  minAge: null,
+  maxAge: null,
+}
+
 const DEFAULT_STATS = {
   patients: '-',
   ieegRecordings: '-',
-  sexBreakdown: '-',
-  ageAtIeegImplant: '-',
+  sexBreakdown: EMPTY_SEX_BREAKDOWN,
+  ageAtIeegImplant: EMPTY_AGE_BREAKDOWN,
   mriLesionBreakdown: '-',
   fiveSenseScore: '-',
   ieegFocalityBreakdown: '-',
@@ -42,12 +61,10 @@ export function useEpilepsyStats() {
         GROUP BY sex
       `),
       queryRaw(`
-        SELECT
-          MEDIAN(CAST(age_ieegimplant AS DOUBLE)) AS median_age,
-          MIN(CAST(age_ieegimplant AS DOUBLE)) AS min_age,
-          MAX(CAST(age_ieegimplant AS DOUBLE)) AS max_age
+        SELECT MAX(CAST(age_ieegimplant AS DOUBLE)) AS age
         FROM ${table('pennepi_ieeg_recording_parameters.parquet')}
         WHERE age_ieegimplant IS NOT NULL AND TRIM(age_ieegimplant) != ''
+        GROUP BY person_id
       `),
       queryRaw(`
         SELECT LOWER(TRIM(mri_lesion)) AS mri_lesion, COUNT(DISTINCT person_id) AS count
@@ -81,8 +98,8 @@ export function useEpilepsyStats() {
     stats.value = {
       patients: formatCount(patientCountRows),
       ieegRecordings: formatCount(ieegCountRows),
-      sexBreakdown: formatSexBreakdown(sexRows),
-      ageAtIeegImplant: formatAgeRange(ageRows[0]),
+      sexBreakdown: buildSexBreakdown(sexRows),
+      ageAtIeegImplant: buildAgeBreakdown(ageRows),
       mriLesionBreakdown: formatBinaryBreakdown(mriLesionRows, 'mri_lesion', [
         { matchValue: 'lesional', displayLabel: 'Lesional' },
         { matchValue: 'nonlesional', displayLabel: 'Nonlesional' },
@@ -103,23 +120,80 @@ function formatCount(rows) {
   return rows[0]?.total != null ? String(rows[0].total) : '-'
 }
 
-function formatSexBreakdown(rows) {
+function buildSexBreakdown(rows) {
   const countsBySex = Object.fromEntries(rows.map((row) => [row.sex, Number(row.count)]))
   const maleCount = countsBySex.Male ?? 0
   const femaleCount = countsBySex.Female ?? 0
   const totalCount = maleCount + femaleCount
-  if (totalCount === 0) return '-'
-  const malePercent = Math.round((maleCount / totalCount) * 100)
-  const femalePercent = Math.round((femaleCount / totalCount) * 100)
-  return `M: ${maleCount} (${malePercent}%) · F: ${femaleCount} (${femalePercent}%)`
+  if (totalCount === 0) return EMPTY_SEX_BREAKDOWN
+  return {
+    totalCount,
+    sourceLabel: 'person table',
+    segments: [
+      {
+        label: 'Male',
+        count: maleCount,
+        percent: Math.round((maleCount / totalCount) * 100),
+        color: SEX_MALE_COLOR,
+      },
+      {
+        label: 'Female',
+        count: femaleCount,
+        percent: Math.round((femaleCount / totalCount) * 100),
+        color: SEX_FEMALE_COLOR,
+      },
+    ],
+  }
 }
 
-function formatAgeRange(row) {
-  if (!row || row.median_age == null) return '-'
-  const medianAge = Math.round(Number(row.median_age))
-  const minAge = Math.round(Number(row.min_age))
-  const maxAge = Math.round(Number(row.max_age))
-  return `Median ${medianAge} (range ${minAge}–${maxAge})`
+const AGE_HISTOGRAM_BIN_COUNT = 8
+
+function buildAgeBreakdown(rows) {
+  const agesAtImplant = rows
+    .map((row) => Number(row.age))
+    .filter((age) => Number.isFinite(age))
+    .sort((a, b) => a - b)
+
+  if (agesAtImplant.length === 0) return EMPTY_AGE_BREAKDOWN
+
+  const totalCount = agesAtImplant.length
+  const minAge = agesAtImplant[0]
+  const maxAge = agesAtImplant[totalCount - 1]
+  const medianAge = computePercentile(agesAtImplant, 0.5)
+  const q1Age = computePercentile(agesAtImplant, 0.25)
+  const q3Age = computePercentile(agesAtImplant, 0.75)
+  const binCounts = computeHistogramBinCounts(agesAtImplant, minAge, maxAge, AGE_HISTOGRAM_BIN_COUNT)
+
+  return { totalCount, minAge, maxAge, medianAge, q1Age, q3Age, binCounts }
+}
+
+function computePercentile(sortedValues, fraction) {
+  if (sortedValues.length === 0) return null
+  const positionIndex = (sortedValues.length - 1) * fraction
+  const lowerIndex = Math.floor(positionIndex)
+  const upperIndex = Math.ceil(positionIndex)
+  if (lowerIndex === upperIndex) return sortedValues[lowerIndex]
+  const interpolationWeight = positionIndex - lowerIndex
+  return (
+    sortedValues[lowerIndex] * (1 - interpolationWeight) +
+    sortedValues[upperIndex] * interpolationWeight
+  )
+}
+
+function computeHistogramBinCounts(sortedValues, minValue, maxValue, binCount) {
+  const binCounts = Array.from({ length: binCount }, () => 0)
+  const valueRange = maxValue - minValue
+  if (valueRange === 0) {
+    binCounts[Math.floor(binCount / 2)] = sortedValues.length
+    return binCounts
+  }
+  const binWidth = valueRange / binCount
+  for (const value of sortedValues) {
+    const rawBinIndex = Math.floor((value - minValue) / binWidth)
+    const clampedBinIndex = Math.min(Math.max(rawBinIndex, 0), binCount - 1)
+    binCounts[clampedBinIndex]++
+  }
+  return binCounts
 }
 
 function formatScoreRange(row) {
