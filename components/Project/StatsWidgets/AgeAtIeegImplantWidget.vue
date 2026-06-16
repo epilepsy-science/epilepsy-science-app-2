@@ -95,13 +95,15 @@ const maxAgeRounded = computed(() => Math.round(props.maxAge ?? 0))
   height: 100%;
   padding: 16px 20px;
   box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  color: $gray_5;
 }
 
 .widget-title {
   margin: 0 0 12px;
   font-size: 15px;
   font-weight: 600;
-  color: #1c1c1c;
+  color: $gray_6;
 }
 
 .histogram-wrap {
@@ -114,7 +116,7 @@ const maxAgeRounded = computed(() => Math.round(props.maxAge ?? 0))
 .histogram-wrap-empty {
   align-items: center;
   justify-content: center;
-  color: #999;
+  color: $lightGrey;
   font-size: 13px;
 }
 
@@ -125,11 +127,11 @@ const maxAgeRounded = computed(() => Math.round(props.maxAge ?? 0))
 }
 
 .histogram-bar {
-  fill: #5b8fe8;
+  fill: $es-primary-color;
 }
 
 .median-line {
-  stroke: #e26a3c;
+  stroke: $orange_1;
   stroke-width: 1.5;
   vector-effect: non-scaling-stroke;
 }
@@ -137,6 +139,6 @@ const maxAgeRounded = computed(() => Math.round(props.maxAge ?? 0))
 .widget-footer {
   margin-top: 12px;
   font-size: 12px;
-  color: #999;
+  color: $lightGrey;
 }
 </style>

@@ -235,6 +235,8 @@ const quartileMarkers = computed(() => {
   height: 100%;
   padding: 16px 20px;
   box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  color: $gray_5;
 }
 
 .widget-header {
@@ -253,18 +255,18 @@ const quartileMarkers = computed(() => {
   margin: 0 0 2px;
   font-size: 15px;
   font-weight: 600;
-  color: #1c1c1c;
+  color: $gray_6;
 }
 
 .widget-subtitle {
   margin: 0;
   font-size: 12px;
-  color: #777;
+  color: $neutralGrey;
 }
 
 .n-badge {
   font-size: 12px;
-  color: #555;
+  color: $gray_5;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -280,7 +282,7 @@ const quartileMarkers = computed(() => {
 .widget-body-empty {
   justify-content: center;
   align-items: center;
-  color: #999;
+  color: $lightGrey;
   font-size: 13px;
 }
 
@@ -291,54 +293,55 @@ const quartileMarkers = computed(() => {
   height: 100%;
   max-height: 100%;
   display: block;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .histogram-bar {
-  fill: #3eaf7c;
+  fill: $green_2;
 }
 
 .axis-label {
   font-size: 8px;
-  fill: #777;
+  fill: $neutralGrey;
 }
 
 .axis-title {
   font-size: 9px;
-  fill: #555;
+  fill: $gray_5;
 }
 
 .x-axis-line,
 .y-axis-tick line:first-child,
 .x-axis-tick line {
-  stroke: #cfd4dc;
+  stroke: $lineColor1;
   stroke-width: 0.75;
 }
 
 .y-axis-grid {
-  stroke: #eef0f3;
+  stroke: $lineColor2;
   stroke-width: 0.5;
 }
 
 .quartile-line {
-  stroke: #8a93a3;
+  stroke: $lightGrey;
   stroke-width: 0.75;
   stroke-dasharray: 3 2;
 }
 
 .quartile-label {
   font-size: 8px;
-  fill: #666;
+  fill: $neutralGrey;
 }
 
 .quartile-value {
   font-size: 9px;
   font-weight: 600;
-  fill: #1c1c1c;
+  fill: $gray_6;
 }
 
 .widget-footer {
   margin-top: 8px;
   font-size: 12px;
-  color: #999;
+  color: $lightGrey;
 }
 </style>

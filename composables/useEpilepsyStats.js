@@ -1,10 +1,18 @@
 import { ref } from 'vue'
 
-const SEX_MALE_COLOR = '#5b8fe8'
-const SEX_FEMALE_COLOR = '#4a2d9c'
-const MRI_LESIONAL_COLOR = '#5b3fb1'
-const MRI_NONLESIONAL_COLOR = '#3eaf7c'
-const MRI_UNKNOWN_COLOR = '#c5cbd3'
+const PALETTE_PRIMARY_PURPLE = '#8300BF'
+const PALETTE_SECONDARY_GREEN = '#14a758'
+const PALETTE_ACCENT_BLUE = '#297fca'
+const PALETTE_NEUTRAL_GRAY = '#CCCCCC'
+
+const SEX_MALE_COLOR = PALETTE_ACCENT_BLUE
+const SEX_FEMALE_COLOR = PALETTE_PRIMARY_PURPLE
+const MRI_LESIONAL_COLOR = PALETTE_PRIMARY_PURPLE
+const MRI_NONLESIONAL_COLOR = PALETTE_SECONDARY_GREEN
+const MRI_UNKNOWN_COLOR = PALETTE_NEUTRAL_GRAY
+const FOCAL_COLOR = PALETTE_PRIMARY_PURPLE
+const NONFOCAL_COLOR = PALETTE_SECONDARY_GREEN
+const FOCALITY_UNKNOWN_COLOR = PALETTE_NEUTRAL_GRAY
 
 const EMPTY_SEX_BREAKDOWN = {
   totalCount: 0,
@@ -38,6 +46,15 @@ const EMPTY_FIVE_SENSE_BREAKDOWN = {
   totalPatientCount: 0,
 }
 
+const EMPTY_FOCALITY_BREAKDOWN = {
+  segments: [],
+}
+
+const EMPTY_INTERVENTION_BREAKDOWN = {
+  categories: [],
+  totalPatientCount: 0,
+}
+
 const DEFAULT_STATS = {
   patients: '-',
   ieegRecordings: '-',
@@ -45,8 +62,8 @@ const DEFAULT_STATS = {
   ageAtIeegImplant: EMPTY_AGE_BREAKDOWN,
   mriLesionBreakdown: EMPTY_MRI_BREAKDOWN,
   fiveSenseScore: EMPTY_FIVE_SENSE_BREAKDOWN,
-  ieegFocalityBreakdown: '-',
-  interventionTypeBreakdown: '-',
+  ieegFocalityBreakdown: EMPTY_FOCALITY_BREAKDOWN,
+  interventionTypeBreakdown: EMPTY_INTERVENTION_BREAKDOWN,
 }
 
 export function useEpilepsyStats() {
@@ -63,6 +80,7 @@ export function useEpilepsyStats() {
       mriLesionRows,
       fiveSenseRows,
       ieegFocalityRows,
+      ieegFocalityPatientRows,
       interventionTypeRows,
     ] = await Promise.all([
       queryRaw(`
@@ -104,6 +122,11 @@ export function useEpilepsyStats() {
         GROUP BY LOWER(TRIM(ieeg_isfocal))
       `),
       queryRaw(`
+        SELECT COUNT(DISTINCT person_id) AS total
+        FROM ${table('pennepi_ieeg_recording_parameters.parquet')}
+        WHERE ieeg_isfocal IS NOT NULL AND TRIM(ieeg_isfocal) != ''
+      `),
+      queryRaw(`
         SELECT intervention_type, COUNT(DISTINCT person_id) AS count
         FROM ${table('pennepi_intervention.parquet')}
         WHERE intervention_type IS NOT NULL AND TRIM(intervention_type) != ''
@@ -121,11 +144,12 @@ export function useEpilepsyStats() {
       ageAtIeegImplant: buildAgeBreakdown(ageRows),
       mriLesionBreakdown: buildMriLesionBreakdown(mriLesionRows, totalPatientCount),
       fiveSenseScore: buildFiveSenseBreakdown(fiveSenseRows, totalPatientCount),
-      ieegFocalityBreakdown: formatBinaryBreakdown(ieegFocalityRows, 'ieeg_isfocal', [
-        { matchValue: 'focal', displayLabel: 'Focal' },
-        { matchValue: 'nonfocal', displayLabel: 'Nonfocal' },
-      ]),
-      interventionTypeBreakdown: formatCategoryBreakdown(interventionTypeRows, 'intervention_type'),
+      ieegFocalityBreakdown: buildIeegFocalityBreakdown(
+        ieegFocalityRows,
+        Number(ieegFocalityPatientRows[0]?.total ?? 0),
+        totalPatientCount,
+      ),
+      interventionTypeBreakdown: buildInterventionTypeBreakdown(interventionTypeRows),
     }
   }
 
@@ -279,37 +303,41 @@ function buildFiveSenseBreakdown(rows, totalPatientCount) {
   }
 }
 
-function formatBinaryBreakdown(rows, categoryColumn, categoryConfigs) {
-  const countsByCategory = Object.fromEntries(
-    rows.map((row) => [String(row[categoryColumn] ?? '').toLowerCase(), Number(row.count)])
+function buildIeegFocalityBreakdown(rows, patientsWithFocalityData, totalPatientCount) {
+  const countsByValue = Object.fromEntries(
+    rows.map((row) => [String(row.ieeg_isfocal ?? '').toLowerCase(), Number(row.count)]),
   )
-  const totalCount = categoryConfigs.reduce(
-    (runningSum, { matchValue }) => runningSum + (countsByCategory[matchValue] ?? 0),
-    0,
-  )
-  if (totalCount === 0) return '-'
-  return categoryConfigs
-    .map(({ matchValue, displayLabel }) => {
-      const categoryCount = countsByCategory[matchValue] ?? 0
-      const categoryPercent = Math.round((categoryCount / totalCount) * 100)
-      return `${displayLabel}: ${categoryCount} (${categoryPercent}%)`
-    })
-    .join(' · ')
+  const focalCount = countsByValue.focal ?? 0
+  const nonfocalCount = countsByValue.nonfocal ?? 0
+  const unknownCount = Math.max(totalPatientCount - patientsWithFocalityData, 0)
+  const segmentsWithCounts = [
+    { label: 'Focal', count: focalCount, color: FOCAL_COLOR },
+    { label: 'Nonfocal', count: nonfocalCount, color: NONFOCAL_COLOR },
+    { label: 'Unknown', count: unknownCount, color: FOCALITY_UNKNOWN_COLOR },
+  ]
+  return { segments: addPercentages(segmentsWithCounts) }
 }
 
-function formatCategoryBreakdown(rows, categoryColumn, maxCategoriesShown = 3) {
-  if (!rows.length) return '-'
-  const totalCount = rows.reduce((runningSum, row) => runningSum + Number(row.count), 0)
-  if (totalCount === 0) return '-'
-  const topCategories = rows.slice(0, maxCategoriesShown)
-  const formattedTopCategories = topCategories.map((row) => {
-    const categoryCount = Number(row.count)
-    const categoryPercent = Math.round((categoryCount / totalCount) * 100)
-    return `${row[categoryColumn]}: ${categoryCount} (${categoryPercent}%)`
-  })
-  const remainingCategoryCount = rows.length - topCategories.length
-  if (remainingCategoryCount > 0) {
-    formattedTopCategories.push(`+${remainingCategoryCount} more`)
-  }
-  return formattedTopCategories.join(' · ')
+function buildInterventionTypeBreakdown(rows) {
+  const categories = rows
+    .map((row) => ({
+      label: String(row.intervention_type ?? '').trim(),
+      count: Number(row.count) || 0,
+    }))
+    .filter((category) => category.label !== '' && category.count > 0)
+    .sort((a, b) => b.count - a.count)
+  const totalPatientCount = categories.reduce(
+    (runningSum, category) => runningSum + category.count,
+    0,
+  )
+  return { categories, totalPatientCount }
+}
+
+function addPercentages(segmentsWithCounts) {
+  const totalSegmentCount = segmentsWithCounts.reduce((sum, segment) => sum + segment.count, 0)
+  return segmentsWithCounts.map((segment) => ({
+    ...segment,
+    percent:
+      totalSegmentCount > 0 ? Math.round((segment.count / totalSegmentCount) * 100) : 0,
+  }))
 }

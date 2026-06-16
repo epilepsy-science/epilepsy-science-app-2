@@ -92,13 +92,15 @@ const donutArcs = computed(() => {
   height: 100%;
   padding: 16px 20px;
   box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  color: $gray_5;
 }
 
 .widget-title {
   margin: 0 0 12px;
   font-size: 15px;
   font-weight: 600;
-  color: #1c1c1c;
+  color: $gray_6;
 }
 
 .widget-body {
@@ -111,7 +113,7 @@ const donutArcs = computed(() => {
 
 .widget-body-empty {
   justify-content: center;
-  color: #999;
+  color: $lightGrey;
   font-size: 13px;
 }
 
@@ -140,14 +142,14 @@ const donutArcs = computed(() => {
 .donut-center-total {
   font-size: 22px;
   font-weight: 700;
-  color: #1c1c1c;
+  color: $gray_6;
   line-height: 1;
 }
 
 .donut-center-caption {
   margin-top: 4px;
   font-size: 12px;
-  color: #888;
+  color: $lightGrey;
 }
 
 .legend {
@@ -164,7 +166,7 @@ const donutArcs = computed(() => {
   align-items: center;
   gap: 10px;
   font-size: 13px;
-  color: #333;
+  color: $gray_5;
 }
 
 .legend-swatch {
@@ -182,16 +184,16 @@ const donutArcs = computed(() => {
 
 .legend-count {
   font-weight: 600;
-  color: #1c1c1c;
+  color: $gray_6;
 }
 
 .legend-percent {
-  color: #555;
+  color: $neutralGrey;
 }
 
 .widget-footer {
   margin-top: 12px;
   font-size: 12px;
-  color: #999;
+  color: $lightGrey;
 }
 </style>

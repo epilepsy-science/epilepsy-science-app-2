@@ -1,11 +1,11 @@
 <template>
-  <div class="mri-lesion-widget">
+  <div class="ieeg-focality-widget">
     <div class="widget-header">
       <div class="title-block">
-        <h3 class="widget-title">MRI lesional?</h3>
-        <p class="widget-subtitle">Lesionality on preimplant MRI (if available).</p>
+        <h3 class="widget-title">iEEG focal vs non-focal</h3>
+        <p class="widget-subtitle">Focality determined from iEEG evaluation.</p>
       </div>
-      <span class="n-badge">N = {{ totalKnownCount }} of {{ totalPatientCount }}</span>
+      <span class="n-badge">N = {{ totalSegmentCount }}</span>
     </div>
     <div v-if="hasData" class="widget-body">
       <div class="donut-wrap">
@@ -49,7 +49,7 @@
       </div>
       <ul class="legend">
         <li
-          v-for="segment in displaySegments"
+          v-for="segment in segments"
           :key="segment.label"
           class="legend-row"
         >
@@ -62,10 +62,6 @@
       </ul>
     </div>
     <div v-else class="widget-body widget-body-empty">No data</div>
-    <div v-if="hasData" class="widget-footer">
-      N = {{ totalKnownCount }} of {{ totalPatientCount }};
-      {{ unknownCount }} patients without MRI data shown as Unknown
-    </div>
   </div>
 </template>
 
@@ -74,9 +70,6 @@ import { computed } from 'vue'
 
 const props = defineProps({
   segments: { type: Array, required: true },
-  totalKnownCount: { type: Number, required: true },
-  unknownCount: { type: Number, required: true },
-  totalPatientCount: { type: Number, required: true },
 })
 
 const chartSize = 200
@@ -86,18 +79,17 @@ const donutRadius = 60
 const donutCircumference = 2 * Math.PI * donutRadius
 const labelRingRadius = donutRadius + donutStrokeWidth / 2 + 12
 
-const displaySegments = computed(() => props.segments)
-
-const hasData = computed(
-  () => props.totalPatientCount > 0 && props.segments.length > 0,
+const totalSegmentCount = computed(() =>
+  props.segments.reduce((sum, segment) => sum + segment.count, 0),
 )
 
+const hasData = computed(() => totalSegmentCount.value > 0)
+
 const donutArcs = computed(() => {
-  const totalForDonut = props.segments.reduce((sum, segment) => sum + segment.count, 0)
-  if (totalForDonut === 0) return []
+  if (totalSegmentCount.value === 0) return []
   let cumulativeFraction = 0
   return props.segments.map((segment) => {
-    const segmentFraction = segment.count / totalForDonut
+    const segmentFraction = segment.count / totalSegmentCount.value
     const segmentLength = donutCircumference * segmentFraction
     const midFraction = cumulativeFraction + segmentFraction / 2
     const labelAngle = -Math.PI / 2 + midFraction * 2 * Math.PI
@@ -124,7 +116,7 @@ const donutArcs = computed(() => {
 </script>
 
 <style scoped lang="scss">
-.mri-lesion-widget {
+.ieeg-focality-widget {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -227,11 +219,5 @@ const donutArcs = computed(() => {
   height: 14px;
   border-radius: 3px;
   flex-shrink: 0;
-}
-
-.widget-footer {
-  margin-top: 12px;
-  font-size: 12px;
-  color: $lightGrey;
 }
 </style>

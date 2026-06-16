@@ -42,6 +42,8 @@ defineProps({
   height: 100%;
   padding: 16px;
   box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  color: $gray_5;
 }
 
 .widget-header {
@@ -52,13 +54,13 @@ defineProps({
   margin: 0 0 4px;
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: $gray_6;
 }
 
 .widget-subtitle {
   margin: 0;
   font-size: 12px;
-  color: #666;
+  color: $neutralGrey;
 }
 
 .bar-list {
@@ -78,25 +80,25 @@ defineProps({
 
 .bar-label {
   font-weight: 500;
-  color: #333;
+  color: $gray_6;
 }
 
 .bar-track {
   height: 14px;
-  background-color: #eef1f6;
+  background-color: $background;
   border-radius: 4px;
   overflow: hidden;
 }
 
 .bar-fill {
   height: 100%;
-  background-color: #297fca;
+  background-color: $es-primary-color;
   transition: width 0.3s ease;
 }
 
 .bar-value {
   text-align: right;
-  color: #555;
+  color: $gray_5;
   font-variant-numeric: tabular-nums;
 }
 </style>

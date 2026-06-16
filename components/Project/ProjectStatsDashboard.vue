@@ -16,6 +16,8 @@ import SexBreakdownWidget from './StatsWidgets/SexBreakdownWidget.vue'
 import AgeAtIeegImplantWidget from './StatsWidgets/AgeAtIeegImplantWidget.vue'
 import MriLesionWidget from './StatsWidgets/MriLesionWidget.vue'
 import FiveSenseScoreWidget from './StatsWidgets/FiveSenseScoreWidget.vue'
+import IeegFocalityWidget from './StatsWidgets/IeegFocalityWidget.vue'
+import InterventionTypeWidget from './StatsWidgets/InterventionTypeWidget.vue'
 import SectionHeaderWidget from './StatsWidgets/SectionHeaderWidget.vue'
 
 const pageStore = useMainStore()
@@ -41,6 +43,8 @@ const availableWidgets = [
   { name: 'AgeAtIeegImplantWidget', component: markRaw(AgeAtIeegImplantWidget) },
   { name: 'MriLesionWidget', component: markRaw(MriLesionWidget) },
   { name: 'FiveSenseScoreWidget', component: markRaw(FiveSenseScoreWidget) },
+  { name: 'IeegFocalityWidget', component: markRaw(IeegFocalityWidget) },
+  { name: 'InterventionTypeWidget', component: markRaw(InterventionTypeWidget) },
   { name: 'SectionHeaderWidget', component: markRaw(SectionHeaderWidget) },
 ]
 
@@ -143,8 +147,30 @@ const defaultLayout = computed(() => [
       totalPatientCount: epilepsyStats.value.fiveSenseScore.totalPatientCount,
     },
   },
-  textWidget({ id: 'stats-ieeg-focality',      x: 0, y: 28, w: 6, h: 4, name: 'Post-implant · iEEG focality', value: epilepsyStats.value.ieegFocalityBreakdown }),
-  textWidget({ id: 'stats-intervention-type',  x: 6, y: 28, w: 6, h: 4, name: 'Post-implant · Intervention type', value: epilepsyStats.value.interventionTypeBreakdown }),
+  sectionHeaderWidget({ id: 'section-postimplant', x: 0, y: 28, w: 12, title: 'D · Postimplant' }),
+  {
+    id: 'stats-ieeg-focality',
+    x: 0, y: 29, w: 6, h: 8,
+    componentKey: 'IeegFocalityWidget',
+    component: markRaw(IeegFocalityWidget),
+    componentName: '',
+    hideHeader: true,
+    Props: {
+      segments: epilepsyStats.value.ieegFocalityBreakdown.segments,
+    },
+  },
+  {
+    id: 'stats-intervention-type',
+    x: 6, y: 29, w: 6, h: 8,
+    componentKey: 'InterventionTypeWidget',
+    component: markRaw(InterventionTypeWidget),
+    componentName: '',
+    hideHeader: true,
+    Props: {
+      categories: epilepsyStats.value.interventionTypeBreakdown.categories,
+      totalPatientCount: epilepsyStats.value.interventionTypeBreakdown.totalPatientCount,
+    },
+  },
 ])
 
 const dashboardOptions = computed(() => ({
@@ -160,12 +186,22 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.project-stats-dashboard :deep(.dashboard-app),
+.project-stats-dashboard :deep(.static-dashboard) {
+  font-family: 'Montserrat', sans-serif;
+}
+
 .project-stats-dashboard :deep(.text-widget-wrap h2) {
   font-size: 15px;
   font-weight: 600;
   line-height: 1.4;
   margin: 0;
-  color: #1c1c1c;
+  color: $gray_6;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.project-stats-dashboard :deep(.widget-name) {
+  font-family: 'Montserrat', sans-serif;
 }
 
 .project-stats-dashboard :deep(.grid-stack-item-content:has(.section-header-widget)) {

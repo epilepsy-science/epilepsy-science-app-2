@@ -19,12 +19,13 @@ defineProps({
   height: 100%;
   padding: 0 4px;
   box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .accent-bar {
   width: 4px;
   height: 16px;
-  background-color: #3eaf7c;
+  background-color: $purple;
   border-radius: 2px;
   flex-shrink: 0;
 }
@@ -34,6 +35,6 @@ defineProps({
   font-weight: 600;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: #666;
+  color: $neutralGrey;
 }
 </style>
