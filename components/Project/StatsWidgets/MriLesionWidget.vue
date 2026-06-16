@@ -2,7 +2,7 @@
   <div class="mri-lesion-widget">
     <div class="widget-header">
       <div class="title-block">
-        <h3 class="widget-title">MRI lesional?</h3>
+        <h3 class="widget-title">MRI lesional</h3>
         <p class="widget-subtitle">Lesionality on preimplant MRI (if available).</p>
       </div>
       <span class="n-badge">N = {{ totalKnownCount }} of {{ totalPatientCount }}</span>

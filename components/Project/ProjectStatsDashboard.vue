@@ -105,21 +105,23 @@ const defaultLayout = computed(() => [
       totalCount: epilepsyStats.value.ageAtIeegImplant.totalCount,
     },
   },
+  sectionHeaderWidget({ id: 'section-modality-coverage', x: 0, y: 11, w: 12, title: 'Modality Coverage' }),
   {
     id: 'stats-modality-coverage',
-    x: 0, y: 11, w: 12, h: 8,
+    x: 0, y: 12, w: 12, h: 8,
     componentKey: 'ModalityCoverageWidget',
     component: markRaw(ModalityCoverageWidget),
-    componentName: 'Modality Coverage',
+    componentName: '',
+    hideHeader: true,
     Props: {
       modalityCoverage: modalityCoverage.value,
       totalPatientCount: totalPatientCount.value,
     },
   },
-  sectionHeaderWidget({ id: 'section-preimplant', x: 0, y: 19, w: 12, title: 'C · Preimplant' }),
+  sectionHeaderWidget({ id: 'section-preimplant', x: 0, y: 20, w: 12, title: 'Preimplant' }),
   {
     id: 'stats-mri-lesion',
-    x: 0, y: 20, w: 6, h: 8,
+    x: 0, y: 21, w: 6, h: 8,
     componentKey: 'MriLesionWidget',
     component: markRaw(MriLesionWidget),
     componentName: '',
@@ -133,7 +135,7 @@ const defaultLayout = computed(() => [
   },
   {
     id: 'stats-five-sense',
-    x: 6, y: 20, w: 6, h: 8,
+    x: 6, y: 21, w: 6, h: 8,
     componentKey: 'FiveSenseScoreWidget',
     component: markRaw(FiveSenseScoreWidget),
     componentName: '',
@@ -147,10 +149,10 @@ const defaultLayout = computed(() => [
       totalPatientCount: epilepsyStats.value.fiveSenseScore.totalPatientCount,
     },
   },
-  sectionHeaderWidget({ id: 'section-postimplant', x: 0, y: 28, w: 12, title: 'D · Postimplant' }),
+  sectionHeaderWidget({ id: 'section-postimplant', x: 0, y: 29, w: 12, title: 'Postimplant' }),
   {
     id: 'stats-ieeg-focality',
-    x: 0, y: 29, w: 6, h: 8,
+    x: 0, y: 30, w: 6, h: 8,
     componentKey: 'IeegFocalityWidget',
     component: markRaw(IeegFocalityWidget),
     componentName: '',
@@ -161,7 +163,7 @@ const defaultLayout = computed(() => [
   },
   {
     id: 'stats-intervention-type',
-    x: 6, y: 29, w: 6, h: 8,
+    x: 6, y: 30, w: 6, h: 8,
     componentKey: 'InterventionTypeWidget',
     component: markRaw(InterventionTypeWidget),
     componentName: '',
@@ -192,9 +194,9 @@ onMounted(() => {
 }
 
 .project-stats-dashboard :deep(.text-widget-wrap h2) {
-  font-size: 15px;
+  font-size: 30px;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.1;
   margin: 0;
   color: $gray_6;
   font-family: 'Montserrat', sans-serif;

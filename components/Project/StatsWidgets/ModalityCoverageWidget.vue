@@ -1,7 +1,6 @@
 <template>
   <div class="modality-coverage-widget">
     <div class="widget-header">
-      <h3 class="widget-title">Modality coverage</h3>
       <p class="widget-subtitle">
         % of N = {{ totalPatientCount }} patients with a record in each table
       </p>
@@ -40,7 +39,7 @@ defineProps({
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 16px;
+  padding: 16px 20px;
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
   color: $gray_5;
@@ -48,13 +47,6 @@ defineProps({
 
 .widget-header {
   margin-bottom: 16px;
-}
-
-.widget-title {
-  margin: 0 0 4px;
-  font-size: 14px;
-  font-weight: 600;
-  color: $gray_6;
 }
 
 .widget-subtitle {
