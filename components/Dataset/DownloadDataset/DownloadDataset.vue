@@ -168,6 +168,7 @@ function openRehydrationModal() {
 
 <template>
   <div>
+    <client-only>
     <el-dialog
       :modelValue="visible"
       :show-close="false"
@@ -273,6 +274,7 @@ function openRehydrationModal() {
         </div>
       </div>
     </el-dialog>
+    </client-only>
 
   </div>
 </template>

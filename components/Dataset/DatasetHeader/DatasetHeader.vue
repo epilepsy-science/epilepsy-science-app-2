@@ -519,6 +519,7 @@ const isRehydrationModalVisible = ref(false)
                   :content="datasetLicenseName"
                   placement="top"
                   :visible-arrow="false"
+                  :teleported="false"
                 >
                   <a :href="licenseLink" target="_blank">
                     {{ datasetLicense }}

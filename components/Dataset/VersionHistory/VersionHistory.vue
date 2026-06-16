@@ -33,6 +33,7 @@ function closeDialog() {
 
 <template>
   <div>
+    <client-only>
     <el-dialog
       :modelValue="visible"
       @update:modelValue="visible = $event"
@@ -86,6 +87,7 @@ function closeDialog() {
         </div>
       </div>
     </el-dialog>
+    </client-only>
 
   </div>
 </template>
