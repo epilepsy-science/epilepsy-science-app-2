@@ -221,7 +221,7 @@ function computeNiceMax(rawMax, desiredTickCount) {
 }
 
 .bar-fill {
-  fill: $purple;
+  fill: $es-primary-color;
 }
 
 .row-label {

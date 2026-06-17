@@ -297,7 +297,7 @@ const quartileMarkers = computed(() => {
 }
 
 .histogram-bar {
-  fill: $green_2;
+  fill: $es-primary-color;
 }
 
 .axis-label {

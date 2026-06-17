@@ -25,7 +25,7 @@ defineProps({
 .accent-bar {
   width: 4px;
   height: 16px;
-  background-color: $purple;
+  background-color: $es-primary-color;
   border-radius: 2px;
   flex-shrink: 0;
 }
