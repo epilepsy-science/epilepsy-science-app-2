@@ -19,6 +19,7 @@ logs
 .fleet
 .idea
 env_var.sh
+public/schemas/metadata_schema.json
 
 # Local env files
 .env

@@ -1,0 +1,223 @@
+<template>
+  <div class="ieeg-focality-widget">
+    <div class="widget-header">
+      <div class="title-block">
+        <h3 class="widget-title">iEEG focal vs non-focal</h3>
+        <p class="widget-subtitle">Focality determined from iEEG evaluation.</p>
+      </div>
+      <span class="n-badge">N = {{ totalSegmentCount }}</span>
+    </div>
+    <div v-if="hasData" class="widget-body">
+      <div class="donut-wrap">
+        <svg
+          class="donut-chart"
+          :viewBox="`0 0 ${chartSize} ${chartSize}`"
+          aria-hidden="true"
+        >
+          <circle
+            v-for="arc in donutArcs"
+            :key="`arc-${arc.label}`"
+            :cx="chartCenter"
+            :cy="chartCenter"
+            :r="donutRadius"
+            fill="none"
+            :stroke="arc.color"
+            :stroke-width="donutStrokeWidth"
+            :stroke-dasharray="arc.dashArray"
+            :stroke-dashoffset="arc.dashOffset"
+            :transform="`rotate(-90 ${chartCenter} ${chartCenter})`"
+          />
+          <g
+            v-for="arc in donutArcs"
+            :key="`label-${arc.label}`"
+            class="donut-label"
+          >
+            <text
+              :x="arc.labelX"
+              :y="arc.labelY - 3"
+              class="donut-label-count"
+              :text-anchor="arc.textAnchor"
+            >{{ arc.count }}</text>
+            <text
+              :x="arc.labelX"
+              :y="arc.labelY + 9"
+              class="donut-label-percent"
+              :text-anchor="arc.textAnchor"
+            >({{ arc.percent }}%)</text>
+          </g>
+        </svg>
+      </div>
+      <ul class="legend">
+        <li
+          v-for="segment in segments"
+          :key="segment.label"
+          class="legend-row"
+        >
+          <span
+            class="legend-swatch"
+            :style="{ backgroundColor: segment.color }"
+          />
+          <span class="legend-text">{{ segment.label }}</span>
+        </li>
+      </ul>
+    </div>
+    <div v-else class="widget-body widget-body-empty">No data</div>
+  </div>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+
+const props = defineProps({
+  segments: { type: Array, required: true },
+})
+
+const chartSize = 200
+const chartCenter = chartSize / 2
+const donutStrokeWidth = 24
+const donutRadius = 60
+const donutCircumference = 2 * Math.PI * donutRadius
+const labelRingRadius = donutRadius + donutStrokeWidth / 2 + 12
+
+const totalSegmentCount = computed(() =>
+  props.segments.reduce((sum, segment) => sum + segment.count, 0),
+)
+
+const hasData = computed(() => totalSegmentCount.value > 0)
+
+const donutArcs = computed(() => {
+  if (totalSegmentCount.value === 0) return []
+  let cumulativeFraction = 0
+  return props.segments.map((segment) => {
+    const segmentFraction = segment.count / totalSegmentCount.value
+    const segmentLength = donutCircumference * segmentFraction
+    const midFraction = cumulativeFraction + segmentFraction / 2
+    const labelAngle = -Math.PI / 2 + midFraction * 2 * Math.PI
+    const labelX = chartCenter + labelRingRadius * Math.cos(labelAngle)
+    const labelY = chartCenter + labelRingRadius * Math.sin(labelAngle)
+    const horizontalOffset = labelX - chartCenter
+    const textAnchor =
+      Math.abs(horizontalOffset) < 12 ? 'middle' : horizontalOffset > 0 ? 'start' : 'end'
+    const arc = {
+      label: segment.label,
+      color: segment.color,
+      count: segment.count,
+      percent: segment.percent,
+      dashArray: `${segmentLength} ${donutCircumference}`,
+      dashOffset: -donutCircumference * cumulativeFraction,
+      labelX,
+      labelY,
+      textAnchor,
+    }
+    cumulativeFraction += segmentFraction
+    return arc
+  })
+})
+</script>
+
+<style scoped lang="scss">
+.ieeg-focality-widget {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  color: $gray_5;
+}
+
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.title-block {
+  min-width: 0;
+}
+
+.widget-title {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: 600;
+  color: $gray_6;
+}
+
+.widget-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: $neutralGrey;
+}
+
+.n-badge {
+  font-size: 12px;
+  color: $gray_5;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.widget-body {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex: 1;
+  min-height: 0;
+}
+
+.widget-body-empty {
+  justify-content: center;
+  color: $lightGrey;
+  font-size: 13px;
+}
+
+.donut-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 200px;
+  height: 200px;
+}
+
+.donut-chart {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.donut-label-count {
+  font-size: 12px;
+  font-weight: 700;
+  fill: $gray_6;
+}
+
+.donut-label-percent {
+  font-size: 10px;
+  fill: $neutralGrey;
+}
+
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: $gray_6;
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+</style>

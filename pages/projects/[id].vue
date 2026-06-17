@@ -12,7 +12,7 @@
     <div v-else-if="project" class="project-detail">
       <div class="project-header">
         <NuxtLink :to="{ name: 'projects' }" class="header-link">
-          <IconArrowLeft class="header-link-icon"/>
+          <IconArrowLeft class="header-link-icon" />
           View all Projects
         </NuxtLink>
         <h1 class="project-title">{{ projectName }}</h1>
@@ -37,31 +37,9 @@
         <div v-if="activeTab === 'overview'" class="overview-section">
           <div class="overview-layout">
             <div class="overview-main">
-              <client-only>
-                <PennsieveDashboard :options="dashboardOptions" />
-              </client-only>
+              <ProjectStatsDashboard />
             </div>
-
-            <aside class="overview-sidebar">
-              <div v-if="projectBannerImage" class="sidebar-logo-wrapper">
-                <img :src="projectBannerImage" alt="Project banner" class="sidebar-logo" />
-              </div>
-
-              <div v-if="projectDescription" class="sidebar-item">
-                <h3 class="sidebar-label">Description</h3>
-                <div class="sidebar-text" v-html="formattedDescription"></div>
-              </div>
-
-              <div v-if="projectInvestigators.length > 0" class="sidebar-item">
-                <h3 class="sidebar-label">Investigators</h3>
-                <p class="sidebar-text">{{ formattedInvestigators }}</p>
-              </div>
-
-              <div v-if="projectFunding.length > 0" class="sidebar-item">
-                <h3 class="sidebar-label">Funding</h3>
-                <p class="sidebar-text">{{ formattedFunding }}</p>
-              </div>
-            </aside>
+            <ProjectSidebar :project="project" />
           </div>
         </div>
 
@@ -75,7 +53,7 @@
             <p>{{ datasetsError }}</p>
           </div>
 
-          <div v-else-if="datasets && datasets.length > 0" class="datasets-list">
+          <div v-else-if="datasets.length > 0" class="datasets-list">
             <DatasetCard
               v-for="dataset in datasets"
               :key="dataset.id"
@@ -94,193 +72,45 @@
 </template>
 
 <script setup>
-import { computed, watch, markRaw, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 import DatasetCard from '~/components/Datasets/DatasetCard/DatasetCard.vue'
-import markedMixin from '@/mixins/marked/index'
-import { PennsieveDashboard, TextWidget } from 'pennsieve-dashboard'
-import 'pennsieve-dashboard/style.css'
-import { useMainStore } from '~/store/index'
 
 const route = useRoute()
-const runtimeConfig = useRuntimeConfig()
 const { $contentfulClient } = useNuxtApp()
 
-// The mixin sets up marked globally, so we can just use its parseMarkdown method
-const parseMarkdown = markedMixin.methods.parseMarkdown
-
 const activeTab = ref('overview')
-const datasets = ref([])
-const datasetsLoading = ref(false)
-const datasetsError = ref(null)
 
-const { data: project, error, status } = useLazyAsyncData(`project-${route.params.id}`, () => {
-  return $contentfulClient.getEntry(route.params.id)
-})
+const { data: project, error, status } = useLazyAsyncData(
+  `project-${route.params.id}`,
+  () => $contentfulClient.getEntry(route.params.id),
+)
 
 const isLoading = computed(() => status.value === 'pending')
+const projectName = computed(() => project.value?.fields?.name || '')
+const projectSummary = computed(() => project.value?.fields?.summary || '')
 
-const projectName = computed(() => {
-  return project.value?.fields?.name || ''
-})
+const {
+  datasets,
+  isLoading: datasetsLoading,
+  error: datasetsError,
+  fetchDatasets,
+} = useProjectDatasets(project)
 
-const projectSummary = computed(() => {
-  return project.value?.fields?.summary || ''
-})
-
-const projectDescription = computed(() => {
-  return project.value?.fields?.description || null
-})
-
-const projectBannerImage = computed(() => {
-  if (project.value?.fields?.bannerImage?.fields?.file?.url) {
-    return `https://${project.value.fields.bannerImage.fields.file.url}`
-  }
-  return null
-})
-
-const projectInvestigators = computed(() => {
-  return project.value?.fields?.investigators || []
-})
-
-const projectFunding = computed(() => {
-  return project.value?.fields?.funding || []
-})
-
-const formattedDescription = computed(() => {
-  if (!projectDescription.value) return 'No description available.'
-  return parseMarkdown(projectDescription.value)
-})
-
-const formattedInvestigators = computed(() => {
-  if (projectInvestigators.value.length === 0) return ''
-  return projectInvestigators.value.join(', ')
-})
-
-const formattedFunding = computed(() => {
-  if (projectFunding.value.length === 0) return ''
-  return projectFunding.value.join(', ')
-})
-
-// Dashboard
-const pageStore = useMainStore()
-pageStore.fetchDatasetStats()
-const stats = computed(() => pageStore.pageStats)
-
-const formattedTotalSize = computed(() => {
-  if (typeof stats.value.totalDatasetSize === 'number') {
-    return useFormatMetric(stats.value.totalDatasetSize)
-  }
-  return stats.value.totalDatasetSize
-})
-
-const patientStats = ref({ total: '-' })
-
-async function fetchPatientStats() {
-  const { queryRaw, table } = useDuckDB()
-  const results = await queryRaw(`
-    SELECT
-      COUNT(DISTINCT person_id) AS total
-    FROM ${table('pennepi_person.parquet')}
-  `)
-  if (results.length > 0) {
-    patientStats.value = {
-      total: String(results[0].total),
-    }
-  }
-}
-
-onMounted(() => {
-  fetchPatientStats()
-})
-
-const availableWidgets = [
-  { name: 'TextWidget', component: markRaw(TextWidget) },
-]
-
-const defaultLayout = computed(() => [
-  {
-    x: 0, y: 0, w: 3, h: 4,
-    id: 'stats-datasets',
-    component: markRaw(TextWidget),
-    componentName: 'Datasets Available',
-    Props: { displayText: String(stats.value.datasets) },
-  },
-  {
-    x: 3, y: 0, w: 3, h: 4,
-    id: 'stats-total-data',
-    component: markRaw(TextWidget),
-    componentName: 'Total Data',
-    Props: { displayText: formattedTotalSize.value },
-  },
-  {
-    x: 0, y: 4, w: 4, h: 4,
-    id: 'stats-patients',
-    component: markRaw(TextWidget),
-    componentName: 'Unique Patients',
-    Props: { displayText: patientStats.value.total },
-  },
-])
-
-const dashboardOptions = computed(() => ({
-  availableWidgets,
-  defaultLayout: defaultLayout.value,
-  hideEditGrid: true,
-}))
-
-const seoTitle = computed(() => {
-  return project.value ? `${projectName.value} - Projects` : 'Project'
+watch([activeTab, project], ([currentTab, currentProject]) => {
+  const shouldFetch =
+    currentTab === 'datasets' &&
+    currentProject &&
+    datasets.value.length === 0 &&
+    !datasetsLoading.value
+  if (shouldFetch) fetchDatasets()
 })
 
 useHead({
-  title: seoTitle,
+  title: computed(() => (project.value ? `${projectName.value} - Projects` : 'Project')),
   meta: [
-    {
-      name: 'description',
-      content: projectSummary.value || 'Project details'
-    }
-  ]
+    { name: 'description', content: projectSummary.value || 'Project details' },
+  ],
 })
-
-const datasetsUrl = computed(() => {
-  if (!project.value?.fields?.collectionIds?.[0]) return null
-  
-  const collectionId = project.value.fields.collectionIds[0]
-  return `${runtimeConfig.public.discover_api_host}/datasets/${collectionId}/versions/1/dois?limit=200&offset=0`
-})
-
-function fetchDatasets() {
-  if (!datasetsUrl.value) return
-  
-  datasetsLoading.value = true
-  datasetsError.value = null
-
-  useSendXhr(datasetsUrl.value, {
-    header: {},
-    method: 'GET',
-  })
-    .then((response) => {
-      // Extract data from the dois array
-      if (response.dois && Array.isArray(response.dois)) {
-        datasets.value = response.dois.map(item => item.data || item)
-      } else {
-        datasets.value = []
-      }
-      datasetsLoading.value = false
-    })
-    .catch((err) => {
-      console.error('Failed to fetch datasets:', err)
-      datasetsError.value = err.message || 'Failed to load datasets'
-      datasetsLoading.value = false
-      datasets.value = []
-    })
-}
-
-// Watch for tab changes to fetch datasets when datasets tab is opened
-watch([activeTab, project], ([newTab, projectData]) => {
-  if (newTab === 'datasets' && projectData && datasets.value.length === 0 && !datasetsLoading.value) {
-    fetchDatasets()
-  }
-}, { immediate: false })
 </script>
 
 <style scoped lang="scss">
@@ -306,24 +136,23 @@ watch([activeTab, project], ([newTab, projectData]) => {
 }
 
 .project-header {
-
   .header-link {
-  color: #4d628c;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 16px;
-
-  &:focus {
     color: #4d628c;
-  }
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
 
-  .header-link-icon {
-    color: #4d628c;
-    height: 10px;
-    width: 10px;
-    margin-right: 4px;
+    &:focus {
+      color: #4d628c;
+    }
+
+    .header-link-icon {
+      color: #4d628c;
+      height: 10px;
+      width: 10px;
+      margin-right: 4px;
+    }
   }
-}
 
   .project-title {
     font-size: 2rem;
@@ -359,7 +188,7 @@ watch([activeTab, project], ([newTab, projectData]) => {
 
   &.active {
     color: #297fca;
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -392,55 +221,12 @@ watch([activeTab, project], ([newTab, projectData]) => {
   border-radius: 8px;
   border: 1px solid #e0e0e0;
   padding: 24px;
+
+  --dash-widget-border: 1px solid #d0d4dc;
+  --dash-widget-radius: 8px;
 }
 
-.overview-sidebar {
-  width: 380px;
-  flex-shrink: 0;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.sidebar-logo-wrapper {
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-
-  .sidebar-logo {
-    width: 240px;
-    height: 240px;
-    display: block;
-    object-fit: contain;
-  }
-}
-
-.sidebar-item {
-  padding: 1rem 1.25rem;
-  border-top: 1px solid #f0f0f0;
-}
-
-.sidebar-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #999;
-  margin: 0 0 0.35rem 0;
-}
-
-.sidebar-text {
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: #444;
-  margin: 0;
-}
-
-.datasets-section {
-  width: 100%;
-}
-
+.datasets-section,
 .datasets-list {
   width: 100%;
 }
@@ -463,10 +249,5 @@ watch([activeTab, project], ([newTab, projectData]) => {
   .overview-layout {
     flex-direction: column;
   }
-
-  .overview-sidebar {
-    width: 100%;
-  }
 }
 </style>
-
