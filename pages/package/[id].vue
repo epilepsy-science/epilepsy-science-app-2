@@ -1,6 +1,6 @@
 <script setup>
 import { useMainStore } from "~/store/index.js";
-import { ref, onMounted, computed, shallowRef } from "vue";
+import { ref, onMounted, computed, shallowRef, nextTick } from "vue";
 import { Markdown, TextViewer, CSVViewer } from "@pennsieve-viz/core";
 import "@pennsieve-viz/core/style.css";
 
@@ -52,17 +52,29 @@ const csvFileTypes = ["CSV", "TSV"]
 const textFileTypes = ["TXT", "JSON", "XML", "LOG", "YAML", "YML"]
 const markdownFileTypes = ["MD", "MARKDOWN"]
 const imageFileTypes = ["PNG", "JPG", "JPEG", "GIF", "SVG", "WEBP", "BMP", "ICO"]
+const neuroglancerFileTypes = ["NII", "NII.GZ", "ZARR", "OME.TIFF", "OME.TIF"]
 
 const isReady = computed(() => !isLoading.value && !!fileType.value)
+const isLoadingAssets = ref(false)
+
+const resolvedFileType = computed(() => {
+  const type = fileType.value.toUpperCase()
+  const uri = fileUri.value.toLowerCase()
+  // Handle compound extensions
+  if (type === "GZ" && uri.endsWith(".nii.gz")) return "NII.GZ"
+  if ((type === "TIFF" || type === "TIF") && uri.match(/\.ome\.tiff?$/)) return "OME.TIFF"
+  return type
+})
 
 const viewerType = computed(() => {
   if (!isReady.value) return null
-  const type = fileType.value.toUpperCase()
+  const type = resolvedFileType.value
   if (timeseriesFileTypes.includes(type)) return "timeseries"
   if (csvFileTypes.includes(type)) return "csv"
   if (markdownFileTypes.includes(type)) return "markdown"
   if (textFileTypes.includes(type)) return "text"
   if (imageFileTypes.includes(type)) return "image"
+  if (neuroglancerFileTypes.includes(type)) return "neuroglancer"
   return "unsupported"
 })
 
@@ -134,10 +146,11 @@ async function initTimeseriesViewer(sourcePackageId, assetId) {
   }
 }
 
-function processFileData(fileData, datasetId, version) {
+async function processFileData(fileData, datasetId, version) {
   fileType.value = fileData.fileType || "";
-  fileUri.value = fileData.uri || "";
-  const type = fileType.value.toUpperCase();
+  fileUri.value = fileData.uri || fileData.path || "";
+  await nextTick();
+  const type = resolvedFileType.value;
   if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
     loadFileContent(fileData, datasetId, version);
   }
@@ -147,6 +160,7 @@ function processFileData(fileData, datasetId, version) {
 
   // Fetch all viewer assets and categorize them
   const sourcePackageId = fileData.sourcePackageId || route.params.id;
+  isLoadingAssets.value = true;
   fetchViewerAssets(sourcePackageId).then((assets) => {
     const tsAssets = assets.filter((a) => a.asset_type === "timeseries");
     const ngAssets = assets.filter((a) => NEUROGLANCER_ASSET_TYPES.includes(a.asset_type));
@@ -161,6 +175,8 @@ function processFileData(fileData, datasetId, version) {
     } else if (timeseriesFileTypes.includes(type)) {
       initTimeseriesViewer(sourcePackageId, undefined);
     }
+  }).finally(() => {
+    isLoadingAssets.value = false;
   });
 }
 
@@ -322,6 +338,14 @@ onMounted(() => {
             :alt="fileType"
             class="image-viewer"
           />
+        </div>
+
+        <!-- Neuroglancer file type waiting for assets -->
+        <div v-else-if="viewerType === 'neuroglancer' && isLoadingAssets" class="viewer-message">
+          Loading viewer...
+        </div>
+        <div v-else-if="viewerType === 'neuroglancer' && !hasOrthogonalAssets" class="viewer-message">
+          No viewer assets available for this file.
         </div>
 
         <!-- Unsupported -->

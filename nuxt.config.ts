@@ -171,7 +171,7 @@ export default defineNuxtConfig({
       deploy_env: process.env.DEPLOY_ENV || "prod",
       orthogonal_viewer_url:
         process.env.PENNSIEVE_ORTHOGONAL_VIEWER_URL ||
-        "https://orthogonal-viewer.pennsieve.net",
+        "https://orthogonal-viewer.pennsieve.io",
     },
   },
 
