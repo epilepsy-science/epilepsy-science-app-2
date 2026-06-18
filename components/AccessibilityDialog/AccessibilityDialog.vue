@@ -1,4 +1,5 @@
 <template>
+  <client-only>
   <el-dialog
     v-model="showModal"
     :show-close="false"
@@ -38,6 +39,7 @@
       </div>
     </div>
   </el-dialog>
+  </client-only>
 </template>
 
 <script>

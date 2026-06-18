@@ -372,6 +372,7 @@ function handleTimeseriesDirectoryClick(row) {
       <input v-model="zipData" type="hidden" name="data" />
     </form>
 
+    <client-only>
     <el-dialog
       v-model="confirmDownloadVisible"
       :show-close="false"
@@ -432,6 +433,7 @@ function handleTimeseriesDirectoryClick(row) {
       </template>
 
     </el-dialog>
+    </client-only>
   </div>
 </template>
 

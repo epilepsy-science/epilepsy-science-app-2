@@ -1,14 +1,16 @@
 <script setup>
 import { useMainStore } from "~/store/index.js";
-import { ref, onMounted, computed, shallowRef } from "vue";
+import { ref, onMounted, computed, shallowRef, nextTick } from "vue";
 import { Markdown, TextViewer, CSVViewer } from "@pennsieve-viz/core";
 import "@pennsieve-viz/core/style.css";
 
-// Dynamic imports for browser-only tsviewer
+// Dynamic imports for browser-only viewers
 const TSViewer = shallowRef(null);
 const viewerStore = shallowRef(null);
 const tsViewerReady = ref(false);
 const tsViewerError = ref("");
+
+const OrthogonalFrame = shallowRef(null);
 
 let tsViewerLoaded = Promise.resolve();
 if (import.meta.client) {
@@ -16,6 +18,9 @@ if (import.meta.client) {
   tsViewerLoaded = import("@pennsieve-viz/tsviewer").then((module) => {
     TSViewer.value = module.TSViewer;
     viewerStore.value = module.createViewerStore("package-viewer");
+  });
+  import("@pennsieve-viz/core").then((module) => {
+    OrthogonalFrame.value = module.OrthogonalFrame;
   });
 }
 
@@ -31,22 +36,45 @@ const isLoadingContent = ref(false);
 const contentError = ref("");
 const { fetchFileContent } = useFileContent();
 
+// Orthogonal (Zarr) viewer state
+const NEUROGLANCER_ASSET_TYPES = ["ome-zarr", "neuroglancer-precomputed"];
+const orthogonalAssets = ref([]);
+const selectedAssetIndex = ref(0);
+const orthogonalEmbedUrl = runtimeConfig.public.orthogonal_viewer_url;
+
+const selectedOrthogonalAsset = computed(
+  () => orthogonalAssets.value[selectedAssetIndex.value] || null
+);
+const hasOrthogonalAssets = computed(() => orthogonalAssets.value.length > 0);
+
 const timeseriesFileTypes = ["MEF", "EDF", "BDF", "NWB"]
 const csvFileTypes = ["CSV", "TSV"]
 const textFileTypes = ["TXT", "JSON", "XML", "LOG", "YAML", "YML"]
 const markdownFileTypes = ["MD", "MARKDOWN"]
 const imageFileTypes = ["PNG", "JPG", "JPEG", "GIF", "SVG", "WEBP", "BMP", "ICO"]
+const neuroglancerFileTypes = ["NII", "NII.GZ", "ZARR", "OME.TIFF", "OME.TIF"]
 
 const isReady = computed(() => !isLoading.value && !!fileType.value)
+const isLoadingAssets = ref(false)
+
+const resolvedFileType = computed(() => {
+  const type = fileType.value.toUpperCase()
+  const uri = fileUri.value.toLowerCase()
+  // Handle compound extensions
+  if (type === "GZ" && uri.endsWith(".nii.gz")) return "NII.GZ"
+  if ((type === "TIFF" || type === "TIF") && uri.match(/\.ome\.tiff?$/)) return "OME.TIFF"
+  return type
+})
 
 const viewerType = computed(() => {
   if (!isReady.value) return null
-  const type = fileType.value.toUpperCase()
+  const type = resolvedFileType.value
   if (timeseriesFileTypes.includes(type)) return "timeseries"
   if (csvFileTypes.includes(type)) return "csv"
   if (markdownFileTypes.includes(type)) return "markdown"
   if (textFileTypes.includes(type)) return "text"
   if (imageFileTypes.includes(type)) return "image"
+  if (neuroglancerFileTypes.includes(type)) return "neuroglancer"
   return "unsupported"
 })
 
@@ -54,7 +82,17 @@ async function fetchViewerAssets(sourcePackageId) {
   const url = `${runtimeConfig.public.packages_api_host}/discover/assets?package_id=${encodeURIComponent(sourcePackageId)}`;
   try {
     const response = await useSendXhr(url, { method: "GET" });
-    return response?.assets || [];
+    const cloudfront = response?.cloudfront || null;
+    const seen = new Set();
+    const assets = (response?.assets || [])
+      .filter((a) => {
+        if (a.status !== "ready") return false;
+        if (seen.has(a.asset_url)) return false;
+        seen.add(a.asset_url);
+        return true;
+      })
+      .map((a) => ({ ...a, cloudfront }));
+    return assets;
   } catch {
     return [];
   }
@@ -108,24 +146,38 @@ async function initTimeseriesViewer(sourcePackageId, assetId) {
   }
 }
 
-function processFileData(fileData, datasetId, version) {
+async function processFileData(fileData, datasetId, version) {
   fileType.value = fileData.fileType || "";
-  fileUri.value = fileData.uri || "";
-  const type = fileType.value.toUpperCase();
+  fileUri.value = fileData.uri || fileData.path || "";
+  await nextTick();
+  const type = resolvedFileType.value;
   if ([...textFileTypes, ...markdownFileTypes].includes(type)) {
     loadFileContent(fileData, datasetId, version);
   }
   if ([...csvFileTypes, ...imageFileTypes].includes(type)) {
     fetchPresignedUrl(fileData.path, datasetId, version);
   }
-  if (timeseriesFileTypes.includes(type)) {
-    const sourcePackageId = fileData.sourcePackageId || route.params.id;
-    fetchViewerAssets(sourcePackageId).then((assets) => {
-      const assetId = assets.length > 0 ? assets[0].id : undefined;
-      console.log('asset id is' , assetId)
-      initTimeseriesViewer(sourcePackageId, assetId);
-    });
-  }
+
+  // Fetch all viewer assets and categorize them
+  const sourcePackageId = fileData.sourcePackageId || route.params.id;
+  isLoadingAssets.value = true;
+  fetchViewerAssets(sourcePackageId).then((assets) => {
+    const tsAssets = assets.filter((a) => a.asset_type === "timeseries");
+    const ngAssets = assets.filter((a) => NEUROGLANCER_ASSET_TYPES.includes(a.asset_type));
+
+    if (ngAssets.length > 0) {
+      orthogonalAssets.value = ngAssets;
+      selectedAssetIndex.value = 0;
+    }
+
+    if (timeseriesFileTypes.includes(type) && tsAssets.length > 0) {
+      initTimeseriesViewer(sourcePackageId, tsAssets[0].id);
+    } else if (timeseriesFileTypes.includes(type)) {
+      initTimeseriesViewer(sourcePackageId, undefined);
+    }
+  }).finally(() => {
+    isLoadingAssets.value = false;
+  });
 }
 
 async function fetchFromSourcePackageId(sourcePackageId, datasetId, version) {
@@ -193,10 +245,40 @@ onMounted(() => {
     <package-details class="package-details-content" />
 
     <div class="package-viewer">
-      <h3 v-if="isReady" class="viewer-title">File Viewer</h3>
+      <h3 v-if="isReady || hasOrthogonalAssets" class="viewer-title">
+        {{ hasOrthogonalAssets ? 'Orthogonal Viewer' : 'File Viewer' }}
+      </h3>
+
+      <!-- Asset tabs when multiple orthogonal assets -->
+      <div v-if="hasOrthogonalAssets && orthogonalAssets.length > 1" class="viewer-tabs">
+        <button
+          v-for="(asset, idx) in orthogonalAssets"
+          :key="asset.asset_url"
+          class="viewer-tab"
+          :class="{ 'viewer-tab--active': idx === selectedAssetIndex }"
+          type="button"
+          @click="selectedAssetIndex = idx"
+        >
+          {{ asset.name }}
+        </button>
+      </div>
+
       <div class="viewer-wrapper">
+        <!-- Orthogonal (Zarr) Viewer -->
+        <client-only v-if="hasOrthogonalAssets && selectedOrthogonalAsset">
+          <component
+            v-if="OrthogonalFrame"
+            :is="OrthogonalFrame"
+            :key="selectedOrthogonalAsset.asset_url"
+            :source="selectedOrthogonalAsset.asset_url"
+            :embed-url="orthogonalEmbedUrl"
+            :cloudfront="selectedOrthogonalAsset.cloudfront || null"
+          />
+          <div v-else class="viewer-message">Loading orthogonal viewer...</div>
+        </client-only>
+
         <!-- Loading State -->
-        <div v-if="!isReady" class="viewer-message">
+        <div v-else-if="!isReady" class="viewer-message">
           Loading viewer...
         </div>
 
@@ -258,6 +340,14 @@ onMounted(() => {
           />
         </div>
 
+        <!-- Neuroglancer file type waiting for assets -->
+        <div v-else-if="viewerType === 'neuroglancer' && isLoadingAssets" class="viewer-message">
+          Loading viewer...
+        </div>
+        <div v-else-if="viewerType === 'neuroglancer' && !hasOrthogonalAssets" class="viewer-message">
+          No viewer assets available for this file.
+        </div>
+
         <!-- Unsupported -->
         <div v-else class="viewer-message">
           Viewer is not available for this file type.
@@ -292,6 +382,33 @@ onMounted(() => {
   text-transform: uppercase;
   letter-spacing: 0.6px;
   margin: 0 0 12px;
+}
+
+.viewer-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid $gray_2;
+}
+
+.viewer-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray_4;
+  cursor: pointer;
+
+  &:hover {
+    color: $purple_1;
+  }
+
+  &--active {
+    color: $purple_1;
+    border-bottom-color: $purple_1;
+  }
 }
 
 .viewer-wrapper {

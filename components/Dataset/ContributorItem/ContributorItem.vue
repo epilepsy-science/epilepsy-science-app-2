@@ -6,6 +6,7 @@
       width="320"
       trigger="hover"
       popper-class="full-content orcid-popover"
+      :teleported="false"
       :disabled="!hasOrcid"
       @show="getOrcidData"
     >
