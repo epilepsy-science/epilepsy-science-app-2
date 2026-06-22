@@ -412,7 +412,7 @@ onMounted(() => {
 }
 
 .viewer-wrapper {
-  min-height: 200px;
+  min-height: 85vh;
 }
 
 .viewer-message {
