@@ -169,6 +169,9 @@ export default defineNuxtConfig({
       pennsieve_api_host: process.env.PENNSIEVE_API_HOST || "https://api.pennsieve.io",
       packages_api_host: process.env.PACKAGES_API_HOST || "https://api2.pennsieve.io/packages",
       deploy_env: process.env.DEPLOY_ENV || "prod",
+      orthogonal_viewer_url:
+        process.env.PENNSIEVE_ORTHOGONAL_VIEWER_URL ||
+        "https://orthogonal-viewer.pennsieve.io",
     },
   },
 

@@ -114,6 +114,7 @@ async function submitRehydrationRequest() {
 
 <template>
   <div class="request-access-dialog">
+    <client-only>
     <el-dialog
       :modelValue="visible"
       :show-close="false"
@@ -167,6 +168,7 @@ async function submitRehydrationRequest() {
         <bf-button :prevent-click-event="true" @click="onFormSubmit">Submit</bf-button>
       </div>
     </el-dialog>
+    </client-only>
 
   </div>
 </template>
