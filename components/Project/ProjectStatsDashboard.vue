@@ -97,6 +97,8 @@ const defaultLayout = computed(() => [
     hideHeader: true,
     Props: {
       binCounts: epilepsyStats.value.ageAtIeegImplant.binCounts,
+      binStartAge: epilepsyStats.value.ageAtIeegImplant.binStartAge,
+      binWidthYears: epilepsyStats.value.ageAtIeegImplant.binWidthYears,
       medianAge: epilepsyStats.value.ageAtIeegImplant.medianAge,
       q1Age: epilepsyStats.value.ageAtIeegImplant.q1Age,
       q3Age: epilepsyStats.value.ageAtIeegImplant.q3Age,

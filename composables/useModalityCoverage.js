@@ -1,10 +1,10 @@
 import { ref } from 'vue'
 
 const MODALITY_TABLES = [
-  { key: 'ieeg',            label: 'iEEG',             parquetFilename: 'pennepi_ieeg_recording_parameters.parquet' },
-  { key: 'surgicalOutcome', label: 'Surgical outcome', parquetFilename: 'pennepi_intervention.parquet' },
-  { key: 'mri',             label: 'MRI',              parquetFilename: 'pennepi_mri.parquet' },
-  { key: 'fiveSense',       label: '5-SENSE',          parquetFilename: 'pennepi_5sense.parquet' },
+  { key: 'mri',             label: 'Magnetic Resonance Imaging',                parquetFilename: 'pennepi_mri.parquet' },
+  { key: 'ieeg',            label: 'Intracranial Electroencephalography',       parquetFilename: 'pennepi_ieeg_recording_parameters.parquet' },
+  { key: 'fiveSense',       label: 'Phenotypic and Assessment Data: 5-SENSE',   parquetFilename: 'pennepi_5sense.parquet' },
+  { key: 'surgicalOutcome', label: 'Surgical Outcome Assessment Data: Engel',   parquetFilename: 'pennepi_intervention.parquet' },
 ]
 
 export function useModalityCoverage() {

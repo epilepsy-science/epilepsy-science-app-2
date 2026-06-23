@@ -22,6 +22,8 @@ const EMPTY_SEX_BREAKDOWN = {
 const EMPTY_AGE_BREAKDOWN = {
   totalCount: 0,
   binCounts: [],
+  binStartAge: 0,
+  binWidthYears: 10,
   medianAge: null,
   q1Age: null,
   q3Age: null,
@@ -185,7 +187,7 @@ function buildSexBreakdown(rows) {
   }
 }
 
-const AGE_HISTOGRAM_BIN_COUNT = 8
+const AGE_HISTOGRAM_BIN_WIDTH_YEARS = 10
 
 function buildAgeBreakdown(rows) {
   const agesAtImplant = rows
@@ -201,9 +203,32 @@ function buildAgeBreakdown(rows) {
   const medianAge = computePercentile(agesAtImplant, 0.5)
   const q1Age = computePercentile(agesAtImplant, 0.25)
   const q3Age = computePercentile(agesAtImplant, 0.75)
-  const binCounts = computeHistogramBinCounts(agesAtImplant, minAge, maxAge, AGE_HISTOGRAM_BIN_COUNT)
+  const binStartAge = Math.floor(minAge / AGE_HISTOGRAM_BIN_WIDTH_YEARS) * AGE_HISTOGRAM_BIN_WIDTH_YEARS
+  const binEndAge = Math.floor(maxAge / AGE_HISTOGRAM_BIN_WIDTH_YEARS) * AGE_HISTOGRAM_BIN_WIDTH_YEARS + AGE_HISTOGRAM_BIN_WIDTH_YEARS
+  const binCount = Math.max(1, Math.round((binEndAge - binStartAge) / AGE_HISTOGRAM_BIN_WIDTH_YEARS))
+  const binCounts = computeFixedWidthBinCounts(agesAtImplant, binStartAge, AGE_HISTOGRAM_BIN_WIDTH_YEARS, binCount)
 
-  return { totalCount, minAge, maxAge, medianAge, q1Age, q3Age, binCounts }
+  return {
+    totalCount,
+    minAge,
+    maxAge,
+    medianAge,
+    q1Age,
+    q3Age,
+    binCounts,
+    binStartAge,
+    binWidthYears: AGE_HISTOGRAM_BIN_WIDTH_YEARS,
+  }
+}
+
+function computeFixedWidthBinCounts(sortedValues, binStartValue, binWidth, binCount) {
+  const binCounts = Array.from({ length: binCount }, () => 0)
+  for (const value of sortedValues) {
+    const rawBinIndex = Math.floor((value - binStartValue) / binWidth)
+    const clampedBinIndex = Math.min(Math.max(rawBinIndex, 0), binCount - 1)
+    binCounts[clampedBinIndex]++
+  }
+  return binCounts
 }
 
 function computePercentile(sortedValues, fraction) {

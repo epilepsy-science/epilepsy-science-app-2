@@ -1,10 +1,5 @@
 <template>
   <div class="modality-coverage-widget">
-    <div class="widget-header">
-      <p class="widget-subtitle">
-        % of N = {{ totalPatientCount }} patients with a record in each table
-      </p>
-    </div>
     <div class="bar-list">
       <div
         v-for="modality in modalityCoverage"
@@ -45,26 +40,17 @@ defineProps({
   color: $gray_5;
 }
 
-.widget-header {
-  margin-bottom: 16px;
-}
-
-.widget-subtitle {
-  margin: 0;
-  font-size: 12px;
-  color: $neutralGrey;
-}
-
 .bar-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
   flex: 1;
+  justify-content: center;
 }
 
 .bar-row {
   display: grid;
-  grid-template-columns: 140px 1fr 160px;
+  grid-template-columns: 280px 1fr 160px;
   align-items: center;
   gap: 12px;
   font-size: 12px;
@@ -73,6 +59,8 @@ defineProps({
 .bar-label {
   font-weight: 500;
   color: $gray_6;
+  text-align: left;
+  line-height: 1.3;
 }
 
 .bar-track {
