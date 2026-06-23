@@ -1,12 +1,6 @@
 <template>
   <div class="five-sense-widget">
-    <div class="widget-header">
-      <div class="title-block">
-        <h3 class="widget-title">5-SENSE score</h3>
-        <p class="widget-subtitle">Focality score (0 = nonfocal, 1 = highly focal).</p>
-      </div>
-      <span class="n-badge">N = {{ totalScoredCount }} of {{ totalPatientCount }}</span>
-    </div>
+    <h3 class="widget-title">Distribution of 5-SENSE Scores</h3>
     <div v-if="hasData" class="widget-body">
       <svg
         class="histogram-chart"
@@ -25,13 +19,6 @@
             :y1="tick.y"
             :y2="tick.y"
           />
-          <line
-            class="y-axis-grid"
-            :x1="chartPlotLeft"
-            :x2="chartPlotRight"
-            :y1="tick.y"
-            :y2="tick.y"
-          />
           <text
             class="axis-label"
             :x="chartPlotLeft - 4"
@@ -41,11 +28,11 @@
         </g>
         <text
           class="axis-title"
-          :x="chartPlotLeft - 22"
+          :x="chartPlotLeft - 24"
           :y="(chartPlotTop + chartPlotBottom) / 2"
-          :transform="`rotate(-90 ${chartPlotLeft - 22} ${(chartPlotTop + chartPlotBottom) / 2})`"
+          :transform="`rotate(-90 ${chartPlotLeft - 24} ${(chartPlotTop + chartPlotBottom) / 2})`"
           text-anchor="middle"
-        >Count</text>
+        >Number of patients</text>
 
         <rect
           v-for="(bar, index) in histogramBars"
@@ -58,34 +45,15 @@
           rx="1"
         />
 
-        <g
-          v-for="marker in quartileMarkers"
-          :key="`marker-${marker.label}`"
-          class="quartile-marker"
-        >
-          <line
-            class="quartile-line"
-            :x1="marker.x"
-            :x2="marker.x"
-            :y1="chartPlotTop"
-            :y2="chartPlotBottom"
-          />
-          <text
-            class="quartile-label"
-            :x="marker.x"
-            :y="chartPlotTop - 12"
-            text-anchor="middle"
-          >{{ marker.label }}</text>
-          <text
-            class="quartile-value"
-            :x="marker.x"
-            :y="chartPlotTop - 2"
-            text-anchor="middle"
-          >{{ marker.value.toFixed(2) }}</text>
-        </g>
-
         <line
-          class="x-axis-line"
+          class="axis-line"
+          :x1="chartPlotLeft"
+          :x2="chartPlotLeft"
+          :y1="chartPlotTop"
+          :y2="chartPlotBottom"
+        />
+        <line
+          class="axis-line"
           :x1="chartPlotLeft"
           :x2="chartPlotRight"
           :y1="chartPlotBottom"
@@ -118,8 +86,9 @@
       </svg>
     </div>
     <div v-else class="widget-body widget-body-empty">No data</div>
-    <div v-if="hasData && unscoredCount > 0" class="widget-footer">
-      {{ unscoredCount }} patients without 5-SENSE data (not shown).
+    <div v-if="hasData" class="widget-footer">
+      median {{ medianScoreFormatted }} · IQR {{ q1ScoreFormatted }}–{{ q3ScoreFormatted }} ·
+      N = {{ totalScoredCount }} of {{ totalPatientCount }}
     </div>
   </div>
 </template>
@@ -142,7 +111,7 @@ const chartViewWidth = 320
 const chartViewHeight = 180
 const chartPlotLeft = 38
 const chartPlotRight = chartViewWidth - 8
-const chartPlotTop = 32
+const chartPlotTop = 12
 const chartPlotBottom = chartViewHeight - 22
 
 const innerPlotWidth = chartPlotRight - chartPlotLeft
@@ -150,10 +119,6 @@ const innerPlotHeight = chartPlotBottom - chartPlotTop
 
 const hasData = computed(
   () => props.totalScoredCount > 0 && props.binCounts.length > 0,
-)
-
-const unscoredCount = computed(
-  () => Math.max(props.totalPatientCount - props.totalScoredCount, 0),
 )
 
 const yAxisNiceMax = computed(() => {
@@ -206,26 +171,13 @@ const histogramBars = computed(() => {
   })
 })
 
-function scoreToPlotX(scoreValue) {
-  const scoreSpan = props.scoreMax - props.scoreMin
-  if (scoreSpan === 0) return chartPlotLeft + innerPlotWidth / 2
-  const scoreFraction = (scoreValue - props.scoreMin) / scoreSpan
-  return chartPlotLeft + scoreFraction * innerPlotWidth
+function formatScore(scoreValue) {
+  return scoreValue == null ? '–' : scoreValue.toFixed(2)
 }
 
-const quartileMarkers = computed(() => {
-  const markers = []
-  if (props.q1Score != null) {
-    markers.push({ label: 'Q1 (25%)', value: props.q1Score, x: scoreToPlotX(props.q1Score) })
-  }
-  if (props.medianScore != null) {
-    markers.push({ label: 'Median', value: props.medianScore, x: scoreToPlotX(props.medianScore) })
-  }
-  if (props.q3Score != null) {
-    markers.push({ label: 'Q3 (75%)', value: props.q3Score, x: scoreToPlotX(props.q3Score) })
-  }
-  return markers
-})
+const medianScoreFormatted = computed(() => formatScore(props.medianScore))
+const q1ScoreFormatted = computed(() => formatScore(props.q1Score))
+const q3ScoreFormatted = computed(() => formatScore(props.q3Score))
 </script>
 
 <style scoped lang="scss">
@@ -239,36 +191,14 @@ const quartileMarkers = computed(() => {
   color: $gray_5;
 }
 
-.widget-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.title-block {
-  min-width: 0;
-}
-
 .widget-title {
-  margin: 0 0 2px;
+  margin: 0 0 12px;
   font-size: 15px;
   font-weight: 600;
+  line-height: 1.2;
   color: $gray_6;
-}
-
-.widget-subtitle {
-  margin: 0;
-  font-size: 12px;
-  color: $neutralGrey;
-}
-
-.n-badge {
-  font-size: 12px;
-  color: $gray_5;
-  white-space: nowrap;
-  flex-shrink: 0;
+  text-transform: none;
+  text-align: left;
 }
 
 .widget-body {
@@ -307,40 +237,19 @@ const quartileMarkers = computed(() => {
 
 .axis-title {
   font-size: 9px;
-  fill: $gray_5;
-}
-
-.x-axis-line,
-.y-axis-tick line:first-child,
-.x-axis-tick line {
-  stroke: $lineColor1;
-  stroke-width: 0.75;
-}
-
-.y-axis-grid {
-  stroke: $lineColor2;
-  stroke-width: 0.5;
-}
-
-.quartile-line {
-  stroke: $lightGrey;
-  stroke-width: 0.75;
-  stroke-dasharray: 3 2;
-}
-
-.quartile-label {
-  font-size: 8px;
-  fill: $neutralGrey;
-}
-
-.quartile-value {
-  font-size: 9px;
-  font-weight: 600;
   fill: $gray_6;
+  font-weight: 500;
+}
+
+.axis-line,
+.y-axis-tick line,
+.x-axis-tick line {
+  stroke: $gray_5;
+  stroke-width: 0.75;
 }
 
 .widget-footer {
-  margin-top: 8px;
+  margin-top: 12px;
   font-size: 12px;
   color: $lightGrey;
 }
