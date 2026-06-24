@@ -8,50 +8,25 @@
           v-for="tick in yAxisTicks"
           :key="`y-tick-${tick.value}`"
           class="y-tick"
+          :style="{ bottom: `${tick.bottomPercent}%` }"
         >{{ tick.value }}</span>
       </div>
       <div class="plot-area">
-        <svg
-          class="plot-svg"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <rect
+        <div
+          v-for="tick in gridlineTicks"
+          :key="`grid-${tick.value}`"
+          class="gridline"
+          :style="{ bottom: `${tick.bottomPercent}%` }"
+        ></div>
+        <div class="bars">
+          <div
             v-for="(bar, index) in histogramBars"
             :key="`bar-${index}`"
-            class="histogram-bar"
-            :x="bar.x"
-            :y="bar.y"
-            :width="bar.width"
-            :height="bar.height"
-          />
-          <line
-            v-if="medianLineXPercent != null"
-            class="median-line"
-            :x1="medianLineXPercent"
-            :x2="medianLineXPercent"
-            y1="0"
-            y2="100"
-            vector-effect="non-scaling-stroke"
-          />
-          <line
-            class="axis-line"
-            x1="0"
-            x2="0"
-            y1="0"
-            y2="100"
-            vector-effect="non-scaling-stroke"
-          />
-          <line
-            class="axis-line"
-            x1="0"
-            x2="100"
-            y1="100"
-            y2="100"
-            vector-effect="non-scaling-stroke"
-          />
-        </svg>
+            class="bar-slot"
+          >
+            <div class="bar" :style="{ height: `${bar.heightPercent}%` }"></div>
+          </div>
+        </div>
       </div>
       <div class="x-axis-ticks">
         <span
@@ -64,8 +39,13 @@
     </div>
     <div v-else class="histogram-wrap-empty">No data</div>
     <div v-if="hasData" class="widget-footer">
-      median {{ medianAgeRounded }} · IQR {{ q1AgeRounded }}–{{ q3AgeRounded }} ·
-      range {{ minAgeRounded }}–{{ maxAgeRounded }} · N = {{ totalCount }}
+      Median <span class="footer-value">{{ medianAgeRounded }}</span>
+      <span class="footer-sep">·</span>
+      IQR <span class="footer-value">{{ q1AgeRounded }}–{{ q3AgeRounded }}</span>
+      <span class="footer-sep">·</span>
+      Range <span class="footer-value">{{ minAgeRounded }}–{{ maxAgeRounded }}</span>
+      <span class="footer-sep">·</span>
+      N <span class="footer-value">{{ totalCount }}</span>
     </div>
   </div>
 </template>
@@ -84,8 +64,6 @@ const props = defineProps({
   maxAge: { type: Number, default: null },
   totalCount: { type: Number, required: true },
 })
-
-const barGapPercent = 1.5
 
 const hasData = computed(
   () => props.totalCount > 0 && props.binCounts.length > 0,
@@ -116,25 +94,24 @@ const yAxisTicks = computed(() => {
     tickValue >= 0;
     tickValue -= yAxisTickInterval.value
   ) {
-    ticks.push({ value: tickValue })
+    ticks.push({
+      value: tickValue,
+      bottomPercent: (tickValue / yAxisMaxCount.value) * 100,
+    })
   }
   return ticks
 })
 
+// Gridlines for every tick above the baseline (the 0 line is the axis itself).
+const gridlineTicks = computed(() =>
+  yAxisTicks.value.filter((tick) => tick.value > 0),
+)
+
 const histogramBars = computed(() => {
   if (!hasData.value) return []
-  const binCount = props.binCounts.length
-  const totalGapPercent = barGapPercent * (binCount - 1)
-  const barWidthPercent = (100 - totalGapPercent) / binCount
-  return props.binCounts.map((countInBin, binIndex) => {
-    const barHeightPercent = (countInBin / yAxisMaxCount.value) * 100
-    return {
-      x: binIndex * (barWidthPercent + barGapPercent),
-      y: 100 - barHeightPercent,
-      width: barWidthPercent,
-      height: barHeightPercent,
-    }
-  })
+  return props.binCounts.map((countInBin) => ({
+    heightPercent: (countInBin / yAxisMaxCount.value) * 100,
+  }))
 })
 
 const xAxisTickLabels = computed(() => {
@@ -144,15 +121,6 @@ const xAxisTickLabels = computed(() => {
     const binUpperEdge = binLowerEdge + props.binWidthYears
     return { value: `${binLowerEdge}–${binUpperEdge}` }
   })
-})
-
-const medianLineXPercent = computed(() => {
-  if (!hasData.value || props.medianAge == null) return null
-  const binCount = props.binCounts.length
-  const totalAgeSpan = binCount * props.binWidthYears
-  if (totalAgeSpan === 0) return 50
-  const fractionOfRange = (props.medianAge - props.binStartAge) / totalAgeSpan
-  return Math.min(Math.max(fractionOfRange, 0), 1) * 100
 })
 
 const medianAgeRounded = computed(() => Math.round(props.medianAge ?? 0))
@@ -174,7 +142,7 @@ const maxAgeRounded = computed(() => Math.round(props.maxAge ?? 0))
 }
 
 .widget-title {
-  margin: 0 0 12px;
+  margin: 0 0 18px;
   font-size: 15px;
   font-weight: 600;
   line-height: 1.2;
@@ -208,9 +176,11 @@ const maxAgeRounded = computed(() => Math.round(props.maxAge ?? 0))
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
-  font-size: 11px;
-  font-weight: 500;
-  color: $gray_6;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $gray_4;
   align-self: center;
   justify-self: center;
 }
@@ -218,19 +188,18 @@ const maxAgeRounded = computed(() => Math.round(props.maxAge ?? 0))
 .y-axis-ticks {
   grid-column: 2;
   grid-row: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-end;
-  font-size: 10px;
-  line-height: 1;
-  color: $gray_5;
+  position: relative;
   min-width: 22px;
-  padding-right: 4px;
 }
 
 .y-tick {
-  display: block;
+  position: absolute;
+  right: 4px;
+  transform: translateY(50%);
+  font-size: 10px;
+  line-height: 1;
+  color: $gray_4;
+  font-variant-numeric: tabular-nums;
 }
 
 .plot-area {
@@ -239,26 +208,39 @@ const maxAgeRounded = computed(() => Math.round(props.maxAge ?? 0))
   position: relative;
   min-width: 0;
   min-height: 0;
+  border-left: 1.5px solid $gray_3;
+  border-bottom: 1.5px solid $gray_3;
 }
 
-.plot-svg {
-  width: 100%;
+.gridline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: $gray_2;
+}
+
+.bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bar-slot {
+  flex: 1;
   height: 100%;
-  display: block;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 5px;
 }
 
-.histogram-bar {
-  fill: $es-primary-color;
-}
-
-.median-line {
-  stroke: $orange_1;
-  stroke-width: 1.5;
-}
-
-.axis-line {
-  stroke: $gray_5;
-  stroke-width: 1;
+.bar {
+  width: 100%;
+  min-height: 2px;
+  background: $es-primary-color;
+  border-radius: 5px 5px 0 0;
 }
 
 .x-axis-ticks {
@@ -270,23 +252,42 @@ const maxAgeRounded = computed(() => Math.round(props.maxAge ?? 0))
 .x-tick {
   flex: 1;
   text-align: center;
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 600;
   color: $gray_5;
+  font-variant-numeric: tabular-nums;
 }
 
 .x-axis-title {
   grid-column: 3;
   grid-row: 3;
   text-align: center;
-  font-size: 11px;
-  font-weight: 500;
-  color: $gray_6;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $gray_4;
   margin-top: 2px;
 }
 
 .widget-footer {
-  margin-top: 12px;
-  font-size: 12px;
-  color: $lightGrey;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid $gray_2;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  color: $gray_5;
+  font-variant-numeric: tabular-nums;
+}
+
+.footer-value {
+  color: $gray_6;
+  font-weight: 700;
+}
+
+.footer-sep {
+  margin: 0 6px;
+  color: $gray_3;
 }
 </style>
