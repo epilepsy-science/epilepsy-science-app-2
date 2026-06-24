@@ -136,12 +136,6 @@ export function useEpilepsyStats() {
       `),
     ])
 
-    const mriLesionEntryRows = await queryRaw(`
-      SELECT mri_lesion
-      FROM ${table('pennepi_mri.parquet')}
-    `)
-    console.log('mri_lesion', mriLesionEntryRows.map((row) => row.mri_lesion))
-
     const totalPatientCount = Number(patientCountRows[0]?.total ?? 0)
 
     stats.value = {
