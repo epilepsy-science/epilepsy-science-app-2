@@ -22,6 +22,8 @@ const EMPTY_SEX_BREAKDOWN = {
 const EMPTY_AGE_BREAKDOWN = {
   totalCount: 0,
   binCounts: [],
+  binStartAge: 0,
+  binWidthYears: 10,
   medianAge: null,
   q1Age: null,
   q3Age: null,
@@ -185,7 +187,7 @@ function buildSexBreakdown(rows) {
   }
 }
 
-const AGE_HISTOGRAM_BIN_COUNT = 8
+const AGE_HISTOGRAM_BIN_WIDTH_YEARS = 10
 
 function buildAgeBreakdown(rows) {
   const agesAtImplant = rows
@@ -201,9 +203,32 @@ function buildAgeBreakdown(rows) {
   const medianAge = computePercentile(agesAtImplant, 0.5)
   const q1Age = computePercentile(agesAtImplant, 0.25)
   const q3Age = computePercentile(agesAtImplant, 0.75)
-  const binCounts = computeHistogramBinCounts(agesAtImplant, minAge, maxAge, AGE_HISTOGRAM_BIN_COUNT)
+  const binStartAge = Math.floor(minAge / AGE_HISTOGRAM_BIN_WIDTH_YEARS) * AGE_HISTOGRAM_BIN_WIDTH_YEARS
+  const binEndAge = Math.floor(maxAge / AGE_HISTOGRAM_BIN_WIDTH_YEARS) * AGE_HISTOGRAM_BIN_WIDTH_YEARS + AGE_HISTOGRAM_BIN_WIDTH_YEARS
+  const binCount = Math.max(1, Math.round((binEndAge - binStartAge) / AGE_HISTOGRAM_BIN_WIDTH_YEARS))
+  const binCounts = computeFixedWidthBinCounts(agesAtImplant, binStartAge, AGE_HISTOGRAM_BIN_WIDTH_YEARS, binCount)
 
-  return { totalCount, minAge, maxAge, medianAge, q1Age, q3Age, binCounts }
+  return {
+    totalCount,
+    minAge,
+    maxAge,
+    medianAge,
+    q1Age,
+    q3Age,
+    binCounts,
+    binStartAge,
+    binWidthYears: AGE_HISTOGRAM_BIN_WIDTH_YEARS,
+  }
+}
+
+function computeFixedWidthBinCounts(sortedValues, binStartValue, binWidth, binCount) {
+  const binCounts = Array.from({ length: binCount }, () => 0)
+  for (const value of sortedValues) {
+    const rawBinIndex = Math.floor((value - binStartValue) / binWidth)
+    const clampedBinIndex = Math.min(Math.max(rawBinIndex, 0), binCount - 1)
+    binCounts[clampedBinIndex]++
+  }
+  return binCounts
 }
 
 function computePercentile(sortedValues, fraction) {
@@ -311,16 +336,31 @@ function buildIeegFocalityBreakdown(rows, patientsWithFocalityData, totalPatient
   const unknownCount = Math.max(totalPatientCount - patientsWithFocalityData, 0)
   const segmentsWithCounts = [
     { label: 'Focal', count: focalCount, color: FOCAL_COLOR },
-    { label: 'Nonfocal', count: nonfocalCount, color: NONFOCAL_COLOR },
-    { label: 'Unknown', count: unknownCount, color: FOCALITY_UNKNOWN_COLOR },
+    { label: 'Non-focal', count: nonfocalCount, color: NONFOCAL_COLOR },
+    { label: 'Other', count: unknownCount, color: FOCALITY_UNKNOWN_COLOR },
   ]
   return { segments: addPercentages(segmentsWithCounts) }
+}
+
+const INTERVENTION_LABEL_OVERRIDES = {
+  rns: 'Responsive neurostimulation',
+  vns: 'Vagus nerve stimulation',
+  dbs: 'Deep brain stimulation',
+}
+
+function formatInterventionLabel(rawLabel) {
+  const trimmedLabel = rawLabel.trim()
+  const normalizedKey = trimmedLabel.toLowerCase()
+  if (INTERVENTION_LABEL_OVERRIDES[normalizedKey]) {
+    return INTERVENTION_LABEL_OVERRIDES[normalizedKey]
+  }
+  return trimmedLabel.charAt(0).toUpperCase() + trimmedLabel.slice(1).toLowerCase()
 }
 
 function buildInterventionTypeBreakdown(rows) {
   const categories = rows
     .map((row) => ({
-      label: String(row.intervention_type ?? '').trim(),
+      label: formatInterventionLabel(String(row.intervention_type ?? '')),
       count: Number(row.count) || 0,
     }))
     .filter((category) => category.label !== '' && category.count > 0)

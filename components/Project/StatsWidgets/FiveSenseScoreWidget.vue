@@ -1,125 +1,51 @@
 <template>
   <div class="five-sense-widget">
-    <div class="widget-header">
-      <div class="title-block">
-        <h3 class="widget-title">5-SENSE score</h3>
-        <p class="widget-subtitle">Focality score (0 = nonfocal, 1 = highly focal).</p>
-      </div>
-      <span class="n-badge">N = {{ totalScoredCount }} of {{ totalPatientCount }}</span>
-    </div>
-    <div v-if="hasData" class="widget-body">
-      <svg
-        class="histogram-chart"
-        :viewBox="`0 0 ${chartViewWidth} ${chartViewHeight}`"
-        preserveAspectRatio="xMidYMid meet"
-        aria-hidden="true"
-      >
-        <g
+    <h3 class="widget-title">Distribution of 5-SENSE Scores</h3>
+    <div v-if="hasData" class="histogram-wrap">
+      <div class="y-axis-title">Number of patients</div>
+      <div class="y-axis-ticks">
+        <span
           v-for="tick in yAxisTicks"
-          :key="`y-${tick.value}`"
-          class="y-axis-tick"
-        >
-          <line
-            :x1="chartPlotLeft - 2"
-            :x2="chartPlotLeft"
-            :y1="tick.y"
-            :y2="tick.y"
-          />
-          <line
-            class="y-axis-grid"
-            :x1="chartPlotLeft"
-            :x2="chartPlotRight"
-            :y1="tick.y"
-            :y2="tick.y"
-          />
-          <text
-            class="axis-label"
-            :x="chartPlotLeft - 4"
-            :y="tick.y + 3"
-            text-anchor="end"
-          >{{ tick.value }}</text>
-        </g>
-        <text
-          class="axis-title"
-          :x="chartPlotLeft - 22"
-          :y="(chartPlotTop + chartPlotBottom) / 2"
-          :transform="`rotate(-90 ${chartPlotLeft - 22} ${(chartPlotTop + chartPlotBottom) / 2})`"
-          text-anchor="middle"
-        >Count</text>
-
-        <rect
-          v-for="(bar, index) in histogramBars"
-          :key="`bar-${index}`"
-          class="histogram-bar"
-          :x="bar.x"
-          :y="bar.y"
-          :width="bar.width"
-          :height="bar.height"
-          rx="1"
-        />
-
-        <g
-          v-for="marker in quartileMarkers"
-          :key="`marker-${marker.label}`"
-          class="quartile-marker"
-        >
-          <line
-            class="quartile-line"
-            :x1="marker.x"
-            :x2="marker.x"
-            :y1="chartPlotTop"
-            :y2="chartPlotBottom"
-          />
-          <text
-            class="quartile-label"
-            :x="marker.x"
-            :y="chartPlotTop - 12"
-            text-anchor="middle"
-          >{{ marker.label }}</text>
-          <text
-            class="quartile-value"
-            :x="marker.x"
-            :y="chartPlotTop - 2"
-            text-anchor="middle"
-          >{{ marker.value.toFixed(2) }}</text>
-        </g>
-
-        <line
-          class="x-axis-line"
-          :x1="chartPlotLeft"
-          :x2="chartPlotRight"
-          :y1="chartPlotBottom"
-          :y2="chartPlotBottom"
-        />
-        <g
-          v-for="tick in xAxisTicks"
-          :key="`x-${tick.value}`"
-          class="x-axis-tick"
-        >
-          <line
-            :x1="tick.x"
-            :x2="tick.x"
-            :y1="chartPlotBottom"
-            :y2="chartPlotBottom + 2"
-          />
-          <text
-            class="axis-label"
-            :x="tick.x"
-            :y="chartPlotBottom + 9"
-            text-anchor="middle"
-          >{{ tick.value.toFixed(1) }}</text>
-        </g>
-        <text
-          class="axis-title"
-          :x="(chartPlotLeft + chartPlotRight) / 2"
-          :y="chartViewHeight - 1"
-          text-anchor="middle"
-        >5-SENSE score</text>
-      </svg>
+          :key="`y-tick-${tick.value}`"
+          class="y-tick"
+          :style="{ bottom: `${tick.bottomPercent}%` }"
+        >{{ tick.value }}</span>
+      </div>
+      <div class="plot-area">
+        <div
+          v-for="tick in gridlineTicks"
+          :key="`grid-${tick.value}`"
+          class="gridline"
+          :style="{ bottom: `${tick.bottomPercent}%` }"
+        ></div>
+        <div class="bars">
+          <div
+            v-for="(bar, index) in histogramBars"
+            :key="`bar-${index}`"
+            class="bar-slot"
+          >
+            <div class="bar" :style="{ height: `${bar.heightPercent}%` }"></div>
+          </div>
+        </div>
+      </div>
+      <div class="x-axis-ticks">
+        <span
+          v-for="(tick, index) in xAxisTicks"
+          :key="`x-tick-${index}`"
+          class="x-tick"
+          :style="{ left: `${tick.leftPercent}%` }"
+        >{{ tick.value.toFixed(1) }}</span>
+      </div>
+      <div class="x-axis-title">5-SENSE score</div>
     </div>
-    <div v-else class="widget-body widget-body-empty">No data</div>
-    <div v-if="hasData && unscoredCount > 0" class="widget-footer">
-      {{ unscoredCount }} patients without 5-SENSE data (not shown).
+    <div v-else class="histogram-wrap-empty">No data</div>
+    <div v-if="hasData" class="widget-footer">
+      Median <span class="footer-value">{{ medianScoreFormatted }}</span>
+      <span class="footer-sep">·</span>
+      IQR <span class="footer-value">{{ q1ScoreFormatted }}–{{ q3ScoreFormatted }}</span>
+      <span class="footer-sep">·</span>
+      N <span class="footer-value">{{ totalScoredCount }}</span> of
+      <span class="footer-value">{{ totalPatientCount }}</span>
     </div>
   </div>
 </template>
@@ -138,22 +64,8 @@ const props = defineProps({
   scoreMax: { type: Number, default: 1 },
 })
 
-const chartViewWidth = 320
-const chartViewHeight = 180
-const chartPlotLeft = 38
-const chartPlotRight = chartViewWidth - 8
-const chartPlotTop = 32
-const chartPlotBottom = chartViewHeight - 22
-
-const innerPlotWidth = chartPlotRight - chartPlotLeft
-const innerPlotHeight = chartPlotBottom - chartPlotTop
-
 const hasData = computed(
   () => props.totalScoredCount > 0 && props.binCounts.length > 0,
-)
-
-const unscoredCount = computed(
-  () => Math.max(props.totalPatientCount - props.totalScoredCount, 0),
 )
 
 const yAxisNiceMax = computed(() => {
@@ -165,67 +77,55 @@ const yAxisNiceMax = computed(() => {
 const yAxisStep = computed(() => (yAxisNiceMax.value <= 10 ? 2 : 5))
 
 const yAxisTicks = computed(() => {
+  if (!hasData.value) return []
   const ticks = []
-  for (let tickValue = 0; tickValue <= yAxisNiceMax.value; tickValue += yAxisStep.value) {
-    const tickFraction = tickValue / yAxisNiceMax.value
+  for (
+    let tickValue = yAxisNiceMax.value;
+    tickValue >= 0;
+    tickValue -= yAxisStep.value
+  ) {
     ticks.push({
       value: tickValue,
-      y: chartPlotBottom - tickFraction * innerPlotHeight,
+      bottomPercent: (tickValue / yAxisNiceMax.value) * 100,
     })
   }
   return ticks
 })
 
+// Gridlines for every tick above the baseline (the 0 line is the axis itself).
+const gridlineTicks = computed(() =>
+  yAxisTicks.value.filter((tick) => tick.value > 0),
+)
+
+const histogramBars = computed(() => {
+  if (!hasData.value) return []
+  return props.binCounts.map((countInBin) => ({
+    heightPercent: (countInBin / yAxisNiceMax.value) * 100,
+  }))
+})
+
+// Ticks sit at the bin edges of the continuous score scale (e.g. 0.0 … 1.0).
 const xAxisTicks = computed(() => {
+  if (!hasData.value) return []
   const ticks = []
   const tickCount = props.binCounts.length + 1
   for (let tickIndex = 0; tickIndex < tickCount; tickIndex++) {
     const tickFraction = tickIndex / (tickCount - 1)
     ticks.push({
       value: props.scoreMin + tickFraction * (props.scoreMax - props.scoreMin),
-      x: chartPlotLeft + tickFraction * innerPlotWidth,
+      leftPercent: tickFraction * 100,
     })
   }
   return ticks
 })
 
-const histogramBars = computed(() => {
-  const binCount = props.binCounts.length
-  if (binCount === 0) return []
-  const barSlotWidth = innerPlotWidth / binCount
-  const barInnerPadding = 1.5
-  return props.binCounts.map((countInBin, binIndex) => {
-    const barHeightFraction = countInBin / yAxisNiceMax.value
-    const barHeight = barHeightFraction * innerPlotHeight
-    return {
-      x: chartPlotLeft + binIndex * barSlotWidth + barInnerPadding,
-      y: chartPlotBottom - barHeight,
-      width: barSlotWidth - barInnerPadding * 2,
-      height: barHeight,
-    }
-  })
-})
-
-function scoreToPlotX(scoreValue) {
-  const scoreSpan = props.scoreMax - props.scoreMin
-  if (scoreSpan === 0) return chartPlotLeft + innerPlotWidth / 2
-  const scoreFraction = (scoreValue - props.scoreMin) / scoreSpan
-  return chartPlotLeft + scoreFraction * innerPlotWidth
+function formatScore(scoreValue) {
+  return scoreValue == null ? '–' : scoreValue.toFixed(2)
 }
 
-const quartileMarkers = computed(() => {
-  const markers = []
-  if (props.q1Score != null) {
-    markers.push({ label: 'Q1 (25%)', value: props.q1Score, x: scoreToPlotX(props.q1Score) })
-  }
-  if (props.medianScore != null) {
-    markers.push({ label: 'Median', value: props.medianScore, x: scoreToPlotX(props.medianScore) })
-  }
-  if (props.q3Score != null) {
-    markers.push({ label: 'Q3 (75%)', value: props.q3Score, x: scoreToPlotX(props.q3Score) })
-  }
-  return markers
-})
+const medianScoreFormatted = computed(() => formatScore(props.medianScore))
+const q1ScoreFormatted = computed(() => formatScore(props.q1Score))
+const q3ScoreFormatted = computed(() => formatScore(props.q3Score))
 </script>
 
 <style scoped lang="scss">
@@ -239,109 +139,155 @@ const quartileMarkers = computed(() => {
   color: $gray_5;
 }
 
-.widget-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.title-block {
-  min-width: 0;
-}
-
 .widget-title {
-  margin: 0 0 2px;
+  margin: 0 0 18px;
   font-size: 15px;
   font-weight: 600;
+  line-height: 1.2;
   color: $gray_6;
+  text-transform: none;
+  text-align: left;
+  align-self: flex-start;
 }
 
-.widget-subtitle {
-  margin: 0;
-  font-size: 12px;
-  color: $neutralGrey;
-}
-
-.n-badge {
-  font-size: 12px;
-  color: $gray_5;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.widget-body {
-  display: flex;
-  align-items: stretch;
+.histogram-wrap {
   flex: 1;
   min-height: 0;
-  min-width: 0;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-rows: 1fr auto auto;
+  column-gap: 6px;
+  row-gap: 4px;
 }
 
-.widget-body-empty {
-  justify-content: center;
+.histogram-wrap-empty {
+  flex: 1;
+  display: flex;
   align-items: center;
+  justify-content: center;
   color: $lightGrey;
   font-size: 13px;
 }
 
-.histogram-chart {
-  flex: 1;
+.y-axis-title {
+  grid-column: 1;
+  grid-row: 1;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $gray_4;
+  align-self: center;
+  justify-self: center;
+}
+
+.y-axis-ticks {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  min-width: 22px;
+}
+
+.y-tick {
+  position: absolute;
+  right: 4px;
+  transform: translateY(50%);
+  font-size: 10px;
+  line-height: 1;
+  color: $gray_4;
+  font-variant-numeric: tabular-nums;
+}
+
+.plot-area {
+  grid-column: 3;
+  grid-row: 1;
+  position: relative;
   min-width: 0;
-  width: 100%;
+  min-height: 0;
+  border-left: 1.5px solid $gray_3;
+  border-bottom: 1.5px solid $gray_3;
+}
+
+.gridline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: $gray_2;
+}
+
+.bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bar-slot {
+  flex: 1;
   height: 100%;
-  max-height: 100%;
-  display: block;
-  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 3px;
 }
 
-.histogram-bar {
-  fill: $es-primary-color;
+.bar {
+  width: 100%;
+  min-height: 2px;
+  background: $es-primary-color;
+  border-radius: 5px 5px 0 0;
 }
 
-.axis-label {
-  font-size: 8px;
-  fill: $neutralGrey;
+.x-axis-ticks {
+  grid-column: 3;
+  grid-row: 2;
+  position: relative;
+  height: 14px;
 }
 
-.axis-title {
-  font-size: 9px;
-  fill: $gray_5;
-}
-
-.x-axis-line,
-.y-axis-tick line:first-child,
-.x-axis-tick line {
-  stroke: $lineColor1;
-  stroke-width: 0.75;
-}
-
-.y-axis-grid {
-  stroke: $lineColor2;
-  stroke-width: 0.5;
-}
-
-.quartile-line {
-  stroke: $lightGrey;
-  stroke-width: 0.75;
-  stroke-dasharray: 3 2;
-}
-
-.quartile-label {
-  font-size: 8px;
-  fill: $neutralGrey;
-}
-
-.quartile-value {
-  font-size: 9px;
+.x-tick {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 11px;
   font-weight: 600;
-  fill: $gray_6;
+  color: $gray_5;
+  font-variant-numeric: tabular-nums;
+}
+
+.x-axis-title {
+  grid-column: 3;
+  grid-row: 3;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $gray_4;
+  margin-top: 2px;
 }
 
 .widget-footer {
-  margin-top: 8px;
-  font-size: 12px;
-  color: $lightGrey;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid $gray_2;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  color: $gray_5;
+  font-variant-numeric: tabular-nums;
+}
+
+.footer-value {
+  color: $gray_6;
+  font-weight: 700;
+}
+
+.footer-sep {
+  margin: 0 6px;
+  color: $gray_3;
 }
 </style>

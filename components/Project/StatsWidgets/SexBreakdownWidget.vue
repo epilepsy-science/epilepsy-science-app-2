@@ -1,6 +1,6 @@
 <template>
   <div class="sex-breakdown-widget">
-    <h3 class="widget-title">Sex</h3>
+    <h3 class="widget-title">Distribution of Sex</h3>
     <div v-if="hasData" class="widget-body">
       <div class="donut-wrap">
         <svg
@@ -38,7 +38,7 @@
             :style="{ backgroundColor: segment.color }"
           />
           <span class="legend-text">
-            {{ segment.label }}
+            <span class="legend-label">{{ segment.label }} (%):</span>
             <span class="legend-count">{{ segment.count }}</span>
             <span class="legend-percent">({{ segment.percent }}%)</span>
           </span>
@@ -46,9 +46,6 @@
       </ul>
     </div>
     <div v-else class="widget-body widget-body-empty">No data</div>
-    <div v-if="hasData" class="widget-footer">
-      N = {{ totalCount }} patients{{ sourceLabel ? ` (${sourceLabel})` : '' }}
-    </div>
   </div>
 </template>
 
@@ -100,7 +97,11 @@ const donutArcs = computed(() => {
   margin: 0 0 12px;
   font-size: 15px;
   font-weight: 600;
+  line-height: 1.2;
   color: $gray_6;
+  text-transform: none;
+  text-align: left;
+  align-self: flex-start;
 }
 
 .widget-body {
@@ -155,10 +156,13 @@ const donutArcs = computed(() => {
 .legend {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  border: 1px solid $lineColor2;
+  border-radius: 4px;
+  background-color: $background;
 }
 
 .legend-row {
@@ -182,6 +186,10 @@ const donutArcs = computed(() => {
   gap: 6px;
 }
 
+.legend-label {
+  color: $gray_6;
+}
+
 .legend-count {
   font-weight: 600;
   color: $gray_6;
@@ -189,11 +197,5 @@ const donutArcs = computed(() => {
 
 .legend-percent {
   color: $neutralGrey;
-}
-
-.widget-footer {
-  margin-top: 12px;
-  font-size: 12px;
-  color: $lightGrey;
 }
 </style>

@@ -1,37 +1,51 @@
 <template>
   <div class="age-implant-widget">
-    <h3 class="widget-title">Age at iEEG implant</h3>
+    <h3 class="widget-title">Distribution of Age at iEEG Implant</h3>
     <div v-if="hasData" class="histogram-wrap">
-      <svg
-        class="histogram-chart"
-        :viewBox="`0 0 ${chartViewBoxWidth} ${chartViewBoxHeight}`"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <rect
-          v-for="(bar, index) in histogramBars"
-          :key="index"
-          class="histogram-bar"
-          :x="bar.x"
-          :y="bar.y"
-          :width="bar.width"
-          :height="bar.height"
-          rx="1.5"
-        />
-        <line
-          v-if="medianLineX != null"
-          class="median-line"
-          :x1="medianLineX"
-          :x2="medianLineX"
-          y1="0"
-          :y2="chartViewBoxHeight"
-        />
-      </svg>
+      <div class="y-axis-title">Number of patients</div>
+      <div class="y-axis-ticks">
+        <span
+          v-for="tick in yAxisTicks"
+          :key="`y-tick-${tick.value}`"
+          class="y-tick"
+          :style="{ bottom: `${tick.bottomPercent}%` }"
+        >{{ tick.value }}</span>
+      </div>
+      <div class="plot-area">
+        <div
+          v-for="tick in gridlineTicks"
+          :key="`grid-${tick.value}`"
+          class="gridline"
+          :style="{ bottom: `${tick.bottomPercent}%` }"
+        ></div>
+        <div class="bars">
+          <div
+            v-for="(bar, index) in histogramBars"
+            :key="`bar-${index}`"
+            class="bar-slot"
+          >
+            <div class="bar" :style="{ height: `${bar.heightPercent}%` }"></div>
+          </div>
+        </div>
+      </div>
+      <div class="x-axis-ticks">
+        <span
+          v-for="(tick, index) in xAxisTickLabels"
+          :key="`x-tick-${index}`"
+          class="x-tick"
+        >{{ tick.value }}</span>
+      </div>
+      <div class="x-axis-title">Age at iEEG implant (years)</div>
     </div>
-    <div v-else class="histogram-wrap histogram-wrap-empty">No data</div>
+    <div v-else class="histogram-wrap-empty">No data</div>
     <div v-if="hasData" class="widget-footer">
-      median {{ medianAgeRounded }} · IQR {{ q1AgeRounded }}–{{ q3AgeRounded }} ·
-      range {{ minAgeRounded }}–{{ maxAgeRounded }} · N = {{ totalCount }}
+      Median <span class="footer-value">{{ medianAgeRounded }}</span>
+      <span class="footer-sep">·</span>
+      IQR <span class="footer-value">{{ q1AgeRounded }}–{{ q3AgeRounded }}</span>
+      <span class="footer-sep">·</span>
+      Range <span class="footer-value">{{ minAgeRounded }}–{{ maxAgeRounded }}</span>
+      <span class="footer-sep">·</span>
+      N <span class="footer-value">{{ totalCount }}</span>
     </div>
   </div>
 </template>
@@ -41,6 +55,8 @@ import { computed } from 'vue'
 
 const props = defineProps({
   binCounts: { type: Array, required: true },
+  binStartAge: { type: Number, default: 0 },
+  binWidthYears: { type: Number, default: 10 },
   medianAge: { type: Number, default: null },
   q1Age: { type: Number, default: null },
   q3Age: { type: Number, default: null },
@@ -49,36 +65,62 @@ const props = defineProps({
   totalCount: { type: Number, required: true },
 })
 
-const chartViewBoxWidth = 100
-const chartViewBoxHeight = 100
-const barGap = 1.5
-
 const hasData = computed(
-  () => props.totalCount > 0 && props.binCounts.length > 0 && props.maxAge != null,
+  () => props.totalCount > 0 && props.binCounts.length > 0,
+)
+
+function computeNiceTickInterval(maxValue) {
+  if (maxValue <= 5) return 1
+  if (maxValue <= 10) return 2
+  if (maxValue <= 50) return 5
+  if (maxValue <= 100) return 10
+  return Math.ceil(maxValue / 50) * 5
+}
+
+const yAxisTickInterval = computed(() =>
+  computeNiceTickInterval(Math.max(...props.binCounts, 1)),
+)
+
+const yAxisMaxCount = computed(() => {
+  const maxBinCount = Math.max(...props.binCounts, 1)
+  return Math.ceil(maxBinCount / yAxisTickInterval.value) * yAxisTickInterval.value
+})
+
+const yAxisTicks = computed(() => {
+  if (!hasData.value) return []
+  const ticks = []
+  for (
+    let tickValue = yAxisMaxCount.value;
+    tickValue >= 0;
+    tickValue -= yAxisTickInterval.value
+  ) {
+    ticks.push({
+      value: tickValue,
+      bottomPercent: (tickValue / yAxisMaxCount.value) * 100,
+    })
+  }
+  return ticks
+})
+
+// Gridlines for every tick above the baseline (the 0 line is the axis itself).
+const gridlineTicks = computed(() =>
+  yAxisTicks.value.filter((tick) => tick.value > 0),
 )
 
 const histogramBars = computed(() => {
   if (!hasData.value) return []
-  const maxBinCount = Math.max(...props.binCounts, 1)
-  const binCount = props.binCounts.length
-  const totalBarSpace = chartViewBoxWidth - barGap * (binCount - 1)
-  const barWidth = totalBarSpace / binCount
-  return props.binCounts.map((countInBin, binIndex) => {
-    const barHeight = (countInBin / maxBinCount) * chartViewBoxHeight
-    return {
-      x: binIndex * (barWidth + barGap),
-      y: chartViewBoxHeight - barHeight,
-      width: barWidth,
-      height: barHeight,
-    }
-  })
+  return props.binCounts.map((countInBin) => ({
+    heightPercent: (countInBin / yAxisMaxCount.value) * 100,
+  }))
 })
 
-const medianLineX = computed(() => {
-  if (!hasData.value || props.medianAge == null) return null
-  const ageSpan = props.maxAge - props.minAge
-  if (ageSpan === 0) return chartViewBoxWidth / 2
-  return ((props.medianAge - props.minAge) / ageSpan) * chartViewBoxWidth
+const xAxisTickLabels = computed(() => {
+  if (!hasData.value) return []
+  return props.binCounts.map((_, binIndex) => {
+    const binLowerEdge = props.binStartAge + binIndex * props.binWidthYears
+    const binUpperEdge = binLowerEdge + props.binWidthYears
+    return { value: `${binLowerEdge}–${binUpperEdge}` }
+  })
 })
 
 const medianAgeRounded = computed(() => Math.round(props.medianAge ?? 0))
@@ -100,46 +142,153 @@ const maxAgeRounded = computed(() => Math.round(props.maxAge ?? 0))
 }
 
 .widget-title {
-  margin: 0 0 12px;
+  margin: 0 0 18px;
   font-size: 15px;
   font-weight: 600;
+  line-height: 1.2;
   color: $gray_6;
-  text-transform: unset;
+  text-transform: none;
+  text-align: left;
+  align-self: flex-start;
 }
 
 .histogram-wrap {
   flex: 1;
   min-height: 0;
-  display: flex;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-rows: 1fr auto auto;
+  column-gap: 6px;
+  row-gap: 4px;
 }
 
 .histogram-wrap-empty {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
   color: $lightGrey;
   font-size: 13px;
 }
 
-.histogram-chart {
-  width: 100%;
+.y-axis-title {
+  grid-column: 1;
+  grid-row: 1;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $gray_4;
+  align-self: center;
+  justify-self: center;
+}
+
+.y-axis-ticks {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  min-width: 22px;
+}
+
+.y-tick {
+  position: absolute;
+  right: 4px;
+  transform: translateY(50%);
+  font-size: 10px;
+  line-height: 1;
+  color: $gray_4;
+  font-variant-numeric: tabular-nums;
+}
+
+.plot-area {
+  grid-column: 3;
+  grid-row: 1;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  border-left: 1.5px solid $gray_3;
+  border-bottom: 1.5px solid $gray_3;
+}
+
+.gridline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: $gray_2;
+}
+
+.bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bar-slot {
+  flex: 1;
   height: 100%;
-  display: block;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 5px;
 }
 
-.histogram-bar {
-  fill: $es-primary-color;
+.bar {
+  width: 100%;
+  min-height: 2px;
+  background: $es-primary-color;
+  border-radius: 5px 5px 0 0;
 }
 
-.median-line {
-  stroke: $orange_1;
-  stroke-width: 1.5;
-  vector-effect: non-scaling-stroke;
+.x-axis-ticks {
+  grid-column: 3;
+  grid-row: 2;
+  display: flex;
+}
+
+.x-tick {
+  flex: 1;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: $gray_5;
+  font-variant-numeric: tabular-nums;
+}
+
+.x-axis-title {
+  grid-column: 3;
+  grid-row: 3;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $gray_4;
+  margin-top: 2px;
 }
 
 .widget-footer {
-  margin-top: 12px;
-  font-size: 12px;
-  color: $lightGrey;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid $gray_2;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  color: $gray_5;
+  font-variant-numeric: tabular-nums;
+}
+
+.footer-value {
+  color: $gray_6;
+  font-weight: 700;
+}
+
+.footer-sep {
+  margin: 0 6px;
+  color: $gray_3;
 }
 </style>

@@ -1,12 +1,6 @@
 <template>
   <div class="intervention-type-widget">
-    <div class="widget-header">
-      <div class="title-block">
-        <h3 class="widget-title">Intervention type</h3>
-        <p class="widget-subtitle">First or primary post-iEEG intervention.</p>
-      </div>
-      <span class="n-badge">N = {{ totalPatientCount }}</span>
-    </div>
+    <h3 class="widget-title">Intervention Type</h3>
     <div v-if="hasData" class="widget-body">
       <svg
         class="bar-chart"
@@ -15,14 +9,14 @@
         aria-hidden="true"
       >
         <g
-          v-for="(row, index) in chartRows"
+          v-for="(row) in chartRows"
           :key="row.label"
           class="bar-row"
         >
           <text
             class="row-label"
-            :x="chartPlotLeft - 6"
-            :y="row.centerY + 3"
+            :x="chartPlotLeft - 8"
+            :y="row.centerY + 4"
             text-anchor="end"
           >{{ row.label }}</text>
           <rect
@@ -31,18 +25,25 @@
             :y="row.barY"
             :width="row.barWidth"
             :height="barHeight"
-            rx="1.5"
+            rx="2"
           />
           <text
             class="bar-value"
-            :x="chartPlotLeft + row.barWidth + 4"
-            :y="row.centerY + 3"
+            :x="chartPlotLeft + row.barWidth + 6"
+            :y="row.centerY + 4"
             text-anchor="start"
           >{{ row.count }}</text>
         </g>
 
         <line
-          class="x-axis-line"
+          class="axis-line"
+          :x1="chartPlotLeft"
+          :x2="chartPlotLeft"
+          :y1="chartPlotTop"
+          :y2="chartPlotBottom"
+        />
+        <line
+          class="axis-line"
           :x1="chartPlotLeft"
           :x2="chartPlotRight"
           :y1="chartPlotBottom"
@@ -57,21 +58,21 @@
             :x1="tick.x"
             :x2="tick.x"
             :y1="chartPlotBottom"
-            :y2="chartPlotBottom + 2"
+            :y2="chartPlotBottom + 5"
           />
           <text
             class="axis-label"
             :x="tick.x"
-            :y="chartPlotBottom + 9"
+            :y="chartPlotBottom + 20"
             text-anchor="middle"
           >{{ tick.value }}</text>
         </g>
         <text
           class="axis-title"
           :x="(chartPlotLeft + chartPlotRight) / 2"
-          :y="chartViewHeight - 1"
+          :y="chartViewHeight - 4"
           text-anchor="middle"
-        >Count</text>
+        >Number of patients</text>
       </svg>
     </div>
     <div v-else class="widget-body widget-body-empty">No data</div>
@@ -86,17 +87,21 @@ const props = defineProps({
   totalPatientCount: { type: Number, required: true },
 })
 
-const chartViewWidth = 320
-const chartViewHeight = 180
-const chartPlotLeft = 78
-const chartPlotRight = chartViewWidth - 16
-const chartPlotTop = 6
-const chartPlotBottom = chartViewHeight - 22
+// viewBox height is sized close to the rendered cell height so that, since a
+// full-row cell is wider than this aspect ratio (height-constrained scaling),
+// `font-size` in user units renders at roughly the same pixel size as the
+// 12px HTML text in the Modality Coverage widget.
+const chartViewWidth = 1000
+const chartViewHeight = 280
+const chartPlotLeft = 230
+const chartPlotRight = chartViewWidth - 24
+const chartPlotTop = 16
+const chartPlotBottom = chartViewHeight - 44
 
 const innerPlotWidth = chartPlotRight - chartPlotLeft
 const innerPlotHeight = chartPlotBottom - chartPlotTop
 
-const barHeight = 12
+const barHeight = 18
 
 const hasData = computed(() => props.categories.length > 0)
 
@@ -164,36 +169,15 @@ function computeNiceMax(rawMax, desiredTickCount) {
   color: $gray_5;
 }
 
-.widget-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.title-block {
-  min-width: 0;
-}
-
 .widget-title {
-  margin: 0 0 2px;
+  margin: 0 0 12px;
   font-size: 15px;
   font-weight: 600;
+  line-height: 1.2;
   color: $gray_6;
-}
-
-.widget-subtitle {
-  margin: 0;
-  font-size: 12px;
-  color: $neutralGrey;
-}
-
-.n-badge {
-  font-size: 12px;
-  color: $gray_5;
-  white-space: nowrap;
-  flex-shrink: 0;
+  text-transform: none;
+  text-align: left;
+  align-self: flex-start;
 }
 
 .widget-body {
@@ -225,29 +209,30 @@ function computeNiceMax(rawMax, desiredTickCount) {
 }
 
 .row-label {
-  font-size: 10px;
+  font-size: 12px;
   fill: $gray_6;
 }
 
 .bar-value {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   fill: $gray_6;
 }
 
 .axis-label {
-  font-size: 8px;
+  font-size: 11px;
   fill: $neutralGrey;
 }
 
 .axis-title {
-  font-size: 9px;
-  fill: $gray_5;
+  font-size: 12px;
+  fill: $gray_6;
+  font-weight: 500;
 }
 
-.x-axis-line,
+.axis-line,
 .x-axis-tick line {
-  stroke: $lineColor1;
-  stroke-width: 0.75;
+  stroke: $gray_5;
+  stroke-width: 1;
 }
 </style>

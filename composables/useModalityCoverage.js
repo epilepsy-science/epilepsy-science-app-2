@@ -1,10 +1,10 @@
 import { ref } from 'vue'
 
 const MODALITY_TABLES = [
-  { key: 'ieeg',            label: 'iEEG',             parquetFilename: 'pennepi_ieeg_recording_parameters.parquet' },
-  { key: 'surgicalOutcome', label: 'Surgical outcome', parquetFilename: 'pennepi_intervention.parquet' },
-  { key: 'mri',             label: 'MRI',              parquetFilename: 'pennepi_mri.parquet' },
-  { key: 'fiveSense',       label: '5-SENSE',          parquetFilename: 'pennepi_5sense.parquet' },
+  { key: 'mri',             label: 'Magnetic Resonance Imaging',                parquetFilename: 'pennepi_mri.parquet',                       valueColumn: 'mri_lesion' },
+  { key: 'ieeg',            label: 'Intracranial Electroencephalography',       parquetFilename: 'pennepi_ieeg_recording_parameters.parquet' },
+  { key: 'fiveSense',       label: 'Phenotypic and Assessment Data: 5-SENSE',   parquetFilename: 'pennepi_5sense.parquet',                    valueColumn: 'fivesensescore' },
+  { key: 'surgicalOutcome', label: 'Surgical Outcome Assessment Data: Engel',   parquetFilename: 'pennepi_intervention.parquet' },
 ]
 
 export function useModalityCoverage() {
@@ -23,12 +23,16 @@ export function useModalityCoverage() {
         SELECT COUNT(DISTINCT person_id) AS total
         FROM ${table('pennepi_person.parquet')}
       `)
-      const modalityCoveragePromises = MODALITY_TABLES.map(({ parquetFilename }) =>
-        queryRaw(`
+      const modalityCoveragePromises = MODALITY_TABLES.map(({ parquetFilename, valueColumn }) => {
+        const nonNullValueFilter = valueColumn
+          ? `WHERE ${valueColumn} IS NOT NULL AND TRIM(${valueColumn}) != ''`
+          : ''
+        return queryRaw(`
           SELECT COUNT(DISTINCT person_id) AS covered
           FROM ${table(parquetFilename)}
+          ${nonNullValueFilter}
         `)
-      )
+      })
 
       const [totalPatientRows, ...modalityRowsByIndex] = await Promise.all([
         totalPatientsPromise,
