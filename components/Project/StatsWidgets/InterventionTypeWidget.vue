@@ -15,8 +15,8 @@
         >
           <text
             class="row-label"
-            :x="chartPlotLeft - 6"
-            :y="row.centerY + 3"
+            :x="chartPlotLeft - 8"
+            :y="row.centerY + 4"
             text-anchor="end"
           >{{ row.label }}</text>
           <rect
@@ -25,12 +25,12 @@
             :y="row.barY"
             :width="row.barWidth"
             :height="barHeight"
-            rx="1.5"
+            rx="2"
           />
           <text
             class="bar-value"
-            :x="chartPlotLeft + row.barWidth + 4"
-            :y="row.centerY + 3"
+            :x="chartPlotLeft + row.barWidth + 6"
+            :y="row.centerY + 4"
             text-anchor="start"
           >{{ row.count }}</text>
         </g>
@@ -58,19 +58,19 @@
             :x1="tick.x"
             :x2="tick.x"
             :y1="chartPlotBottom"
-            :y2="chartPlotBottom + 2"
+            :y2="chartPlotBottom + 5"
           />
           <text
             class="axis-label"
             :x="tick.x"
-            :y="chartPlotBottom + 9"
+            :y="chartPlotBottom + 20"
             text-anchor="middle"
           >{{ tick.value }}</text>
         </g>
         <text
           class="axis-title"
           :x="(chartPlotLeft + chartPlotRight) / 2"
-          :y="chartViewHeight - 1"
+          :y="chartViewHeight - 4"
           text-anchor="middle"
         >Number of patients</text>
       </svg>
@@ -87,17 +87,21 @@ const props = defineProps({
   totalPatientCount: { type: Number, required: true },
 })
 
-const chartViewWidth = 360
-const chartViewHeight = 180
-const chartPlotLeft = 130
-const chartPlotRight = chartViewWidth - 20
-const chartPlotTop = 6
-const chartPlotBottom = chartViewHeight - 22
+// viewBox height is sized close to the rendered cell height so that, since a
+// full-row cell is wider than this aspect ratio (height-constrained scaling),
+// `font-size` in user units renders at roughly the same pixel size as the
+// 12px HTML text in the Modality Coverage widget.
+const chartViewWidth = 1000
+const chartViewHeight = 280
+const chartPlotLeft = 230
+const chartPlotRight = chartViewWidth - 24
+const chartPlotTop = 16
+const chartPlotBottom = chartViewHeight - 44
 
 const innerPlotWidth = chartPlotRight - chartPlotLeft
 const innerPlotHeight = chartPlotBottom - chartPlotTop
 
-const barHeight = 12
+const barHeight = 18
 
 const hasData = computed(() => props.categories.length > 0)
 
@@ -205,23 +209,23 @@ function computeNiceMax(rawMax, desiredTickCount) {
 }
 
 .row-label {
-  font-size: 9px;
+  font-size: 12px;
   fill: $gray_6;
 }
 
 .bar-value {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   fill: $gray_6;
 }
 
 .axis-label {
-  font-size: 8px;
+  font-size: 11px;
   fill: $neutralGrey;
 }
 
 .axis-title {
-  font-size: 9px;
+  font-size: 12px;
   fill: $gray_6;
   font-weight: 500;
 }
@@ -229,6 +233,6 @@ function computeNiceMax(rawMax, desiredTickCount) {
 .axis-line,
 .x-axis-tick line {
   stroke: $gray_5;
-  stroke-width: 0.75;
+  stroke-width: 1;
 }
 </style>

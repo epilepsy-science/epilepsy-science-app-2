@@ -154,7 +154,7 @@ const defaultLayout = computed(() => [
   sectionHeaderWidget({ id: 'section-postimplant', x: 0, y: 27, w: 12, title: 'Postimplant' }),
   {
     id: 'stats-ieeg-focality',
-    x: 0, y: 28, w: 6, h: 8,
+    x: 0, y: 28, w: 12, h: 6,
     componentKey: 'IeegFocalityWidget',
     component: markRaw(IeegFocalityWidget),
     componentName: '',
@@ -165,7 +165,7 @@ const defaultLayout = computed(() => [
   },
   {
     id: 'stats-intervention-type',
-    x: 6, y: 28, w: 6, h: 8,
+    x: 0, y: 34, w: 12, h: 8,
     componentKey: 'InterventionTypeWidget',
     component: markRaw(InterventionTypeWidget),
     componentName: '',
