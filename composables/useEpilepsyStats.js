@@ -336,16 +336,31 @@ function buildIeegFocalityBreakdown(rows, patientsWithFocalityData, totalPatient
   const unknownCount = Math.max(totalPatientCount - patientsWithFocalityData, 0)
   const segmentsWithCounts = [
     { label: 'Focal', count: focalCount, color: FOCAL_COLOR },
-    { label: 'Nonfocal', count: nonfocalCount, color: NONFOCAL_COLOR },
-    { label: 'Unknown', count: unknownCount, color: FOCALITY_UNKNOWN_COLOR },
+    { label: 'Non-focal', count: nonfocalCount, color: NONFOCAL_COLOR },
+    { label: 'Other', count: unknownCount, color: FOCALITY_UNKNOWN_COLOR },
   ]
   return { segments: addPercentages(segmentsWithCounts) }
+}
+
+const INTERVENTION_LABEL_OVERRIDES = {
+  rns: 'Responsive neurostimulation',
+  vns: 'Vagus nerve stimulation',
+  dbs: 'Deep brain stimulation',
+}
+
+function formatInterventionLabel(rawLabel) {
+  const trimmedLabel = rawLabel.trim()
+  const normalizedKey = trimmedLabel.toLowerCase()
+  if (INTERVENTION_LABEL_OVERRIDES[normalizedKey]) {
+    return INTERVENTION_LABEL_OVERRIDES[normalizedKey]
+  }
+  return trimmedLabel.charAt(0).toUpperCase() + trimmedLabel.slice(1).toLowerCase()
 }
 
 function buildInterventionTypeBreakdown(rows) {
   const categories = rows
     .map((row) => ({
-      label: String(row.intervention_type ?? '').trim(),
+      label: formatInterventionLabel(String(row.intervention_type ?? '')),
       count: Number(row.count) || 0,
     }))
     .filter((category) => category.label !== '' && category.count > 0)

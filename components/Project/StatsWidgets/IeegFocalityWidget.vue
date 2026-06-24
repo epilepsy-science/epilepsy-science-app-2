@@ -1,12 +1,6 @@
 <template>
   <div class="ieeg-focality-widget">
-    <div class="widget-header">
-      <div class="title-block">
-        <h3 class="widget-title">iEEG focal vs non-focal</h3>
-        <p class="widget-subtitle">Focality determined from iEEG evaluation.</p>
-      </div>
-      <span class="n-badge">N = {{ totalSegmentCount }}</span>
-    </div>
+    <h3 class="widget-title">iEEG-determined Focality</h3>
     <div v-if="hasData" class="widget-body">
       <div class="donut-wrap">
         <svg
@@ -27,25 +21,11 @@
             :stroke-dashoffset="arc.dashOffset"
             :transform="`rotate(-90 ${chartCenter} ${chartCenter})`"
           />
-          <g
-            v-for="arc in donutArcs"
-            :key="`label-${arc.label}`"
-            class="donut-label"
-          >
-            <text
-              :x="arc.labelX"
-              :y="arc.labelY - 3"
-              class="donut-label-count"
-              :text-anchor="arc.textAnchor"
-            >{{ arc.count }}</text>
-            <text
-              :x="arc.labelX"
-              :y="arc.labelY + 9"
-              class="donut-label-percent"
-              :text-anchor="arc.textAnchor"
-            >({{ arc.percent }}%)</text>
-          </g>
         </svg>
+        <div class="donut-center">
+          <div class="donut-center-total">{{ totalSegmentCount }}</div>
+          <div class="donut-center-caption">patients</div>
+        </div>
       </div>
       <ul class="legend">
         <li
@@ -57,7 +37,11 @@
             class="legend-swatch"
             :style="{ backgroundColor: segment.color }"
           />
-          <span class="legend-text">{{ segment.label }}</span>
+          <span class="legend-text">
+            <span class="legend-label">{{ segment.label }} (%):</span>
+            <span class="legend-count">{{ segment.count }}</span>
+            <span class="legend-percent">({{ segment.percent }}%)</span>
+          </span>
         </li>
       </ul>
     </div>
@@ -72,12 +56,11 @@ const props = defineProps({
   segments: { type: Array, required: true },
 })
 
-const chartSize = 200
+const chartSize = 140
 const chartCenter = chartSize / 2
-const donutStrokeWidth = 24
-const donutRadius = 60
+const donutStrokeWidth = 20
+const donutRadius = (chartSize - donutStrokeWidth) / 2
 const donutCircumference = 2 * Math.PI * donutRadius
-const labelRingRadius = donutRadius + donutStrokeWidth / 2 + 12
 
 const totalSegmentCount = computed(() =>
   props.segments.reduce((sum, segment) => sum + segment.count, 0),
@@ -91,23 +74,11 @@ const donutArcs = computed(() => {
   return props.segments.map((segment) => {
     const segmentFraction = segment.count / totalSegmentCount.value
     const segmentLength = donutCircumference * segmentFraction
-    const midFraction = cumulativeFraction + segmentFraction / 2
-    const labelAngle = -Math.PI / 2 + midFraction * 2 * Math.PI
-    const labelX = chartCenter + labelRingRadius * Math.cos(labelAngle)
-    const labelY = chartCenter + labelRingRadius * Math.sin(labelAngle)
-    const horizontalOffset = labelX - chartCenter
-    const textAnchor =
-      Math.abs(horizontalOffset) < 12 ? 'middle' : horizontalOffset > 0 ? 'start' : 'end'
     const arc = {
       label: segment.label,
       color: segment.color,
-      count: segment.count,
-      percent: segment.percent,
       dashArray: `${segmentLength} ${donutCircumference}`,
       dashOffset: -donutCircumference * cumulativeFraction,
-      labelX,
-      labelY,
-      textAnchor,
     }
     cumulativeFraction += segmentFraction
     return arc
@@ -126,42 +97,20 @@ const donutArcs = computed(() => {
   color: $gray_5;
 }
 
-.widget-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.title-block {
-  min-width: 0;
-}
-
 .widget-title {
-  margin: 0 0 2px;
+  margin: 0 0 12px;
   font-size: 15px;
   font-weight: 600;
+  line-height: 1.2;
   color: $gray_6;
-}
-
-.widget-subtitle {
-  margin: 0;
-  font-size: 12px;
-  color: $neutralGrey;
-}
-
-.n-badge {
-  font-size: 12px;
-  color: $gray_5;
-  white-space: nowrap;
-  flex-shrink: 0;
+  text-transform: none;
+  text-align: left;
 }
 
 .widget-body {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 24px;
   flex: 1;
   min-height: 0;
 }
@@ -175,35 +124,48 @@ const donutArcs = computed(() => {
 .donut-wrap {
   position: relative;
   flex-shrink: 0;
-  width: 200px;
-  height: 200px;
+  width: 140px;
+  height: 140px;
 }
 
 .donut-chart {
   width: 100%;
   height: 100%;
-  overflow: visible;
-  font-family: 'Montserrat', sans-serif;
 }
 
-.donut-label-count {
-  font-size: 12px;
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donut-center-total {
+  font-size: 22px;
   font-weight: 700;
-  fill: $gray_6;
+  color: $gray_6;
+  line-height: 1;
 }
 
-.donut-label-percent {
-  font-size: 10px;
-  fill: $neutralGrey;
+.donut-center-caption {
+  margin-top: 4px;
+  font-size: 12px;
+  color: $lightGrey;
 }
 
 .legend {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  border: 1px solid $lineColor2;
+  border-radius: 4px;
+  background-color: $background;
 }
 
 .legend-row {
@@ -211,13 +173,32 @@ const donutArcs = computed(() => {
   align-items: center;
   gap: 10px;
   font-size: 13px;
-  color: $gray_6;
+  color: $gray_5;
 }
 
 .legend-swatch {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
   flex-shrink: 0;
+}
+
+.legend-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.legend-label {
+  color: $gray_6;
+}
+
+.legend-count {
+  font-weight: 600;
+  color: $gray_6;
+}
+
+.legend-percent {
+  color: $neutralGrey;
 }
 </style>
