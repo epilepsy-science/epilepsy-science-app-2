@@ -101,6 +101,7 @@ const donutArcs = computed(() => {
   color: $gray_6;
   text-transform: none;
   text-align: left;
+  align-self: flex-start;
 }
 
 .widget-body {

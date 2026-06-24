@@ -147,6 +147,7 @@ const q3ScoreFormatted = computed(() => formatScore(props.q3Score))
   color: $gray_6;
   text-transform: none;
   text-align: left;
+  align-self: flex-start;
 }
 
 .histogram-wrap {

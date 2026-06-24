@@ -149,6 +149,7 @@ const maxAgeRounded = computed(() => Math.round(props.maxAge ?? 0))
   color: $gray_6;
   text-transform: none;
   text-align: left;
+  align-self: flex-start;
 }
 
 .histogram-wrap {
