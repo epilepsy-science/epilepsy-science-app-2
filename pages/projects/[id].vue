@@ -37,7 +37,7 @@
         <div v-if="activeTab === 'overview'" class="overview-section">
           <div class="overview-layout">
             <div class="overview-main">
-              <ProjectStatsDashboard />
+              <ProjectStatsDashboard :project="project" />
             </div>
             <ProjectSidebar :project="project" />
           </div>

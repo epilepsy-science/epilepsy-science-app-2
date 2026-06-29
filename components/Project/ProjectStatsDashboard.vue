@@ -7,10 +7,9 @@
 </template>
 
 <script setup>
-import { computed, markRaw, onMounted } from 'vue'
+import { computed, markRaw, onMounted, toRef } from 'vue'
 import { PennsieveDashboard, TextWidget } from 'pennsieve-dashboard'
 import 'pennsieve-dashboard/style.css'
-import { useMainStore } from '~/store/index'
 import ModalityCoverageWidget from './StatsWidgets/ModalityCoverageWidget.vue'
 import SexBreakdownWidget from './StatsWidgets/SexBreakdownWidget.vue'
 import AgeAtIeegImplantWidget from './StatsWidgets/AgeAtIeegImplantWidget.vue'
@@ -20,9 +19,14 @@ import IeegFocalityWidget from './StatsWidgets/IeegFocalityWidget.vue'
 import InterventionTypeWidget from './StatsWidgets/InterventionTypeWidget.vue'
 import SectionHeaderWidget from './StatsWidgets/SectionHeaderWidget.vue'
 
-const pageStore = useMainStore()
-pageStore.fetchDatasetStats()
-const pageStats = computed(() => pageStore.pageStats)
+const props = defineProps({
+  project: {
+    type: Object,
+    default: null,
+  },
+})
+
+const projectRef = toRef(props, 'project')
 
 const { stats: epilepsyStats, fetchStats: fetchEpilepsyStats } = useEpilepsyStats()
 const {
@@ -31,10 +35,16 @@ const {
   fetchModalityCoverage,
 } = useModalityCoverage()
 
-const formattedTotalSize = computed(() => {
-  const totalSize = pageStats.value.totalDatasetSize
-  return typeof totalSize === 'number' ? useFormatMetric(totalSize) : totalSize
-})
+const { datasets: projectDatasets, fetchDatasets: fetchProjectDatasets } =
+  useProjectDatasets(projectRef)
+
+const datasetsAvailable = computed(() => projectDatasets.value.length)
+
+const totalDatasetSize = computed(() =>
+  projectDatasets.value.reduce((sum, dataset) => sum + (dataset.size || 0), 0)
+)
+
+const formattedTotalSize = computed(() => useFormatMetric(totalDatasetSize.value))
 
 const availableWidgets = [
   { name: 'TextWidget', component: markRaw(TextWidget) },
@@ -72,7 +82,7 @@ function sectionHeaderWidget({ id, x, y, w, title }) {
 const defaultLayout = computed(() => [
   textWidget({ id: 'stats-patients',         x: 0, y: 0, w: 3, h: 4, name: 'Patients',            value: epilepsyStats.value.patients }),
   textWidget({ id: 'stats-ieeg-recordings',  x: 3, y: 0, w: 3, h: 4, name: 'iEEG Recordings',     value: epilepsyStats.value.ieegRecordings }),
-  textWidget({ id: 'stats-datasets',         x: 6, y: 0, w: 3, h: 4, name: 'Datasets Available',  value: String(pageStats.value.datasets) }),
+  textWidget({ id: 'stats-datasets',         x: 6, y: 0, w: 3, h: 4, name: 'Datasets Available',  value: String(datasetsAvailable.value) }),
   textWidget({ id: 'stats-total-data',       x: 9, y: 0, w: 3, h: 4, name: 'Total Data',          value: formattedTotalSize.value }),
   sectionHeaderWidget({ id: 'section-demographics', x: 0, y: 4, w: 12, title: 'Demographics' }),
   {
@@ -186,6 +196,7 @@ const dashboardOptions = computed(() => ({
 onMounted(() => {
   fetchEpilepsyStats()
   fetchModalityCoverage()
+  fetchProjectDatasets()
 })
 </script>
 
