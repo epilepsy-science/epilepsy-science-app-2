@@ -136,7 +136,7 @@ const q3ScoreFormatted = computed(() => formatScore(props.q3Score))
   padding: 16px 20px;
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
-  color: $gray_5;
+  color: $neutralGrey;
 }
 
 .widget-title {
@@ -165,7 +165,7 @@ const q3ScoreFormatted = computed(() => formatScore(props.q3Score))
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $lightGrey;
+  color: $neutralGrey;
   font-size: 13px;
 }
 
@@ -179,7 +179,7 @@ const q3ScoreFormatted = computed(() => formatScore(props.q3Score))
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: $gray_4;
+  color: $neutralGrey;
   align-self: center;
   justify-self: center;
 }
@@ -197,7 +197,7 @@ const q3ScoreFormatted = computed(() => formatScore(props.q3Score))
   transform: translateY(50%);
   font-size: 10px;
   line-height: 1;
-  color: $gray_4;
+  color: $neutralGrey;
   font-variant-numeric: tabular-nums;
 }
 
@@ -254,7 +254,7 @@ const q3ScoreFormatted = computed(() => formatScore(props.q3Score))
   transform: translateX(-50%);
   font-size: 11px;
   font-weight: 600;
-  color: $gray_5;
+  color: $neutralGrey;
   font-variant-numeric: tabular-nums;
 }
 
@@ -266,7 +266,7 @@ const q3ScoreFormatted = computed(() => formatScore(props.q3Score))
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: $gray_4;
+  color: $neutralGrey;
   margin-top: 2px;
 }
 
@@ -277,7 +277,7 @@ const q3ScoreFormatted = computed(() => formatScore(props.q3Score))
   font-size: 13px;
   font-weight: 500;
   text-align: center;
-  color: $gray_5;
+  color: $neutralGrey;
   font-variant-numeric: tabular-nums;
 }
 

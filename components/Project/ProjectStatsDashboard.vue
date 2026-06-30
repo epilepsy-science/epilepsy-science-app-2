@@ -223,5 +223,6 @@ onMounted(() => {
   background: transparent;
   border: none;
   box-shadow: none;
+  overflow: hidden;
 }
 </style>

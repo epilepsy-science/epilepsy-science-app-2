@@ -166,7 +166,7 @@ function computeNiceMax(rawMax, desiredTickCount) {
   padding: 16px 20px;
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
-  color: $gray_5;
+  color: $neutralGrey;
 }
 
 .widget-title {
@@ -190,7 +190,7 @@ function computeNiceMax(rawMax, desiredTickCount) {
 .widget-body-empty {
   justify-content: center;
   align-items: center;
-  color: $lightGrey;
+  color: $neutralGrey;
   font-size: 13px;
 }
 
@@ -210,6 +210,7 @@ function computeNiceMax(rawMax, desiredTickCount) {
 
 .row-label {
   font-size: 12px;
+  font-weight: 500;
   fill: $gray_6;
 }
 
@@ -221,7 +222,8 @@ function computeNiceMax(rawMax, desiredTickCount) {
 
 .axis-label {
   font-size: 11px;
-  fill: $neutralGrey;
+  font-weight: 500;
+  fill: $gray_6;
 }
 
 .axis-title {
