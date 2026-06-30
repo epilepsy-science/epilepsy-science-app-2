@@ -37,7 +37,7 @@ defineProps({
   padding: 16px 20px;
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
-  color: $gray_5;
+  color: $neutralGrey;
 }
 
 .bar-list {
@@ -78,7 +78,7 @@ defineProps({
 
 .bar-value {
   text-align: right;
-  color: $gray_5;
+  color: $neutralGrey;
   font-variant-numeric: tabular-nums;
 }
 </style>

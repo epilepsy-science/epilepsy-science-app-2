@@ -94,7 +94,7 @@ const donutArcs = computed(() => {
   padding: 16px 20px;
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
-  color: $gray_5;
+  color: $neutralGrey;
 }
 
 .widget-title {
@@ -118,7 +118,7 @@ const donutArcs = computed(() => {
 
 .widget-body-empty {
   justify-content: center;
-  color: $lightGrey;
+  color: $neutralGrey;
   font-size: 13px;
 }
 
@@ -154,7 +154,7 @@ const donutArcs = computed(() => {
 .donut-center-caption {
   margin-top: 4px;
   font-size: 12px;
-  color: $lightGrey;
+  color: $neutralGrey;
 }
 
 .legend {
@@ -174,7 +174,7 @@ const donutArcs = computed(() => {
   align-items: center;
   gap: 10px;
   font-size: 13px;
-  color: $gray_5;
+  color: $neutralGrey;
 }
 
 .legend-swatch {
